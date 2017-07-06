@@ -769,6 +769,7 @@ class TaskMultiProcessEngine(engine.MultiProcessEngine):
 
     # Keep track of certain values so we can spawn new extraction workers.
     self._processing_configuration = processing_configuration
+    self._processing_configuration.cause_errors = True
 
     self._debug_output = processing_configuration.debug_output
     self._filter_find_specs = filter_find_specs
