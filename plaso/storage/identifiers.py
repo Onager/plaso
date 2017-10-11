@@ -3,6 +3,8 @@
 
 from __future__ import unicode_literals
 
+import uuid
+
 from plaso.containers import interface as containers_interface
 
 
@@ -103,3 +105,21 @@ class SQLTableIdentifier(containers_interface.AttributeContainerIdentifier):
       return '{0:s}.{1:d}'.format(self.name, self.row_identifier)
 
     return None
+
+class RedisKeyIdentifier(containers_interface.AttributeContainerIdentifier):
+  """Redis key attribute container identifier.
+
+  The identifier is used to uniquely identify attribute containers. Where
+  for example an attribute container is stored as a JSON serialized data in
+  a redis instance.
+
+  Attributes:
+  """
+
+  def __init__(self, identifier=None):
+    """"Initializes a redis key identifier."""
+    super(RedisKeyIdentifier, self).__init__()
+    if identifier:
+      self._identifier = int(identifier, 10)
+    else:
+      self._identifier = uuid.uuid4().int

@@ -8,6 +8,7 @@ import logging
 import multiprocessing
 import os
 import time
+import traceback
 
 from dfvfs.lib import definitions as dfvfs_definitions
 from dfvfs.resolver import context
@@ -25,6 +26,7 @@ from plaso.multi_processing import logger
 from plaso.multi_processing import multi_process_queue
 from plaso.multi_processing import task_manager
 from plaso.multi_processing import worker_process
+from plaso.storage.redis import redis_store
 
 
 class _EventSourceHeap(object):
@@ -152,6 +154,7 @@ class TaskMultiProcessEngine(engine.MultiProcessEngine):
       start_with_first (Optional[bool]): True if the function should start
           with the first written event source.
     """
+    logger.debug('Filling source heap')
     if self._processing_profiler:
       self._processing_profiler.StartTiming('fill_event_source_heap')
 
@@ -169,6 +172,7 @@ class TaskMultiProcessEngine(engine.MultiProcessEngine):
     while event_source:
       event_source_heap.PushEventSource(event_source)
       if event_source_heap.IsFull():
+        logger.debug('Source heap is full.')
         break
 
       if self._processing_profiler:
@@ -193,10 +197,19 @@ class TaskMultiProcessEngine(engine.MultiProcessEngine):
       storage_writer (StorageWriter): storage writer for a session storage used
           to merge task storage.
     """
+    logger.debug('Starting merge check')
     if self._processing_profiler:
       self._processing_profiler.StartTiming('merge_check')
 
-    for task_identifier in storage_writer.GetProcessedTaskIdentifiers():
+    if (self._processing_configuration.task_storage_format ==
+        definitions.STORAGE_FORMAT_REDIS):
+      task_identifiers = redis_store.RedisStore.ScanForProcessedTasks(
+          self._session_identifier)
+      logger.debug('Finished checking for processed redis tasks')
+    else:
+      task_identifiers = storage_writer.GetProcessedTaskIdentifiers()
+
+    for task_identifier in task_identifiers:
       try:
         task = self._task_manager.GetProcessedTaskByIdentifier(task_identifier)
 
@@ -218,6 +231,8 @@ class TaskMultiProcessEngine(engine.MultiProcessEngine):
             'Unable to retrieve task: {0:s} to prepare it to be merged. '
             'Error: {1!s}.'.format(task_identifier, exception))
         continue
+
+    logger.debug('Finished checking for merge')
 
     if self._processing_profiler:
       self._processing_profiler.StopTiming('merge_check')
@@ -293,6 +308,8 @@ class TaskMultiProcessEngine(engine.MultiProcessEngine):
       self._number_of_produced_events = storage_writer.number_of_events
       self._number_of_produced_sources = storage_writer.number_of_event_sources
       self._number_of_produced_warnings = storage_writer.number_of_warnings
+
+    logger.debug('Finished merging')
 
   def _ProcessSources(
       self, source_path_specs, storage_writer):
@@ -463,7 +480,8 @@ class TaskMultiProcessEngine(engine.MultiProcessEngine):
         if not task and not event_source:
           event_source = event_source_heap.PopEventSource()
 
-      except KeyboardInterrupt:
+      except KeyboardInterrupt as exception:
+        traceback.print_exc()
         self._abort = True
 
         self._processing_status.aborted = True
