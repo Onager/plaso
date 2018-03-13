@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """An event extraction worker that simulates various failures."""
 
+from __future__ import unicode_literals
+
 import time
 import sys
 import random
@@ -16,7 +18,7 @@ class BadWorker(worker.EventExtractionWorker):
     if option == 1:
       logging.debug('Starting to bloat memory for {0:s}'.format(
           file_entry.path_spec.comparable))
-      bloat = 'a'
+      bloat = 'bloat'
       self._ExhaustMemory(bloat)
       logging.debug('Finished bloating memory to {0:d}'.format(len(bloat)))
     if option == 2:
@@ -28,7 +30,7 @@ class BadWorker(worker.EventExtractionWorker):
           file_entry.path_spec.comparable))
       self._TakeALongTime()
     if option == 4:
-      logging.debug('Dieing on {0:s}'.format(
+      logging.debug('Dying on {0:s}'.format(
           file_entry.path_spec.comparable))
       self._JustDie()
     super(BadWorker, self)._ProcessFileEntryDataStream(
@@ -42,7 +44,7 @@ class BadWorker(worker.EventExtractionWorker):
     """
     while bloat < engine.MultiProcessEngine._DEFAULT_WORKER_MEMORY_LIMIT:
       bloat += bloat
-      time.sleep(2)
+      time.sleep(10)
 
   def _NeverReturn(self):
     """Block forever."""
