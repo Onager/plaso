@@ -237,7 +237,7 @@ class ParserList(objectfilter.GenericBinaryOperator):
 class PlasoAttributeFilterImplementation(objectfilter.BaseFilterImplementation):
   """Does field name access on the lowercase version of names.
 
-  Useful to only access attributes and properties with Google's python naming
+  Useful to only access attributes and properties with Google's Python naming
   style.
   """
 

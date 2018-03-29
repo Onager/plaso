@@ -482,7 +482,7 @@ class HTTPHashAnalyzer(HashAnalyzer):
     self._checked_for_old_python_version = False
 
   def _CheckPythonVersionAndDisableWarnings(self):
-    """Checks python version, and disables SSL warnings.
+    """Checks Python version, and disables SSL warnings.
 
     urllib3 will warn on each HTTPS request made by older versions of Python.
     Rather than spamming the user, we print one warning message, then disable
