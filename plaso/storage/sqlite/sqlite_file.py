@@ -961,6 +961,7 @@ class SQLiteStorageFile(interface.BaseStorageFile):
 
       # Turn off insert transaction integrity since we want to do bulk insert.
       self._cursor.execute('PRAGMA synchronous=OFF')
+      self._cursor.execute('PRAGMA journal_mode=wal')
 
       if not self._HasTable('metadata'):
         self._WriteStorageMetadata()
