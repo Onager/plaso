@@ -289,7 +289,8 @@ class StatusView(object):
     """
     if self._mode == self.MODE_LINEAR:
       return self._PrintAnalysisStatusUpdateLinear
-    elif self._mode == self.MODE_WINDOW:
+
+    if self._mode == self.MODE_WINDOW:
       return self._PrintAnalysisStatusUpdateWindow
 
     return None
@@ -302,7 +303,8 @@ class StatusView(object):
     """
     if self._mode == self.MODE_LINEAR:
       return self._PrintExtractionStatusUpdateLinear
-    elif self._mode == self.MODE_WINDOW:
+
+    if self._mode == self.MODE_WINDOW:
       return self._PrintExtractionStatusUpdateWindow
 
     return None

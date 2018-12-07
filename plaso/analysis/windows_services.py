@@ -265,10 +265,10 @@ class WindowsServicesAnalysisPlugin(interface.AnalysisPlugin):
     # TODO: Handle event log entries here also (ie, event id 4697).
     if getattr(event, 'data_type', None) != 'windows:registry:service':
       return
-    else:
-      # Create and store the service.
-      service = WindowsService.FromEvent(event)
-      self._service_collection.AddService(service)
+
+    # Create and store the service.
+    service = WindowsService.FromEvent(event)
+    self._service_collection.AddService(service)
 
   def SetOutputFormat(self, output_format):
     """Sets the output format of the generated report.

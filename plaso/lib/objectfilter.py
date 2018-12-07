@@ -262,8 +262,8 @@ class GenericBinaryOperator(BinaryOperator):
       try:
         if self.Operation(val, self.right_operand):
           return True
-        else:
-          continue
+        continue
+
       except (ValueError, TypeError):
         continue
     return False
@@ -652,9 +652,9 @@ class BinaryExpression(lexer.BinaryExpression):
   def Compile(self, filter_implementation):
     """Compile the binary expression into a filter object."""
     operator = self.operator.lower()
-    if operator == 'and' or operator == '&&':
+    if operator in ('and', '&&'):
       method = 'AndFilter'
-    elif operator == 'or' or operator == '||':
+    elif operator in ('or', '||'):
       method = 'OrFilter'
     else:
       raise errors.ParseError(
@@ -815,7 +815,7 @@ class Parser(lexer.SearchParser):
     if self.state == 'ATTRIBUTE':
       return self.StoreAttribute(string=self.string)
 
-    elif self.state == 'ARG':
+    if self.state == 'ARG':
       return self.InsertArg(string=self.string)
 
     return None

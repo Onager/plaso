@@ -284,7 +284,7 @@ class EventExtractor(object):
       if parse_result == self._PARSE_RESULT_FAILURE:
         return self._PARSE_RESULT_FAILURE
 
-      elif parse_result == self._PARSE_RESULT_SUCCESS:
+      if parse_result == self._PARSE_RESULT_SUCCESS:
         parse_results = self._PARSE_RESULT_SUCCESS
 
     return parse_results

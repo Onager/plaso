@@ -32,7 +32,7 @@ class MockChromeExtensionPlugin(chrome_extension.ChromeExtensionPlugin):
     chrome_web_store_file = shared_test_lib.GetTestFilePath([
         'chrome_extensions', extension_identifier])
     if not os.path.exists(chrome_web_store_file):
-      return
+      return None
 
     with open(chrome_web_store_file, 'rb') as file_object:
       page_content = file_object.read()

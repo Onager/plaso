@@ -153,13 +153,13 @@ class AppCompatCacheWindowsRegistryPlugin(
       # TODO: determine which format version is used (2003 or Vista).
       return self._FORMAT_TYPE_2003
 
-    elif format_type == self._FORMAT_TYPE_8:
+    if format_type == self._FORMAT_TYPE_8:
       cached_entry_signature = value_data[signature:signature + 4]
       if cached_entry_signature in (
           self._CACHED_ENTRY_SIGNATURE_8_0, self._CACHED_ENTRY_SIGNATURE_8_1):
         return self._FORMAT_TYPE_8
 
-    elif format_type == self._FORMAT_TYPE_10:
+    if format_type == self._FORMAT_TYPE_10:
       # Windows 10 uses the same cache entry signature as Windows 8.1
       cached_entry_signature = value_data[signature:signature + 4]
       if cached_entry_signature == self._CACHED_ENTRY_SIGNATURE_8_1:

@@ -315,9 +315,9 @@ class BinaryExpression(Expression):
   def Compile(self, filter_implementation):
     """Compile the binary expression into a filter object."""
     operator = self.operator.lower()
-    if operator == 'and' or operator == '&&':
+    if operator in ('and', '&&'):
       method = 'AndFilter'
-    elif operator == 'or' or operator == '||':
+    elif operator in ('or', '||'):
       method = 'OrFilter'
     else:
       raise errors.ParseError(
@@ -431,8 +431,9 @@ class SearchParser(Lexer):
     if self.state == 'ATTRIBUTE':
       return self.StoreAttribute(string=self.string)
 
-    elif self.state == 'ARG_LIST':
+    if self.state == 'ARG_LIST':
       return self.InsertArg(string=self.string)
+
     return None
 
   def StoreAttribute(self, string='', **unused_kwargs):

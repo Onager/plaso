@@ -162,15 +162,16 @@ class PsortTool(
     """
     # Get a list of all available plugins.
     analysis_plugin_info = self._analysis_manager.GetAllPluginInformation()
-    analysis_plugin_names = set([
-        name.lower() for name, _, _ in analysis_plugin_info])
+    analysis_plugin_names = {
+      name.lower() for name, _, _ in analysis_plugin_info}
 
     analysis_plugins = self.ParseStringOption(options, 'analysis_plugins')
     if not analysis_plugins:
       return
 
-    requested_plugin_names = set([
-        name.strip().lower() for name in analysis_plugins.split(',')])
+
+    requested_plugin_names = {
+      name.strip().lower() for name in analysis_plugins.split(',')}
 
     # Check to see if we are trying to load plugins that do not exist.
     difference = requested_plugin_names.difference(analysis_plugin_names)

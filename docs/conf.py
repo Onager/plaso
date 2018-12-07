@@ -37,6 +37,8 @@ sys.path.insert(0, os.path.abspath('..'))
 import plaso
 from plaso import dependencies
 
+# pylint: disable
+
 
 # -- General configuration ------------------------------------------------
 

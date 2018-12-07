@@ -71,6 +71,7 @@ class VirusTotalTest(test_lib.AnalysisPluginTestCase):
       response['positives'] = 10
       return response
     self.fail('Unexpected parameters to request.get()')
+    return None
 
   def _CreateTestEventObject(self, event_dictionary):
     """Create a test event with a set of attributes.

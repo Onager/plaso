@@ -460,12 +460,11 @@ class PsortMultiProcessEngineTest(shared_test_lib.BaseTestCase):
       storage_writer = storage_factory.StorageFactory.CreateStorageWriter(
           definitions.DEFAULT_STORAGE_FORMAT, session, temp_file)
 
-      counter = test_engine.AnalyzeEvents(
+      test_engine.AnalyzeEvents(
           knowledge_base_object, storage_writer, output_module, data_location,
           analysis_plugins, configuration)
 
     # TODO: assert if tests were successful.
-    _ = counter
 
     test_filter = filters_test_lib.TestEventFilter()
 
@@ -476,12 +475,11 @@ class PsortMultiProcessEngineTest(shared_test_lib.BaseTestCase):
       storage_writer = storage_factory.StorageFactory.CreateStorageWriter(
           definitions.DEFAULT_STORAGE_FORMAT, session, temp_file)
 
-      counter = test_engine.AnalyzeEvents(
+      test_engine.AnalyzeEvents(
           knowledge_base_object, storage_writer, data_location,
           analysis_plugins, configuration, event_filter=test_filter)
 
     # TODO: assert if tests were successful.
-    _ = counter
 
     # TODO: add bogus data location test.
 
