@@ -106,7 +106,7 @@ class TaggingFile(object):
     except efilter_errors.EfilterParseError as exception:
       stripped_expression = event_tagging_expression.rstrip()
       raise errors.TaggingFileError((
-          'Unable to parse event tagging expressoin: "{0:s}" with error: '
+          'Unable to parse event tagging expression: "{0:s}" with error: '
           '{1!s}').format(stripped_expression, exception))
 
   def GetEventTaggingRules(self):
