@@ -6,6 +6,7 @@ from __future__ import unicode_literals
 import argparse
 import collections
 import os
+import json
 import uuid
 
 from plaso.cli import logger
@@ -520,8 +521,14 @@ class PinfoTool(
       json_string = serializer.WriteSerialized(session)
       if index != 0:
         self._output_writer.Write(',\n')
-      self._output_writer.Write('"session_{0:s}": {1:s} '.format(
+      self._output_writer.Write('"session_{0:s}": {1:s}, '.format(
           session.identifier, json_string))
+
+    storage_counters = self._CalculateStorageCounters(storage)
+    json_string = json.dumps(storage_counters)
+    self._output_writer.Write('"storage_summary": {1:s} '.format(
+        session.identifier, json_string))
+
     self._output_writer.Write('}')
 
   def _PrintTasksInformation(self, storage):

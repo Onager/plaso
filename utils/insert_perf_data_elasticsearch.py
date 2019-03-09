@@ -89,14 +89,14 @@ class TestReader(object):
           try:
             pinfo_output = json.load(metric_file)
           except ValueError:
-            print('Couldn\'t load {0:s}'.format(filename))
+            print('Unable to load {0:s}'.format(filename))
             continue
           document = self.BuildTestDocument(pinfo_output, test_dir,
               build_number)
           elastic_importer.AddTestResult(test_dir, build_number, document)
 
   def BuildTestDocument(self, pinfo_output, test_name, build_number):
-    """Builds a JSON to represent the results of a test.
+    """Builds a JSON document to represent the results of a test.
 
     Args:
 
@@ -130,6 +130,10 @@ class TestReader(object):
           fieldnames.append(csv_field_name)
         events[csv_field_name] = event_count
 
+    storage_counters = pinfo_output.items()[1][1]
+    warnings_by_parser_chain_counter = storage_counters.get(
+        'warnings_by_parser_chain', {})
+
     events_counter = session['parsers_counter']
     del events_counter['__type__']
     del events_counter['total']
@@ -140,6 +144,8 @@ class TestReader(object):
     document['number_of_parsers'] = number_of_parsers
     document['total_events'] = total_events
     document['events'] = events
+    document['total_warnings'] = sum(warnings_by_parser_chain_counter.values())
+    document['warnings_by_parser_chain'] = warnings_by_parser_chain_counter
 
     return document
 
