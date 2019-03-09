@@ -187,11 +187,11 @@ class PinfoTool(
     Args:
       storage (BaseStore): storage.
     """
-    if not storage.HasErrors():
+    if not storage.HasWarnings():
       self._output_writer.Write('No errors stored.\n\n')
       return
 
-    for index, error in enumerate(storage.GetErrors()):
+    for index, error in enumerate(storage.GetWarnings()):
       title = 'Error: {0:d}'.format(index)
       table_view = views.ViewsFactory.GetTableView(
           self._views_format_type, title=title)

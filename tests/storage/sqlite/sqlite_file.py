@@ -7,12 +7,12 @@ from __future__ import unicode_literals
 import os
 import unittest
 
-from plaso.containers import errors
 from plaso.containers import events
 from plaso.containers import event_sources
 from plaso.containers import reports
 from plaso.containers import sessions
 from plaso.containers import tasks
+from plaso.containers import warnings
 from plaso.lib import definitions
 from plaso.storage.sqlite import sqlite_file
 
@@ -238,20 +238,6 @@ class SQLiteStorageFileTest(test_lib.StorageTestCase):
 
       storage_file.Close()
 
-  def testAddError(self):
-    """Tests the AddError function."""
-    extraction_error = errors.ExtractionError(
-        message='Test extraction error')
-
-    with shared_test_lib.TempDirectory() as temp_directory:
-      temp_file = os.path.join(temp_directory, 'plaso.sqlite')
-      storage_file = sqlite_file.SQLiteStorageFile()
-      storage_file.Open(path=temp_file, read_only=False)
-
-      storage_file.AddError(extraction_error)
-
-      storage_file.Close()
-
   def testAddEvent(self):
     """Tests the AddEvent function."""
     test_events = self._CreateTestEvents()
@@ -310,6 +296,20 @@ class SQLiteStorageFileTest(test_lib.StorageTestCase):
 
       storage_file.Close()
 
+  def testAddWarning(self):
+    """Tests the AddWarning function."""
+    extraction_warning = warnings.ExtractionWarning(
+        message='Test extraction warning')
+
+    with shared_test_lib.TempDirectory() as temp_directory:
+      temp_file = os.path.join(temp_directory, 'plaso.sqlite')
+      storage_file = sqlite_file.SQLiteStorageFile()
+      storage_file.Open(path=temp_file, read_only=False)
+
+      storage_file.AddWarning(extraction_warning)
+
+      storage_file.Close()
+
   # TODO: add tests for CheckSupportedFormat
 
   def testGetAnalysisReports(self):
@@ -334,9 +334,31 @@ class SQLiteStorageFileTest(test_lib.StorageTestCase):
 
       storage_file.Close()
 
-  def testGetErrors(self):
-    """Tests the GetErrors function."""
-    extraction_error = errors.ExtractionError(
+  def testGetWarnings(self):
+    """Tests the GetWarnings function."""
+    extraction_warning = warnings.ExtractionWarning(
+        message='Test extraction warning')
+
+    with shared_test_lib.TempDirectory() as temp_directory:
+      temp_file = os.path.join(temp_directory, 'plaso.sqlite')
+      storage_file = sqlite_file.SQLiteStorageFile()
+      storage_file.Open(path=temp_file, read_only=False)
+
+      storage_file.AddWarning(extraction_warning)
+
+      storage_file.Close()
+
+      storage_file = sqlite_file.SQLiteStorageFile()
+      storage_file.Open(path=temp_file)
+
+      test_warnings = list(storage_file.GetWarnings())
+      self.assertEqual(len(test_warnings), 1)
+
+      storage_file.Close()
+
+  def testExtractionErrorCompatibility(self):
+    """Tests that extraction errors are converted to warnings."""
+    extraction_error = warnings.ExtractionError(
         message='Test extraction error')
 
     with shared_test_lib.TempDirectory() as temp_directory:
@@ -344,15 +366,19 @@ class SQLiteStorageFileTest(test_lib.StorageTestCase):
       storage_file = sqlite_file.SQLiteStorageFile()
       storage_file.Open(path=temp_file, read_only=False)
 
-      storage_file.AddError(extraction_error)
+      # Directly using the private methods as AddError has been removed.
+      storage_file._AddAttributeContainer(
+          extraction_error.CONTAINER_TYPE, extraction_error)
+      storage_file._WriteSerializedAttributeContainerList(
+          extraction_error.CONTAINER_TYPE)
 
       storage_file.Close()
 
       storage_file = sqlite_file.SQLiteStorageFile()
       storage_file.Open(path=temp_file)
 
-      test_errors = list(storage_file.GetErrors())
-      self.assertEqual(len(test_errors), 1)
+      test_warnings = list(storage_file.GetWarnings())
+      self.assertEqual(len(test_warnings), 1)
 
       storage_file.Close()
 
@@ -460,7 +486,7 @@ class SQLiteStorageFileTest(test_lib.StorageTestCase):
     # TODO: add test with time range.
 
   # TODO: add tests for HasAnalysisReports
-  # TODO: add tests for HasErrors
+  # TODO: add tests for HasWarnings
   # TODO: add tests for HasEventTags
 
   # TODO: add tests for Open and Close
