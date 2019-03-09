@@ -65,6 +65,7 @@ class ElasticImporter(object):
 
 
 class TestReader(object):
+  """Reads jenkins test output"""
 
   def ReadTests(self, temporary_directory, elastic_importer):
     """Reads tests result data from a temporary directory.
@@ -130,7 +131,10 @@ class TestReader(object):
           fieldnames.append(csv_field_name)
         events[csv_field_name] = event_count
 
-    storage_counters = pinfo_output.items()[1][1]
+    try:
+      storage_counters = pinfo_output.items()[1][1]
+    except IndexError:
+      storage_counters = {}
     warnings_by_parser_chain_counter = storage_counters.get(
         'warnings_by_parser_chain', {})
 

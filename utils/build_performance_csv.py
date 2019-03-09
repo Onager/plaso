@@ -16,7 +16,11 @@ from google.cloud import storage
 
 
 class PlasoCIFetcher(object):
+  """Fetches Plaso jenkins results from a GCS bucket."""
+
   RESULTS_ROOT = 'jenkins/build_results'
+  PINFO_SUFFIX = '-pinfo.out'
+  STORAGE_SUFFIX = '.plaso'
 
   def __init__(self, bucket_name='', project_name='',
       storage_file_temporary_directory=''):
@@ -29,21 +33,21 @@ class PlasoCIFetcher(object):
     self._storage_file_temporary_directory = storage_file_temporary_directory
     self._bucket_name = bucket_name
     self._project_name = project_name
+    self._storage_client = storage.Client(project=self._project_name)
+    self._bucket = storage_client.get_bucket(self._bucket_name)
 
-  def GetPinfoOutput(self, test_name):
+  def GetPinfoOutputBlobs(self, test_name):
     """Iterates over pinfo output files for an end-to-end test.
 
     Args:
-      test_name (str): name of test to get storage files for.
+      test_name (str): name of test to get pinfo files for.
 
     Yields:
-      names of all pinfo output files for the given test.
+      GCS blob objects for all pinfo output files for the test.
     """
-    storage_client = storage.Client(project=self._project_name)
-    bucket = storage_client.get_bucket(self._bucket_name)
     prefix = '{0:s}/{1:s}/'.format(self.RESULTS_ROOT, test_name)
-    for blob in bucket.list_blobs(prefix=prefix):
-      if blob.name.endswith('-pinfo.out'):
+    for blob in self.bucket.list_blobs(prefix=prefix):
+      if blob.name.endswith(self.PINFO_SUFFIX):
         yield blob
 
   def GetStorageFileBlobs(self, test_name):
@@ -53,13 +57,11 @@ class PlasoCIFetcher(object):
       test_name (str): name of test to get storage files for.
 
     Yields:
-      names of all .plaso storage files for the given test.
+      GCS blob objects for all plaso storage files for the test.
     """
-    storage_client = storage.Client(project=self._project_name)
-    bucket = storage_client.get_bucket(self._bucket_name)
     prefix = '{0:s}/{1:s}'.format(self.RESULTS_ROOT, test_name)
-    for blob in bucket.list_blobs(prefix=prefix):
-      if blob.name.endswith('.plaso'):
+    for blob in self.bucket.list_blobs(prefix=prefix):
+      if blob.name.endswith(self.STORAGE_SUFFIX):
         yield blob
 
   def _GetNameForBlob(self, blob):
@@ -76,7 +78,7 @@ class PlasoCIFetcher(object):
       # Directory already exists.
       pass
 
-    for blob in self.GetPinfoOutput(test_name):
+    for blob in self.GetPinfoOutputBlobs(test_name):
       temp_name = self._GetNameForBlob(blob)
       blob_path = os.path.join(storage_file_dir, temp_name)
       if os.path.exists(blob_path):
