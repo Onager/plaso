@@ -100,6 +100,16 @@ class PinfoTool(
 
     storage_counters = {}
 
+    warnings_by_path_spec = collections.Counter()
+    warnings_by_parser_chain = collections.Counter()
+
+    for warning in list(storage.GetWarnings()):
+      warnings_by_path_spec[warning.path_spec.comparable] += 1
+      warnings_by_parser_chain[warning.parser_chain] += 1
+
+    storage_counters['warnings_by_path_spec'] = warnings_by_path_spec
+    storage_counters['warnings_by_parser_chain'] = warnings_by_parser_chain
+
     if not analysis_reports_counter_error:
       storage_counters['analysis_reports'] = analysis_reports_counter
 
@@ -181,6 +191,44 @@ class PinfoTool(
 
       table_view.Write(self._output_writer)
 
+  def _PrintWarningCounters(self, storage_counters):
+    """Prints a summary of the warnings.
+
+    Args:
+      storage (BaseStore): storage.
+    """
+    warnings_by_pathspec = storage_counters.get('warnings_by_path_spec', {})
+    warnings_by_parser_chain = storage_counters.get(
+        'warnings_by_parser_chain', {})
+    if not warnings_by_parser_chain:
+      self._output_writer.Write('No warnings stored.\n\n')
+      return
+
+    table_view = views.ViewsFactory.GetTableView(
+        self._views_format_type, title='Warnings generated per parser',
+        column_names=['Parser (plugin) name', 'Number of warnings'])
+    for parser_chain, count in warnings_by_parser_chain.items():
+      parser_chain = parser_chain or '<No parser>'
+      table_view.AddRow([ parser_chain, '{0:d}'.format(count)])
+    table_view.Write(self._output_writer)
+
+    table_view = views.ViewsFactory.GetTableView(
+        self._views_format_type, title='Pathspecs with most warnings',
+        column_names=['Number of warnings', 'Pathspec'])
+
+    top_pathspecs = warnings_by_pathspec.most_common(10)
+    for pathspec, count in top_pathspecs:
+      for path_index, line in enumerate(pathspec.split('\n')):
+        if not line:
+          continue
+
+        if path_index == 0:
+          table_view.AddRow(['{0:d}'.format(count), line])
+        else:
+          table_view.AddRow(['', line])
+
+    table_view.Write(self._output_writer)
+
   def _PrintWarningsDetails(self, storage):
     """Prints the details of the warnings.
 
@@ -251,14 +299,14 @@ class PinfoTool(
     Args:
       parsers_counter (collections.Counter): number of events per parser or
           parser plugin.
-      session_identifier (Optional[str]): session identifier.
+      session_identifier (Optional[UUID]): session identifier.
     """
     if not parsers_counter:
       return
 
     title = 'Events generated per parser'
     if session_identifier:
-      title = '{0:s}: {1:s}'.format(title, session_identifier)
+      title = '{0:s}: {1!s}'.format(title, session_identifier)
 
     table_view = views.ViewsFactory.GetTableView(
         self._views_format_type,
@@ -450,7 +498,11 @@ class PinfoTool(
       else:
         self._PrintEventLabelsCounter(storage_counters['event_labels'])
 
-      self._PrintWarningsDetails(storage)
+      self._PrintWarningCounters(storage_counters)
+
+      if self._verbose:
+        self._PrintWarningsDetails(storage)
+
       self._PrintAnalysisReportsDetails(storage)
 
     elif storage.storage_type == definitions.STORAGE_TYPE_TASK:
