@@ -88,7 +88,9 @@ class TaskMultiProcessEngine(engine.MultiProcessEngine):
   """
 
   # Maximum number of attribute containers to merge per loop.
-  _MAXIMUM_NUMBER_OF_CONTAINERS = 50
+  _MAXIMUM_CONTAINER_LIMIT = 5000
+
+  _MINIMUM_CONTAINER_LIMIT = 25
 
   # Maximum number of concurrent tasks.
   _MAXIMUM_NUMBER_OF_TASKS = 10000
@@ -114,6 +116,7 @@ class TaskMultiProcessEngine(engine.MultiProcessEngine):
           instead of Python's multiprocessing queue.
     """
     super(TaskMultiProcessEngine, self).__init__()
+    self._container_merge_limit = self._MINIMUM_CONTAINER_LIMIT
     self._enable_sigsegv_handler = False
     self._filter_find_specs = None
     self._last_worker_number = 0
@@ -197,6 +200,7 @@ class TaskMultiProcessEngine(engine.MultiProcessEngine):
     if self._processing_profiler:
       self._processing_profiler.StartTiming('merge_check')
 
+    new_container_to_merge = False
     for task_identifier in storage_writer.GetProcessedTaskIdentifiers():
       try:
         task = self._task_manager.GetProcessedTaskByIdentifier(task_identifier)
@@ -211,6 +215,8 @@ class TaskMultiProcessEngine(engine.MultiProcessEngine):
           self._task_manager.SampleTaskStatus(task, 'removed_processed')
 
         else:
+          new_container_to_merge = True
+          self._container_merge_limit = self._MINIMUM_CONTAINER_LIMIT
           storage_writer.PrepareMergeTaskStorage(task)
           self._task_manager.UpdateTaskAsPendingMerge(task)
 
@@ -219,6 +225,10 @@ class TaskMultiProcessEngine(engine.MultiProcessEngine):
             'Unable to retrieve task: {0:s} to prepare it to be merged.'.format(
                 task_identifier))
         continue
+
+    if (not new_container_to_merge
+        and self._container_merge_limit < self._MINIMUM_CONTAINER_LIMIT):
+      self._container_merge_limit = self._container_merge_limit * 2
 
     if self._processing_profiler:
       self._processing_profiler.StopTiming('merge_check')
@@ -258,7 +268,7 @@ class TaskMultiProcessEngine(engine.MultiProcessEngine):
 
       if self._storage_merge_reader:
         fully_merged = self._storage_merge_reader.MergeAttributeContainers(
-            maximum_number_of_containers=self._MAXIMUM_NUMBER_OF_CONTAINERS)
+            maximum_number_of_containers=self._container_merge_limit)
       else:
         # TODO: Do something more sensible when this happens, perhaps
         # retrying the task once that is implemented. For now, we mark the task
