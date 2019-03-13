@@ -216,6 +216,8 @@ class TaskMultiProcessEngine(engine.MultiProcessEngine):
 
         else:
           new_container_to_merge = True
+          if not self._container_merge_limit == self._MINIMUM_CONTAINER_LIMIT:
+            logger.debug('Reset merge limit')
           self._container_merge_limit = self._MINIMUM_CONTAINER_LIMIT
           storage_writer.PrepareMergeTaskStorage(task)
           self._task_manager.UpdateTaskAsPendingMerge(task)
@@ -226,9 +228,10 @@ class TaskMultiProcessEngine(engine.MultiProcessEngine):
                 task_identifier))
         continue
 
-    if (not new_container_to_merge
-        and self._container_merge_limit < self._MINIMUM_CONTAINER_LIMIT):
-      self._container_merge_limit = self._container_merge_limit * 2
+    if not new_container_to_merge:
+        if not self._container_merge_limit < self._MINIMUM_CONTAINER_LIMIT:
+          logging.debug('Increasing merge limit.')
+          self._container_merge_limit = self._container_merge_limit * 2
 
     if self._processing_profiler:
       self._processing_profiler.StopTiming('merge_check')
