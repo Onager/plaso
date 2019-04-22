@@ -3,11 +3,12 @@
 
 from __future__ import unicode_literals
 
+import plaso.storage.file_interface
 from plaso.storage import interface
 from plaso.storage.sqlite import sqlite_file
 
 
-class SQLiteStorageFileReader(interface.StorageFileReader):
+class SQLiteStorageFileReader(plaso.storage.file_interface.StorageFileReader):
   """SQLite-based storage file reader."""
 
   def __init__(self, path):

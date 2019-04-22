@@ -210,11 +210,12 @@ class FakeStorageWriter(interface.StorageWriter):
     self._warnings.append(warning)
     self.number_of_warnings += 1
 
-  def CreateTaskStorage(self, task):
+  def CreateTaskStorage(self, task, storage_format):
     """Creates a task storage.
 
     Args:
       task (Task): task.
+      storage_format (str): TODO
 
     Returns:
       FakeStorageWriter: storage writer.

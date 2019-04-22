@@ -6,6 +6,7 @@ from __future__ import unicode_literals
 
 import unittest
 
+import plaso.storage.file_interface
 from plaso.storage import interface
 
 
@@ -18,7 +19,8 @@ class SerializedAttributeContainerListTest(unittest.TestCase):
 
   def testEmpty(self):
     """Tests the Empty function."""
-    container_list = interface.SerializedAttributeContainerList()
+    container_list = plaso.storage.file_interface\
+      .SerializedAttributeContainerList()
 
     container_list.Empty()
     self.assertEqual(container_list._list, [])

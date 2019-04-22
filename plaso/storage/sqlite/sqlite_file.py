@@ -7,6 +7,7 @@ import os
 import sqlite3
 import zlib
 
+import plaso.storage.file_interface
 from plaso.containers import artifacts
 from plaso.containers import event_sources
 from plaso.containers import events
@@ -21,7 +22,7 @@ from plaso.storage import interface
 from plaso.storage import logger
 
 
-class SQLiteStorageFile(interface.BaseStorageFile):
+class SQLiteStorageFile(plaso.storage.file_interface.BaseStorageFile):
   """SQLite-based storage file.
 
   Attributes:
@@ -773,7 +774,7 @@ class SQLiteStorageFile(interface.BaseStorageFile):
   def GetEvents(self):
     """Retrieves the events.
 
-    Yield:
+    Yields:
       EventObject: event.
     """
     for event in self._GetAttributeContainers('event'):
@@ -1165,3 +1166,26 @@ class SQLiteStorageFile(interface.BaseStorageFile):
     self._RaiseIfNotWritable()
 
     self._WriteAttributeContainer(task_start)
+
+  def GetProcessedTaskIdentifiers(self):
+    """Identifiers for tasks which have been processed.
+
+    Returns:
+      list[str]: task identifiers that are processed.
+
+    Raises:
+      IOError: if the storage type is not supported or
+          if the temporary path for the task storage does not exist.
+    """
+    if self._storage_type != definitions.STORAGE_TYPE_SESSION:
+      raise IOError('Unsupported storage type.')
+
+    if not self._processed_task_storage_path:
+      raise IOError('Missing processed task storage path.')
+
+    task_identifiers = super(
+        SQLiteStorageFile, self).GetProcessedTaskIdentifiers()
+
+
+
+    return task_identifiers
