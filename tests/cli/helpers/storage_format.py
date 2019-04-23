@@ -30,7 +30,7 @@ optional arguments:
                         Supported options: sqlite
   --task_storage_format FORMAT, --task-storage-format FORMAT
                         Format for task storage, the default is: sqlite.
-                        Supported options: redis, sqlite
+                        Supported options: sqlite
 """
 
   def testAddArguments(self):

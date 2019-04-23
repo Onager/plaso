@@ -7,7 +7,6 @@ import os
 import sqlite3
 import zlib
 
-import plaso.storage.file_interface
 from plaso.containers import artifacts
 from plaso.containers import event_sources
 from plaso.containers import events
@@ -17,12 +16,12 @@ from plaso.containers import tasks
 from plaso.containers import warnings
 from plaso.lib import definitions
 from plaso.storage import event_heaps
+from plaso.storage import file_interface
 from plaso.storage import identifiers
-from plaso.storage import interface
 from plaso.storage import logger
 
 
-class SQLiteStorageFile(plaso.storage.file_interface.BaseStorageFile):
+class SQLiteStorageFile(file_interface.BaseStorageFile):
   """SQLite-based storage file.
 
   Attributes:

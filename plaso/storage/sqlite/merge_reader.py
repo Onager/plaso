@@ -7,20 +7,17 @@ import os
 import sqlite3
 import zlib
 
-import plaso.storage.file_interface
-from plaso.containers import errors
 from plaso.containers import event_sources
 from plaso.containers import events
 from plaso.containers import reports
 from plaso.containers import tasks
 from plaso.containers import warnings
 from plaso.lib import definitions
+from plaso.storage import file_interface
 from plaso.storage import identifiers
-from plaso.storage import interface
 
 
-class SQLiteStorageMergeReader(
-    plaso.storage.file_interface.StorageFileMergeReader):
+class SQLiteStorageMergeReader(file_interface.StorageFileMergeReader):
   """SQLite-based storage file reader for merging."""
 
   _CONTAINER_TYPE_ANALYSIS_REPORT = reports.AnalysisReport.CONTAINER_TYPE
