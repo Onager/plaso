@@ -215,7 +215,7 @@ class FakeStorageWriter(interface.StorageWriter):
 
     Args:
       task (Task): task.
-      storage_format (str): TODO
+      storage_format (str): storage format to store task results.
 
     Returns:
       FakeStorageWriter: storage writer.
