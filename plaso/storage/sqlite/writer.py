@@ -24,6 +24,7 @@ class SQLiteStorageFileWriter(file_interface.StorageFileWriter):
       StorageWriter: storage writer.
 
     Raises:
+      OSError: if the storage type or storage format is not supported.
       IOError: if the storage type or storage format is not supported.
     """
     if self._storage_type != definitions.STORAGE_TYPE_SESSION:
@@ -52,7 +53,8 @@ class SQLiteStorageFileWriter(file_interface.StorageFileWriter):
 
     Raises:
       IOError: if the storage type is not supported or
-          if the task storage format is not supported or
+          if the temporary path for the task storage does not exist.
+      OSError: if the storage type is not supported or
           if the temporary path for the task storage does not exist.
     """
     if self._storage_type != definitions.STORAGE_TYPE_SESSION:

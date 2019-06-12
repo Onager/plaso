@@ -639,6 +639,7 @@ class StorageFileWriter(interface.StorageWriter):
 
     Raises:
       IOError: if the storage type is not supported or
+          if the temporary path for the task storage does not exist.
       OSError: if the storage type is not supported or
           if the temporary path for the task storage does not exist.
     """

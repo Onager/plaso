@@ -902,12 +902,12 @@ class StorageWriter(object):
     """
 
   # pylint: disable=unused-argument
-  def CreateTaskStorage(self, task, storage_format):
+  def CreateTaskStorage(self, task, task_storage_format):
     """Creates a task store.
 
     Args:
       task (Task): task.
-      storage_format (str): storage format to store task results.
+      task_storage_format (str): storage format to store task results.
 
     Returns:
       StorageWriter: storage writer for the task store.
