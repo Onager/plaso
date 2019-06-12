@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+"""Storage interface classes for file-backed stores."""
+
+from __future__ import unicode_literals
+
 import shutil
 
 import abc
@@ -176,6 +180,16 @@ class BaseStorageFile(interface.BaseStore):
 
     return attribute_container_data
 
+  def _RaiseIfNotReadable(self):
+    """Raises if the storage file is not readable.
+
+     Raises:
+      IOError: when the storage file is closed.
+      OSError: when the storage file is closed.
+    """
+    if not self._is_open:
+      raise IOError('Unable to read from closed storage file.')
+
   def _RaiseIfNotWritable(self):
     """Raises if the storage file is not writable.
 
@@ -189,21 +203,6 @@ class BaseStorageFile(interface.BaseStore):
     if self._read_only:
       raise IOError('Unable to write to read-only storage file.')
 
-
-class StorageFileMergeReader(interface.StorageMergeReader):
-  """Storage reader interface for merging file-based stores."""
-
-  # pylint: disable=abstract-method
-
-  def __init__(self, storage_writer):
-    """Initializes a storage merge reader.
-
-    Args:
-      storage_writer (StorageWriter): storage writer.
-    """
-    super(StorageFileMergeReader, self).__init__(storage_writer)
-
-
 class StorageFileReader(interface.StorageReader):
   """File-based storage reader interface."""
 
@@ -216,6 +215,39 @@ class StorageFileReader(interface.StorageReader):
     super(StorageFileReader, self).__init__()
     self._path = path
     self._storage_file = None
+
+  def GetFormatVersion(self):
+    """Retrieves the format version of the underlying storage file.
+
+    Returns:
+      int: the format version, or None if not available.
+    """
+    if self._storage_file:
+      return self._storage_file.format_version
+
+    return None
+
+  def GetSerializationFormat(self):
+    """Retrieves the serialization format of the underlying storage file.
+
+    Returns:
+      str: the serialization format, or None if not available.
+    """
+    if self._storage_file:
+      return self._storage_file.serialization_format
+
+    return None
+
+  def GetStorageType(self):
+    """Retrieves the storage type of the underlying storage file.
+
+    Returns:
+      str: the storage type, or None if not available.
+    """
+    if self._storage_file:
+      return self._storage_file.storage_type
+
+    return None
 
   def Close(self):
     """Closes the storage reader."""
@@ -301,6 +333,14 @@ class StorageFileReader(interface.StorageReader):
     """
     return self._storage_file.GetNumberOfAnalysisReports()
 
+  def GetSessions(self):
+    """Retrieves the sessions.
+
+    Returns:
+      generator(Session): session generator.
+    """
+    return self._storage_file.GetSessions()
+
   def GetSortedEvents(self, time_range=None):
     """Retrieves the events in increasing chronological order.
 
@@ -315,6 +355,37 @@ class StorageFileReader(interface.StorageReader):
       generator(EventObject): event generator.
     """
     return self._storage_file.GetSortedEvents(time_range=time_range)
+
+  def GetWarnings(self):
+    """Retrieves the warnings.
+
+    Returns:
+      generator(Warning): warning generator.
+    """
+    return self._storage_file.GetWarnings()
+
+  def HasAnalysisReports(self):
+    """Determines if a store contains analysis reports.
+
+    Returns:
+      bool: True if the store contains analysis reports.
+    """
+    return self._storage_file.HasAnalysisReports()
+
+  def HasEventTags(self):
+    """Determines if a store contains event tags.
+
+    Returns:
+      bool: True if the store contains event tags.
+    """
+    return self._storage_file.HasEventTags()
+
+  def HasWarnings(self):
+    """Determines if a store contains extraction warnings.
+
+    Returns:
+      bool: True if the store contains extraction warnings.
+    """
 
   def ReadPreprocessingInformation(self, knowledge_base):
     """Reads preprocessing information.
@@ -478,21 +549,6 @@ class StorageFileWriter(interface.StorageWriter):
     self._session.analysis_reports_counter[report_identifier] += 1
     self.number_of_analysis_reports += 1
 
-  def AddError(self, error):
-    """Adds an error.
-
-    Args:
-      error (AnalysisError|ExtractionError): an analysis or extraction error.
-
-    Raises:
-      IOError: when the storage writer is closed.
-      OSError: when the storage writer is closed.
-    """
-    self._RaiseIfNotWritable()
-
-    self._storage_file.AddError(error)
-    self.number_of_errors += 1
-
   def AddEvent(self, event):
     """Adds an event.
 
@@ -557,6 +613,17 @@ class StorageFileWriter(interface.StorageWriter):
     for label in event_tag.labels:
       self._session.event_labels_counter[label] += 1
     self.number_of_event_tags += 1
+
+  def AddWarning(self, warning):
+    """Adds an warning.
+
+    Args:
+      warning (ExtractionWarning): a warning.
+    """
+    self._RaiseIfNotWritable()
+
+    self._storage_file.AddWarning(warning)
+    self.number_of_warnings += 1
 
   def CheckTaskReadyForMerge(self, task):
     """Checks if a task is ready for merging with this session storage.

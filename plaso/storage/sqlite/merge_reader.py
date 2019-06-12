@@ -13,11 +13,11 @@ from plaso.containers import reports
 from plaso.containers import tasks
 from plaso.containers import warnings
 from plaso.lib import definitions
-from plaso.storage import file_interface
+from plaso.storage import interface
 from plaso.storage import identifiers
 
 
-class SQLiteStorageMergeReader(file_interface.StorageFileMergeReader):
+class SQLiteStorageMergeReader(interface.StorageMergeReader):
   """SQLite-based storage file reader for merging."""
 
   _CONTAINER_TYPE_ANALYSIS_REPORT = reports.AnalysisReport.CONTAINER_TYPE
