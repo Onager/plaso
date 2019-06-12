@@ -7,6 +7,8 @@ from __future__ import unicode_literals
 import mock
 import unittest
 
+import fakeredis
+
 from plaso.containers import events
 from plaso.containers import event_sources
 from plaso.containers import reports
@@ -16,7 +18,7 @@ from plaso.containers import warnings
 from plaso.lib import definitions
 from plaso.storage.redis import redis_store
 
-from tests import test_lib as shared_test_lib
+from tests.containers import test_lib as containers_test_lib
 from tests.storage import test_lib
 
 
@@ -30,7 +32,8 @@ class RedisStoreTest(test_lib.StorageTestCase):
     event_data = events.EventData()
 
     store = redis_store.RedisStore()
-    store.Open()
+    redis_client = fakeredis.FakeStrictRedis()
+    store.Open(redis_client=redis_client)
 
     self.assertEqual(
         store._GetNumberOfAttributeContainers(event_data.CONTAINER_TYPE), 0)
@@ -51,7 +54,8 @@ class RedisStoreTest(test_lib.StorageTestCase):
     event_data = events.EventData()
 
     store = redis_store.RedisStore()
-    store.Open()
+    redis_client = fakeredis.FakeStrictRedis()
+    store.Open(redis_client=redis_client)
 
     store._AddAttributeContainer(
         store._CONTAINER_TYPE_EVENT_DATA, event_data)
@@ -71,11 +75,12 @@ class RedisStoreTest(test_lib.StorageTestCase):
 
   def testAddEvent(self):
     """Tests the _AddEvent method."""
-    test_events = self._CreateTestEvents()
-    event = test_events[0]
+
+    event, _ = containers_test_lib.CreateEventFromValues(self._TEST_EVENTS[0])
 
     store = redis_store.RedisStore()
-    store.Open()
+    redis_client = fakeredis.FakeStrictRedis()
+    store.Open(redis_client=redis_client)
 
     self.assertEqual(
         store._GetNumberOfAttributeContainers(event.CONTAINER_TYPE), 0)
@@ -89,12 +94,12 @@ class RedisStoreTest(test_lib.StorageTestCase):
 
   def testGetSortedEvents(self):
     """Tests the GetSortedEvents method."""
-    test_events = self._CreateTestEvents()
-
     store = redis_store.RedisStore()
-    store.Open()
+    redis_client = fakeredis.FakeStrictRedis()
+    store.Open(redis_client=redis_client)
 
-    for event in test_events:
+    for event, _ in containers_test_lib.CreateEventsFromValues(
+        self._TEST_EVENTS):
       store.AddEvent(event)
 
     retrieved_events = list(store.GetSortedEvents())
@@ -104,30 +109,33 @@ class RedisStoreTest(test_lib.StorageTestCase):
 
   def testGetAttributeContainers(self):
     """Tests the _GetAttributeContainers method."""
-    test_event_data = [
-      events.EventData(data_type='test_event_data1'),
-      events.EventData(data_type='test_event_data2'),
-      events.EventData(data_type='test_event_data3')
-    ]
-
     store = redis_store.RedisStore()
-    store.Open()
+    redis_client = fakeredis.FakeStrictRedis()
+    store.Open(redis_client=redis_client)
 
-    for event_data in test_event_data:
+    for _, event_data in containers_test_lib.CreateEventsFromValues(
+        self._TEST_EVENTS):
       store.AddEventData(event_data)
 
-    retrieved_event_data = list(
+    retrieved_event_datas = list(
         store._GetAttributeContainers(store._CONTAINER_TYPE_EVENT_DATA))
-    self.assertEqual(len(retrieved_event_data), 3)
+    self.assertEqual(len(retrieved_event_datas), 4)
 
     store.Close()
 
   def testGetAttributeContainerByIdentifier(self):
     """Tests the _GetAttributeContainerByIdentifier method."""
-    test_event_tag = events.EventTag()
+    test_events = []
+    for test_event, _ in containers_test_lib.CreateEventsFromValues(
+        self._TEST_EVENTS):
+      test_events.append(test_event)
+
+    test_event_tags = self._CreateTestEventTags(test_events)
+    test_event_tag = test_event_tags[0]
 
     store = redis_store.RedisStore()
-    store.Open()
+    redis_client = fakeredis.FakeStrictRedis()
+    store.Open(redis_client=redis_client)
 
     store.AddEventTag(test_event_tag)
 
@@ -146,16 +154,17 @@ class RedisStoreTest(test_lib.StorageTestCase):
   def testFinalization(self):
     """Tests that a store is correctly finalized."""
     store = redis_store.RedisStore()
-    store.Open()
+    redis_client = fakeredis.FakeStrictRedis()
+    store.Open(redis_client=redis_client)
     self.assertFalse(store.IsFinalized())
     store.Close()
 
-    store.Open()
+    store.Open(redis_client=redis_client)
     self.assertFalse(store.IsFinalized())
     store.Finalize()
     self.assertTrue(store.IsFinalized())
     store.Close()
 
-    store.Open()
+    store.Open(redis_client=redis_client)
     self.assertTrue(store.IsFinalized())
     store.Close()

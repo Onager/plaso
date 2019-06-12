@@ -114,12 +114,13 @@ class RedisKeyIdentifier(containers_interface.AttributeContainerIdentifier):
   a redis instance.
 
   Attributes:
+    identifier (int): unique identifier fof a container.
   """
 
   def __init__(self, identifier=None):
     """"Initializes a redis key identifier."""
     super(RedisKeyIdentifier, self).__init__()
     if identifier:
-      self._identifier = int(identifier, 10)
+      self.identifier = int(identifier, 10)
     else:
-      self._identifier = uuid.uuid4().int
+      self.identifier = uuid.uuid4().int

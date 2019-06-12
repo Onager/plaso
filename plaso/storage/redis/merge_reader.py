@@ -53,7 +53,7 @@ class RedisMergeReader(interface.StorageMergeReader):
 
     Args:
       storage_writer (StorageWriter): storage writer.
-      task (Task): TODO
+      task (Task): the task whose store is being merged.
 
     Raises:
       RuntimeError: if an add container method is missing.
@@ -69,7 +69,6 @@ class RedisMergeReader(interface.StorageMergeReader):
     self._event_data_identifier_mappings = {}
     self._add_container_type_methods = {}
     self._active_extra_containers = []
-
 
     # Create a runtime lookup table for the add container type method. This
     # prevents having to create a series of if-else checks for container types.

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Storage writer for Redis"""
+"""Storage writer for Redis."""
 
 from __future__ import unicode_literals
 
@@ -101,14 +101,6 @@ class RedisStorageWriter(interface.StorageWriter):
     """
     self._store.AddAnalysisReport(analysis_report)
 
-  def AddError(self, error):
-    """Adds an error.
-
-    Args:
-      error (ExtractionError): an error.
-    """
-    self._store.AddError(error)
-
   def AddEvent(self, event):
     """Adds an event.
 
@@ -140,6 +132,14 @@ class RedisStorageWriter(interface.StorageWriter):
       event_tag (EventTag): an event tag.
     """
     self._store.AddEventTag(event_tag)
+
+  def AddWarning(self, warning):
+    """Adds a warning.
+
+    Args:
+      warning (ExtractionWarning): a warning.
+    """
+    self._store.AddWarning(warning)
 
   def GetEventDataByIdentifier(self, identifier):
     """Retrieves specific event data.

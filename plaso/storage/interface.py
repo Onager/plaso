@@ -863,14 +863,6 @@ class StorageWriter(object):
     """
 
   @abc.abstractmethod
-  def AddEventData(self, event_data):
-    """Adds event data.
-
-    Args:
-      event_data (EventData): event data.
-    """
-
-  @abc.abstractmethod
   def AddEventSource(self, event_source):
     """Adds an event source.
 
