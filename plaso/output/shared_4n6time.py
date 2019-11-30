@@ -5,9 +5,11 @@ from __future__ import unicode_literals
 
 from dfdatetime import posix_time as dfdatetime_posix_time
 
-from plaso.lib import definitions
+from plaso.formatters import manager as formatters_manager
 from plaso.lib import errors
+from plaso.lib import py2to3
 from plaso.output import interface
+from plaso.output import logger
 
 
 class Shared4n6TimeOutputModule(interface.OutputModule):
@@ -149,19 +151,25 @@ class Shared4n6TimeOutputModule(interface.OutputModule):
 
     datetime_string = self._FormatDateTime(event, event_data)
 
-    format_variables = self._output_mediator.GetFormatStringAttributeNames(
-        event_data)
-    if format_variables is None:
+    unformatted_attributes = (
+        formatters_manager.FormattersManager.GetUnformattedAttributes(
+            event_data))
+    if unformatted_attributes is None:
       raise errors.NoFormatterFound(
           'Unable to find event formatter for: {0:s}.'.format(data_type))
 
     extra_attributes = []
     for attribute_name, attribute_value in sorted(event_data.GetAttributes()):
-      if (attribute_name in definitions.RESERVED_VARIABLE_NAMES or
-          attribute_name in format_variables):
-        continue
-      extra_attributes.append(
-          '{0:s}: {1!s} '.format(attribute_name, attribute_value))
+      if attribute_name in unformatted_attributes:
+        # Some parsers have written bytes values to storage.
+        if isinstance(attribute_value, py2to3.BYTES_TYPE):
+          attribute_value = attribute_value.decode('utf-8', 'replace')
+          logger.warning(
+              'Found bytes value for attribute "{0:s}" for data type: '
+              '{1!s}. Value was converted to UTF-8: "{2:s}"'.format(
+                  attribute_name, event_data.data_type, attribute_value))
+        extra_attributes.append('{0:s}: {1!s} '.format(
+            attribute_name, attribute_value))
 
     extra_attributes = ' '.join(extra_attributes)
 

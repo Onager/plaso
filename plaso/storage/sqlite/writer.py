@@ -2,6 +2,8 @@
 """Storage writer for SQLite storage files."""
 import os
 
+import os
+
 from plaso.lib import definitions
 from plaso.storage import file_interface
 from plaso.storage.sqlite import merge_reader

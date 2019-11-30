@@ -3,15 +3,15 @@
 
 from __future__ import unicode_literals
 
-import shutil
-
 import abc
 import os
+import shutil
 import tempfile
 
 from plaso.lib import definitions
 from plaso.serializer import json_serializer
 from plaso.storage import interface
+
 
 class SerializedAttributeContainerList(object):
   """Serialized attribute container list.
@@ -70,7 +70,7 @@ class SerializedAttributeContainerList(object):
     """Pops a serialized attribute container from the list.
 
     Returns:
-      bytes: serialized attribute container data.
+      bytes: serialized attribute container data or None if the list is empty.
     """
     try:
       serialized_data = self._list.pop(0)
@@ -203,6 +203,23 @@ class BaseStorageFile(interface.BaseStore):
     if self._read_only:
       raise IOError('Unable to write to read-only storage file.')
 
+
+class StorageFileMergeReader(interface.StorageMergeReader):
+  """Storage reader interface for merging file-based stores."""
+
+  # pylint: disable=abstract-method
+
+  def __init__(self, storage_writer):
+    """Initializes a storage merge reader.
+
+    Args:
+      storage_writer (StorageWriter): storage writer.
+    """
+    super(StorageFileMergeReader, self).__init__(storage_writer)
+    self._serializer = json_serializer.JSONAttributeContainerSerializer
+    self._serializers_profiler = None
+
+
 class StorageFileReader(interface.StorageReader):
   """File-based storage reader interface."""
 
@@ -263,13 +280,13 @@ class StorageFileReader(interface.StorageReader):
     """
     return self._storage_file.GetAnalysisReports()
 
-  def GetErrors(self):
-    """Retrieves the errors.
+  def GetWarnings(self):
+    """Retrieves the warnings.
 
     Returns:
-      generator(ExtractionError): error generator.
+      generator(ExtractionWarning): warning generator.
     """
-    return self._storage_file.GetErrors()
+    return self._storage_file.GetWarnings()
 
   def GetEventData(self):
     """Retrieves the event data.
@@ -333,6 +350,14 @@ class StorageFileReader(interface.StorageReader):
     """
     return self._storage_file.GetNumberOfAnalysisReports()
 
+  def GetNumberOfEventSources(self):
+    """Retrieves the number of event sources.
+
+    Returns:
+      int: number of event sources.
+    """
+    return self._storage_file.GetNumberOfEventSources()
+
   def GetSessions(self):
     """Retrieves the sessions.
 
@@ -356,14 +381,6 @@ class StorageFileReader(interface.StorageReader):
     """
     return self._storage_file.GetSortedEvents(time_range=time_range)
 
-  def GetWarnings(self):
-    """Retrieves the warnings.
-
-    Returns:
-      generator(Warning): warning generator.
-    """
-    return self._storage_file.GetWarnings()
-
   def HasAnalysisReports(self):
     """Determines if a store contains analysis reports.
 
@@ -386,6 +403,7 @@ class StorageFileReader(interface.StorageReader):
     Returns:
       bool: True if the store contains extraction warnings.
     """
+    return self._storage_file.HasWarnings()
 
   def ReadPreprocessingInformation(self, knowledge_base):
     """Reads preprocessing information.
@@ -549,6 +567,21 @@ class StorageFileWriter(interface.StorageWriter):
     self._session.analysis_reports_counter[report_identifier] += 1
     self.number_of_analysis_reports += 1
 
+  def AddWarning(self, warning):
+    """Adds an warning.
+
+    Args:
+      warning (ExtractionWarning): an extraction warning.
+
+    Raises:
+      IOError: when the storage writer is closed.
+      OSError: when the storage writer is closed.
+    """
+    self._RaiseIfNotWritable()
+
+    self._storage_file.AddWarning(warning)
+    self.number_of_warnings += 1
+
   def AddEvent(self, event):
     """Adds an event.
 
@@ -613,51 +646,6 @@ class StorageFileWriter(interface.StorageWriter):
     for label in event_tag.labels:
       self._session.event_labels_counter[label] += 1
     self.number_of_event_tags += 1
-
-  def AddWarning(self, warning):
-    """Adds an warning.
-
-    Args:
-      warning (ExtractionWarning): a warning.
-    """
-    self._RaiseIfNotWritable()
-
-    self._storage_file.AddWarning(warning)
-    self.number_of_warnings += 1
-
-  def CheckTaskReadyForMerge(self, task):
-    """Checks if a task is ready for merging with this session storage.
-
-    If the task is ready to be merged, this method also sets the task's
-    storage file size.
-
-    Args:
-      task (Task): task.
-
-    Returns:
-      bool: True if the task is ready to be merged.
-
-    Raises:
-      IOError: if the storage type is not supported or
-          if the temporary path for the task storage does not exist.
-      OSError: if the storage type is not supported or
-          if the temporary path for the task storage does not exist.
-    """
-    if self._storage_type != definitions.STORAGE_TYPE_SESSION:
-      raise IOError('Unsupported storage type.')
-
-    if not self._processed_task_storage_path:
-      raise IOError('Missing processed task storage path.')
-
-    processed_storage_file_path = self._GetProcessedStorageFilePath(task)
-
-    try:
-      stat_info = os.stat(processed_storage_file_path)
-    except (IOError, OSError):
-      return False
-
-    task.storage_file_size = stat_info.st_size
-    return True
 
   def Close(self):
     """Closes the storage writer.
@@ -810,9 +798,9 @@ class StorageFileWriter(interface.StorageWriter):
       task (Task): task.
 
     Raises:
-      IOError: if the storage type is not supported or
+      IOError: if the storage type or format is not supported or
           if the storage file cannot be renamed.
-      OSError: if the storage type is not supported or
+      OSError: if the storage type or format is not supported or
           if the storage file cannot be renamed.
     """
     if self._storage_type != definitions.STORAGE_TYPE_SESSION:
@@ -874,18 +862,17 @@ class StorageFileWriter(interface.StorageWriter):
     if self._storage_type != definitions.STORAGE_TYPE_SESSION:
       raise IOError('Unsupported storage type.')
 
-    if task.storage_format == definitions.STORAGE_FORMAT_SQLITE:
-      merge_storage_file_path = self._GetMergeTaskStorageFilePath(task)
-      processed_storage_file_path = self._GetProcessedStorageFilePath(task)
+    merge_storage_file_path = self._GetMergeTaskStorageFilePath(task)
+    processed_storage_file_path = self._GetProcessedStorageFilePath(task)
 
-      task.storage_file_size = os.path.getsize(processed_storage_file_path)
+    task.storage_file_size = os.path.getsize(processed_storage_file_path)
 
-      try:
-        os.rename(processed_storage_file_path, merge_storage_file_path)
-      except OSError as exception:
-        raise IOError((
-            'Unable to rename task storage file: {0:s} with error: '
-            '{1!s}').format(processed_storage_file_path, exception))
+    try:
+      os.rename(processed_storage_file_path, merge_storage_file_path)
+    except OSError as exception:
+      raise IOError((
+          'Unable to rename task storage file: {0:s} with error: '
+          '{1!s}').format(processed_storage_file_path, exception))
 
   def ReadPreprocessingInformation(self, knowledge_base):
     """Reads preprocessing information.
@@ -914,9 +901,9 @@ class StorageFileWriter(interface.StorageWriter):
       task (Task): task.
 
     Raises:
-      IOError: if the storage type is not supported or
+      IOError: if the storage type or format is not supported or
           if the storage file cannot be removed.
-      OSError: if the storage type is not supported or
+      OSError: if the storage type or format is not supported or
           if the storage file cannot be removed.
     """
     if self._storage_type != definitions.STORAGE_TYPE_SESSION:
@@ -925,15 +912,14 @@ class StorageFileWriter(interface.StorageWriter):
     if task.storage_format != definitions.STORAGE_FORMAT_SQLITE:
       raise IOError('Unsupported storage format.')
 
-    if task.storage_format == definitions.STORAGE_FORMAT_SQLITE:
-      processed_storage_file_path = self._GetProcessedStorageFilePath(task)
+    processed_storage_file_path = self._GetProcessedStorageFilePath(task)
 
-      try:
-        os.remove(processed_storage_file_path)
-      except OSError as exception:
-        raise IOError((
-            'Unable to remove task storage file: {0:s} with error: '
-            '{1!s}').format(processed_storage_file_path, exception))
+    try:
+      os.remove(processed_storage_file_path)
+    except OSError as exception:
+      raise IOError((
+          'Unable to remove task storage file: {0:s} with error: '
+          '{1!s}').format(processed_storage_file_path, exception))
 
   def SetSerializersProfiler(self, serializers_profiler):
     """Sets the serializers profiler.
@@ -956,7 +942,7 @@ class StorageFileWriter(interface.StorageWriter):
       self._storage_file.SetStorageProfiler(storage_profiler)
 
   def StartMergeTaskStorage(self, task):
-    """Starts a merge of a task storage with the session storage.
+    """Starts a merge of a task store with the session storage.
 
     Args:
       task (Task): task.

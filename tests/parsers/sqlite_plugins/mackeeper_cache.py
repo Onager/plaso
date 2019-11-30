@@ -9,14 +9,12 @@ import unittest
 from plaso.formatters import mackeeper_cache as _  # pylint: disable=unused-import
 from plaso.parsers.sqlite_plugins import mackeeper_cache
 
-from tests import test_lib as shared_test_lib
 from tests.parsers.sqlite_plugins import test_lib
 
 
 class MacKeeperCachePluginTest(test_lib.SQLitePluginTestCase):
   """Tests for the MacKeeper Cache database plugin."""
 
-  @shared_test_lib.skipUnlessHasTestFile(['mackeeper_cache.db'])
   def testProcess(self):
     """Tests the Process function on a MacKeeper Cache database file."""
     plugin = mackeeper_cache.MacKeeperCachePlugin()
@@ -32,6 +30,8 @@ class MacKeeperCachePluginTest(test_lib.SQLitePluginTestCase):
 
     self.CheckTimestamp(event.timestamp, '2013-07-12 19:30:31.000000')
 
+    event_data = self._GetEventDataOfEvent(storage_writer, event)
+
     expected_message = (
         'Chat Outgoing Message : I have received your system scan report and '
         'I will start analyzing it right now. [ URL: http://support.kromtech.'
@@ -44,7 +44,8 @@ class MacKeeperCachePluginTest(test_lib.SQLitePluginTestCase):
         'I have received your system scan report and I will start analyzing '
         'it right now.')
 
-    self._TestGetMessageStrings(event, expected_message, expected_short_message)
+    self._TestGetMessageStrings(
+        event_data, expected_message, expected_short_message)
 
 
 if __name__ == '__main__':

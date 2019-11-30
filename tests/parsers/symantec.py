@@ -9,7 +9,6 @@ import unittest
 from plaso.formatters import symantec as _  # pylint: disable=unused-import
 from plaso.parsers import symantec
 
-from tests import test_lib as shared_test_lib
 from tests.parsers import test_lib
 
 
@@ -30,7 +29,6 @@ class SymantecAccessProtectionUnitTest(test_lib.ParserTestCase):
     time_elements_tuple = parser._GetTimeElementsTuple('2A0A1E0A2F1D')
     self.assertEqual(time_elements_tuple, expected_time_elements_tuple)
 
-  @shared_test_lib.skipUnlessHasTestFile(['Symantec.Log'])
   def testParse(self):
     """Tests the Parse function."""
     parser = symantec.SymantecParser()
@@ -48,10 +46,11 @@ class SymantecAccessProtectionUnitTest(test_lib.ParserTestCase):
 
     self.CheckTimestamp(event.timestamp, '2012-11-30 10:47:29.000000')
 
-    self.assertEqual(event.user, 'davnads')
+    event_data = self._GetEventDataOfEvent(storage_writer, event)
+    self.assertEqual(event_data.user, 'davnads')
     expected_file = (
         'D:\\Twinkle_Prod$\\VM11 XXX\\outside\\test.exe.txt')
-    self.assertEqual(event.file, expected_file)
+    self.assertEqual(event_data.file, expected_file)
 
     expected_message = (
         'Event Name: GL_EVENT_INFECTION; '
@@ -69,7 +68,8 @@ class SymantecAccessProtectionUnitTest(test_lib.ParserTestCase):
         'W32.Changeup!gen33; '
         'Unknown; ...')
 
-    self._TestGetMessageStrings(event, expected_message, expected_short_message)
+    self._TestGetMessageStrings(
+        event_data, expected_message, expected_short_message)
 
 
 if __name__ == '__main__':

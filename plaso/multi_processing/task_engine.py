@@ -8,7 +8,6 @@ import logging
 import multiprocessing
 import os
 import time
-import traceback
 
 from dfvfs.lib import definitions as dfvfs_definitions
 from dfvfs.resolver import context
@@ -23,10 +22,8 @@ from plaso.lib import errors
 from plaso.lib import loggers
 from plaso.multi_processing import engine
 from plaso.multi_processing import logger
-from plaso.multi_processing import multi_process_queue
 from plaso.multi_processing import task_manager
 from plaso.multi_processing import worker_process
-from plaso.storage.redis import redis_store
 
 
 class _EventSourceHeap(object):
@@ -106,14 +103,12 @@ class TaskMultiProcessEngine(engine.MultiProcessEngine):
   _ZEROMQ_NO_WORKER_REQUEST_TIME_SECONDS = 10 * 60
 
   def __init__(
-      self, maximum_number_of_tasks=_MAXIMUM_NUMBER_OF_TASKS, use_zeromq=True):
+      self, maximum_number_of_tasks=_MAXIMUM_NUMBER_OF_TASKS):
     """Initializes an engine.
 
     Args:
       maximum_number_of_tasks (Optional[int]): maximum number of concurrent
           tasks, where 0 represents no limit.
-      use_zeromq (Optional[bool]): True if ZeroMQ should be used for queuing
-          instead of Python's multiprocessing queue.
     """
     super(TaskMultiProcessEngine, self).__init__()
     self._enable_sigsegv_handler = False
@@ -142,7 +137,6 @@ class TaskMultiProcessEngine(engine.MultiProcessEngine):
     self._task_queue = None
     self._task_queue_port = None
     self._task_manager = task_manager.TaskManager()
-    self._use_zeromq = use_zeromq
 
   def _FillEventSourceHeap(
       self, storage_writer, event_source_heap, start_with_first=False):
@@ -154,7 +148,6 @@ class TaskMultiProcessEngine(engine.MultiProcessEngine):
       start_with_first (Optional[bool]): True if the function should start
           with the first written event source.
     """
-    logger.debug('Filling source heap')
     if self._processing_profiler:
       self._processing_profiler.StartTiming('fill_event_source_heap')
 
@@ -172,7 +165,6 @@ class TaskMultiProcessEngine(engine.MultiProcessEngine):
     while event_source:
       event_source_heap.PushEventSource(event_source)
       if event_source_heap.IsFull():
-        logger.debug('Source heap is full.')
         break
 
       if self._processing_profiler:
@@ -197,19 +189,10 @@ class TaskMultiProcessEngine(engine.MultiProcessEngine):
       storage_writer (StorageWriter): storage writer for a session storage used
           to merge task storage.
     """
-    logger.debug('Starting merge check')
     if self._processing_profiler:
       self._processing_profiler.StartTiming('merge_check')
 
-    if (self._processing_configuration.task_storage_format ==
-        definitions.STORAGE_FORMAT_REDIS):
-      task_identifiers = redis_store.RedisStore.ScanForProcessedTasks(
-          self._session_identifier)
-      logger.debug('Finished checking for processed redis tasks')
-    else:
-      task_identifiers = storage_writer.GetProcessedTaskIdentifiers()
-
-    for task_identifier in task_identifiers:
+    for task_identifier in storage_writer.GetProcessedTaskIdentifiers():
       try:
         task = self._task_manager.GetProcessedTaskByIdentifier(task_identifier)
 
@@ -228,11 +211,9 @@ class TaskMultiProcessEngine(engine.MultiProcessEngine):
 
       except KeyError as exception:
         logger.error(
-            'Unable to retrieve task: {0:s} to prepare it to be merged. '
-            'Error: {1!s}.'.format(task_identifier, exception))
+            'Unable to retrieve task: {0:s} to prepare it to be merged '
+            'with error: {1!s}.'.format(task_identifier, exception))
         continue
-
-    logger.debug('Finished checking for merge')
 
     if self._processing_profiler:
       self._processing_profiler.StopTiming('merge_check')
@@ -308,8 +289,6 @@ class TaskMultiProcessEngine(engine.MultiProcessEngine):
       self._number_of_produced_events = storage_writer.number_of_events
       self._number_of_produced_sources = storage_writer.number_of_event_sources
       self._number_of_produced_warnings = storage_writer.number_of_warnings
-
-    logger.debug('Finished merging')
 
   def _ProcessSources(
       self, source_path_specs, storage_writer):
@@ -446,22 +425,19 @@ class TaskMultiProcessEngine(engine.MultiProcessEngine):
         if not task and event_source:
           task = self._task_manager.CreateTask(
               self._session_identifier,
-              self._processing_configuration.task_storage_format)
+              storage_format=self._processing_configuration.task_storage_format)
           task.file_entry_type = event_source.file_entry_type
           task.path_spec = event_source.path_spec
           event_source = None
 
           self._number_of_consumed_sources += 1
 
-          if self._guppy_memory_profiler:
-            self._guppy_memory_profiler.Sample()
-
         if task:
           if self._ScheduleTask(task):
-            task_path_spec = task.path_spec.comparable.replace('\n', ' ')
+            task_path_spec_string = task.path_spec.comparable.replace('\n', ' ')
             logger.debug(
                 'Scheduled task {0:s} for path specification {1:s}'.format(
-                    task.identifier, task_path_spec))
+                    task.identifier, task_path_spec_string))
 
             self._task_manager.SampleTaskStatus(task, 'scheduled')
 
@@ -480,8 +456,7 @@ class TaskMultiProcessEngine(engine.MultiProcessEngine):
         if not task and not event_source:
           event_source = event_source_heap.PopEventSource()
 
-      except KeyboardInterrupt as exception:
-        traceback.print_exc()
+      except KeyboardInterrupt:
         self._abort = True
 
         self._processing_status.aborted = True
@@ -517,14 +492,11 @@ class TaskMultiProcessEngine(engine.MultiProcessEngine):
     process_name = 'Worker_{0:02d}'.format(self._last_worker_number)
     logger.debug('Starting worker process {0:s}'.format(process_name))
 
-    if self._use_zeromq:
-      queue_name = '{0:s} task queue'.format(process_name)
-      task_queue = zeromq_queue.ZeroMQRequestConnectQueue(
-          delay_open=True, linger_seconds=0, name=queue_name,
-          port=self._task_queue_port,
-          timeout_seconds=self._TASK_QUEUE_TIMEOUT_SECONDS)
-    else:
-      task_queue = self._task_queue
+    queue_name = '{0:s} task queue'.format(process_name)
+    task_queue = zeromq_queue.ZeroMQRequestConnectQueue(
+        delay_open=True, linger_seconds=0, name=queue_name,
+        port=self._task_queue_port,
+        timeout_seconds=self._TASK_QUEUE_TIMEOUT_SECONDS)
 
     process = worker_process.WorkerProcess(
         task_queue, storage_writer, self.collection_filters_helper,
@@ -593,10 +565,6 @@ class TaskMultiProcessEngine(engine.MultiProcessEngine):
     """
     logger.debug('Stopping extraction processes.')
     self._StopMonitoringProcesses()
-
-    # Note that multiprocessing.Queue is very sensitive regarding
-    # blocking on either a get or a put. So we try to prevent using
-    # any blocking behavior.
 
     if abort:
       # Signal all the processes to abort.
@@ -797,22 +765,17 @@ class TaskMultiProcessEngine(engine.MultiProcessEngine):
     self._storage_writer = storage_writer
 
     # Set up the task queue.
-    if not self._use_zeromq:
-      self._task_queue = multi_process_queue.MultiProcessingQueue(
-          maximum_number_of_queued_items=self._maximum_number_of_tasks)
+    task_outbound_queue = zeromq_queue.ZeroMQBufferedReplyBindQueue(
+        delay_open=True, linger_seconds=0, maximum_items=1,
+        name='main_task_queue',
+        timeout_seconds=self._ZEROMQ_NO_WORKER_REQUEST_TIME_SECONDS)
+    self._task_queue = task_outbound_queue
 
-    else:
-      task_outbound_queue = zeromq_queue.ZeroMQBufferedReplyBindQueue(
-          delay_open=True, linger_seconds=0, maximum_items=1,
-          name='main_task_queue',
-          timeout_seconds=self._ZEROMQ_NO_WORKER_REQUEST_TIME_SECONDS)
-      self._task_queue = task_outbound_queue
-
-      # The ZeroMQ backed queue must be started first, so we can save its port.
-      # TODO: raises: attribute-defined-outside-init
-      # self._task_queue.name = 'Task queue'
-      self._task_queue.Open()
-      self._task_queue_port = self._task_queue.port
+    # The ZeroMQ backed queue must be started first, so we can save its port.
+    # TODO: raises: attribute-defined-outside-init
+    # self._task_queue.name = 'Task queue'
+    self._task_queue.Open()
+    self._task_queue_port = self._task_queue.port
 
     self._StartProfiling(self._processing_configuration.profiling)
     self._task_manager.StartProfiling(
@@ -878,8 +841,7 @@ class TaskMultiProcessEngine(engine.MultiProcessEngine):
       self._KillProcess(os.getpid())
 
     # The task queue should be closed by _StopExtractionProcesses, this
-    # close is a failsafe, primarily due to MultiProcessingQueue's
-    # blocking behavior.
+    # close is a failsafe.
     self._task_queue.Close(abort=True)
 
     if self._processing_status.error_path_specs:

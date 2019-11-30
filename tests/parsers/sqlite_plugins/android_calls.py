@@ -9,14 +9,12 @@ import unittest
 from plaso.formatters import android_calls as _  # pylint: disable=unused-import
 from plaso.parsers.sqlite_plugins import android_calls
 
-from tests import test_lib as shared_test_lib
 from tests.parsers.sqlite_plugins import test_lib
 
 
 class AndroidCallSQLitePluginTest(test_lib.SQLitePluginTestCase):
   """Tests for the Android Call History database plugin."""
 
-  @shared_test_lib.skipUnlessHasTestFile(['contacts2.db'])
   def testProcess(self):
     """Test the Process function on an Android contacts2.db file."""
     plugin = android_calls.AndroidCallPlugin()
@@ -35,11 +33,12 @@ class AndroidCallSQLitePluginTest(test_lib.SQLitePluginTestCase):
 
     self.CheckTimestamp(event.timestamp, '2013-11-06 21:17:16.690000')
 
+    event_data = self._GetEventDataOfEvent(storage_writer, event)
     expected_number = '5404561685'
-    self.assertEqual(event.number, expected_number)
+    self.assertEqual(event_data.number, expected_number)
 
     expected_type = 'MISSED'
-    self.assertEqual(event.call_type, expected_type)
+    self.assertEqual(event_data.call_type, expected_type)
 
     expected_message = (
         'MISSED '
@@ -47,7 +46,8 @@ class AndroidCallSQLitePluginTest(test_lib.SQLitePluginTestCase):
         'Name: Barney '
         'Duration: 0 seconds')
     expected_short_message = 'MISSED Call'
-    self._TestGetMessageStrings(event, expected_message, expected_short_message)
+    self._TestGetMessageStrings(
+        event_data, expected_message, expected_short_message)
 
     event = events[3]
 
@@ -59,7 +59,8 @@ class AndroidCallSQLitePluginTest(test_lib.SQLitePluginTestCase):
 
     self.assertEqual(event.timestamp_desc, 'Call Ended')
 
-    self.assertEqual(event.duration, 639)
+    event_data = self._GetEventDataOfEvent(storage_writer, event)
+    self.assertEqual(event_data.duration, 639)
 
 
 if __name__ == '__main__':

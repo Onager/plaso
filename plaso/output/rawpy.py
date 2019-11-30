@@ -3,12 +3,12 @@
 
 from __future__ import unicode_literals
 
-import logging
+from dfdatetime import posix_time as dfdatetime_posix_time
 
 from plaso.lib import definitions
 from plaso.lib import py2to3
-from plaso.lib import timelib
 from plaso.output import interface
+from plaso.output import logger
 from plaso.output import manager
 
 
@@ -27,12 +27,14 @@ class NativePythonFormatterHelper(object):
     Returns:
       str: string representation of the event.
     """
-    time_string = timelib.Timestamp.CopyToIsoFormat(event.timestamp)
+    date_time = dfdatetime_posix_time.PosixTimeInMicroseconds(
+        timestamp=event.timestamp)
+    date_time_string = date_time.CopyToDateTimeStringISO8601()
 
     lines_of_text = [
         '+-' * 40,
         '[Timestamp]:',
-        '  {0:s}'.format(time_string)]
+        '  {0:s}'.format(date_time_string)]
 
     pathspec = getattr(event_data, 'pathspec', None)
     if pathspec:
@@ -53,24 +55,24 @@ class NativePythonFormatterHelper(object):
         '[Additional attributes]:']
 
     for attribute_name, attribute_value in sorted(event_data.GetAttributes()):
-      # TODO: some pyparsing based parsers can generate empty bytes values
-      # in Python 3.
-      if (isinstance(attribute_value, py2to3.BYTES_TYPE) and
-          attribute_value == b''):
-        logging.debug((
-            'attribute: {0:s} of data type: {1:s} contains an empty bytes '
-            'value').format(attribute_name, event_data.data_type))
-        attribute_value = ''
+      # Some parsers have written bytes values to storage.
+      if isinstance(attribute_value, py2to3.BYTES_TYPE):
+        attribute_value = attribute_value.decode('utf-8', 'replace')
+        logger.warning(
+            'Found bytes value for attribute "{0:s}" for data type: '
+            '{1!s}. Value was converted to UTF-8: "{2:s}"'.format(
+                attribute_name, event_data.data_type, attribute_value))
 
-      if attribute_name not in definitions.RESERVED_VARIABLE_NAMES:
-        attribute_string = '  {{{0!s}}} {1!s}'.format(
-            attribute_name, attribute_value)
-        additional_attributes.append(attribute_string)
+      if attribute_name == 'pathspec':
+        continue
 
-      elif attribute_name != 'pathspec':
-        attribute_string = '  {{{0!s}}} {1!s}'.format(
-            attribute_name, attribute_value)
+      attribute_string = '  {{{0!s}}} {1!s}'.format(
+          attribute_name, attribute_value)
+
+      if attribute_name in definitions.RESERVED_VARIABLE_NAMES:
         reserved_attributes.append(attribute_string)
+      else:
+        additional_attributes.append(attribute_string)
 
     lines_of_text.extend(reserved_attributes)
     lines_of_text.extend(additional_attributes)

@@ -10,14 +10,12 @@ from plaso.formatters import kik_ios as _  # pylint: disable=unused-import
 from plaso.lib import definitions
 from plaso.parsers.sqlite_plugins import kik_ios
 
-from tests import test_lib as shared_test_lib
 from tests.parsers.sqlite_plugins import test_lib
 
 
 class KikMessageTest(test_lib.SQLitePluginTestCase):
   """Tests for the Kik message database plugin."""
 
-  @shared_test_lib.skipUnlessHasTestFile(['kik_ios.sqlite'])
   def testProcess(self):
     """Test the Process function on a Kik messenger kik.sqlite file."""
     plugin = kik_ios.KikIOSPlugin()
@@ -36,9 +34,10 @@ class KikMessageTest(test_lib.SQLitePluginTestCase):
     self.assertEqual(
         event.timestamp_desc, definitions.TIME_DESCRIPTION_CREATION)
 
-    self.assertEqual(event.username, 'ken.doh')
-    self.assertEqual(event.displayname, 'Ken Doh')
-    self.assertEqual(event.body, 'Hello')
+    event_data = self._GetEventDataOfEvent(storage_writer, event)
+    self.assertEqual(event_data.username, 'ken.doh')
+    self.assertEqual(event_data.displayname, 'Ken Doh')
+    self.assertEqual(event_data.body, 'Hello')
 
     expected_message = (
         'Username: ken.doh '
@@ -47,7 +46,8 @@ class KikMessageTest(test_lib.SQLitePluginTestCase):
         'Type: sent '
         'Message: Hello')
     expected_short_message = 'Hello'
-    self._TestGetMessageStrings(event, expected_message, expected_short_message)
+    self._TestGetMessageStrings(
+        event_data, expected_message, expected_short_message)
 
 
 if __name__ == '__main__':

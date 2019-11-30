@@ -10,14 +10,12 @@ from plaso.formatters import safari as _  # pylint: disable=unused-import
 from plaso.lib import definitions
 from plaso.parsers.sqlite_plugins import safari
 
-from tests import test_lib as shared_test_lib
 from tests.parsers.sqlite_plugins import test_lib
 
 
 class SafariHistoryPluginTest(test_lib.SQLitePluginTestCase):
   """Tests for the Safari History database plugin."""
 
-  @shared_test_lib.skipUnlessHasTestFile(['History.db'])
   def testProcess(self):
     """Tests the process function on a Safari History.db database file."""
     plugin = safari.SafariHistoryPluginSqlite()
@@ -35,16 +33,16 @@ class SafariHistoryPluginTest(test_lib.SQLitePluginTestCase):
     self.assertEqual(
         event.timestamp_desc, definitions.TIME_DESCRIPTION_LAST_VISITED)
 
-    expected_url = 'http://facebook.com/'
-    self.assertEqual(event.url, expected_url)
-
-    expected_title = ''
-    self.assertEqual(event.title, expected_title)
+    event_data = self._GetEventDataOfEvent(storage_writer, event)
+    self.assertEqual(event_data.url, 'http://facebook.com/')
+    self.assertEqual(event_data.title, '')
 
     expected_message = (
-        'URL: {0:s} [count: 2] http_non_get: False').format(expected_url)
+        'URL: http://facebook.com/ '
+        '[count: 2] http_non_get: False')
 
-    self._TestGetMessageStrings(event, expected_message, expected_message)
+    self._TestGetMessageStrings(
+        event_data, expected_message, expected_message)
 
 
 if __name__ == '__main__':

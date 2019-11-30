@@ -9,14 +9,12 @@ import unittest
 from plaso.lib import definitions
 from plaso.parsers.sqlite_plugins import tango_android
 
-from tests import test_lib as shared_test_lib
 from tests.parsers.sqlite_plugins import test_lib
 
 
 class TangoAndroidProfileTest(test_lib.SQLitePluginTestCase):
   """Tests for Tango on Android profile database plugin."""
 
-  @shared_test_lib.skipUnlessHasTestFile(['tango_android_profile.db'])
   def testProcess(self):
     """Test the Process function on a Tango Android file."""
     plugin = tango_android.TangoAndroidProfilePlugin()
@@ -36,16 +34,17 @@ class TangoAndroidProfileTest(test_lib.SQLitePluginTestCase):
     self.assertEqual(
         event.timestamp_desc, definitions.TIME_DESCRIPTION_LAST_ACTIVE)
 
-    self.assertEqual(event.first_name, 'Rouel')
-    self.assertEqual(event.last_name, 'Henry')
-    self.assertEqual(event.birthday, '1980-10-01')
-    self.assertEqual(event.gender, 'male')
-    self.assertEqual(event.status, 'Praying!')
-    self.assertEqual(event.distance, 39.04880905)
-    self.assertEqual(event.is_friend, False)
-    self.assertEqual(event.friend_request_type, 'outRequest')
+    event_data = self._GetEventDataOfEvent(storage_writer, event)
+    self.assertEqual(event_data.first_name, 'Rouel')
+    self.assertEqual(event_data.last_name, 'Henry')
+    self.assertEqual(event_data.birthday, '1980-10-01')
+    self.assertEqual(event_data.gender, 'male')
+    self.assertEqual(event_data.status, 'Praying!')
+    self.assertEqual(event_data.distance, 39.04880905)
+    self.assertEqual(event_data.is_friend, False)
+    self.assertEqual(event_data.friend_request_type, 'outRequest')
     self.assertEqual(
-        event.friend_request_message, 'I am following you on Tango')
+        event_data.friend_request_message, 'I am following you on Tango')
 
     expected_message = (
         'Rouel Henry male birthday: 1980-10-01 Status: Praying! Friend: False '
@@ -54,7 +53,8 @@ class TangoAndroidProfileTest(test_lib.SQLitePluginTestCase):
 
     expected_short_message = 'Rouel Henry Status: Praying!'
 
-    self._TestGetMessageStrings(event, expected_message, expected_short_message)
+    self._TestGetMessageStrings(
+        event_data, expected_message, expected_short_message)
 
     # Test tango contact last access time event.
     event = events[57]
@@ -74,7 +74,6 @@ class TangoAndroidProfileTest(test_lib.SQLitePluginTestCase):
 class TangoAndroidTCTest(test_lib.SQLitePluginTestCase):
   """Tests for Tango on Android tc databases plugin."""
 
-  @shared_test_lib.skipUnlessHasTestFile(['tango_android_tc.db'])
   def testProcess(self):
     """Test the Process function on a Tango Android file."""
     plugin = tango_android.TangoAndroidTCPlugin()
@@ -88,18 +87,21 @@ class TangoAndroidTCTest(test_lib.SQLitePluginTestCase):
     events = list(storage_writer.GetSortedEvents())
 
     # Test the first tango conversation event.
-    event = events[0]
+    event = events[2]
 
     self.CheckTimestamp(event.timestamp, '1970-01-01 00:00:00.000000')
     self.assertEqual(
         event.timestamp_desc, definitions.TIME_DESCRIPTION_NOT_A_TIME)
 
-    self.assertEqual(event.conversation_identifier, 'DyGWr_010wQM_ozkIe-9Ww')
+    event_data = self._GetEventDataOfEvent(storage_writer, event)
+    self.assertEqual(
+        event_data.conversation_identifier, 'DyGWr_010wQM_ozkIe-9Ww')
 
     expected_message = 'Conversation (DyGWr_010wQM_ozkIe-9Ww)'
     expected_short_message = 'Conversation (DyGWr_010wQM_ozkIe-9Ww)'
 
-    self._TestGetMessageStrings(event, expected_message, expected_short_message)
+    self._TestGetMessageStrings(
+        event_data, expected_message, expected_short_message)
 
     # Test tango message creation time event
     event = events[21]
@@ -108,13 +110,15 @@ class TangoAndroidTCTest(test_lib.SQLitePluginTestCase):
     self.assertEqual(
         event.timestamp_desc, definitions.TIME_DESCRIPTION_CREATION)
 
-    self.assertEqual(event.message_identifier, 16777224)
-    self.assertEqual(event.direction, 2)
+    event_data = self._GetEventDataOfEvent(storage_writer, event)
+    self.assertEqual(event_data.message_identifier, 16777224)
+    self.assertEqual(event_data.direction, 2)
 
     expected_message = 'Outgoing Message (16777224)'
     expected_short_message = 'Outgoing Message (16777224)'
 
-    self._TestGetMessageStrings(event, expected_message, expected_short_message)
+    self._TestGetMessageStrings(
+        event_data, expected_message, expected_short_message)
 
     # Test tango message sent time event
     event = events[22]

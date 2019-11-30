@@ -44,45 +44,52 @@ class CCleanerRegistryPluginTest(test_lib.RegistryPluginTestCase):
 
     event = events[0]
 
-    self.assertEqual(event.data_type, 'ccleaner:update')
-    self.assertEqual(event.pathspec, test_file_entry.path_spec)
+    self.CheckTimestamp(event.timestamp, '2013-07-13 10:03:14.000000')
+
+    event_data = self._GetEventDataOfEvent(storage_writer, event)
+
     # This should just be the plugin name, as we're invoking it directly,
     # and not through the parser.
-    self.assertEqual(event.parser, plugin.plugin_name)
-
-    self.CheckTimestamp(event.timestamp, '2013-07-13 10:03:14.000000')
+    self.assertEqual(event_data.parser, plugin.plugin_name)
+    self.assertEqual(event_data.data_type, 'ccleaner:update')
+    self.assertEqual(event_data.pathspec, test_file_entry.path_spec)
 
     expected_message = 'Origin: {0:s}'.format(key_path)
 
-    self._TestGetMessageStrings(event, expected_message, expected_message)
+    self._TestGetMessageStrings(
+        event_data, expected_message, expected_message)
 
     event = events[1]
 
-    self.assertEqual(event.data_type, 'ccleaner:configuration')
     self.CheckTimestamp(event.timestamp, '2013-07-13 14:03:26.861688')
+
+    event_data = self._GetEventDataOfEvent(storage_writer, event)
+
+    self.assertEqual(event_data.data_type, 'ccleaner:configuration')
 
     expected_message = (
         '[{0:s}] '
-        'CookiesToSave: *.piriform.com '
-        '(App)Delete Index.dat files: True '
-        '(App)Last Download Location: True '
-        '(App)Recently Typed URLs: True '
         '(App)Cookies: True '
+        '(App)Delete Index.dat files: True '
         '(App)History: True '
-        '(App)Temporary Internet Files: True '
-        '(App)Recent Documents: True '
-        '(App)Run (in Start Menu): True '
+        '(App)Last Download Location: True '
         '(App)Other Explorer MRUs: True '
+        '(App)Recent Documents: True '
+        '(App)Recently Typed URLs: True '
+        '(App)Run (in Start Menu): True '
+        '(App)Temporary Internet Files: True '
         '(App)Thumbnail Cache: True '
-        'WINDOW_LEFT: 146 '
-        'WINDOW_TOP: 102 '
-        'WINDOW_WIDTH: 733 '
+        'CookiesToSave: *.piriform.com '
         'WINDOW_HEIGHT: 524 '
-        'WINDOW_MAX: 0').format(key_path)
+        'WINDOW_LEFT: 146 '
+        'WINDOW_MAX: 0 '
+        'WINDOW_TOP: 102 '
+        'WINDOW_WIDTH: 733').format(key_path)
 
     expected_short_message = '{0:s}...'.format(expected_message[:77])
 
-    self._TestGetMessageStrings(event, expected_message, expected_short_message)
+    self._TestGetMessageStrings(
+        event_data, expected_message, expected_short_message)
 
 
 if __name__ == '__main__':

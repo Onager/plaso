@@ -8,7 +8,6 @@ import unittest
 
 from plaso.parsers import bash_history
 
-from tests import test_lib as shared_test_lib
 from tests.parsers import test_lib
 
 
@@ -29,16 +28,27 @@ class BashHistoryTest(test_lib.ParserTestCase):
 
     events = list(storage_writer.GetEvents())
 
-    self.CheckTimestamp(events[0].timestamp, '2013-10-01 12:36:17.000000')
-    self.assertEqual(events[0].command, '/usr/lib/plaso')
+    event = events[0]
 
-    self.CheckTimestamp(events[1].timestamp, '2013-10-01 12:36:18.000000')
-    self.assertEqual(events[1].command, '/bin/bash')
+    self.CheckTimestamp(event.timestamp, '2013-10-01 12:36:17.000000')
 
-    self.CheckTimestamp(events[2].timestamp, '2013-10-01 12:36:19.000000')
-    self.assertEqual(events[2].command, '/usr/local/bin/splunk -p 8080')
+    event_data = self._GetEventDataOfEvent(storage_writer, event)
+    self.assertEqual(event_data.command, '/usr/lib/plaso')
 
-  @shared_test_lib.skipUnlessHasTestFile(['bash_history_desync'])
+    event = events[1]
+
+    self.CheckTimestamp(event.timestamp, '2013-10-01 12:36:18.000000')
+
+    event_data = self._GetEventDataOfEvent(storage_writer, event)
+    self.assertEqual(event_data.command, '/bin/bash')
+
+    event = events[2]
+
+    self.CheckTimestamp(event.timestamp, '2013-10-01 12:36:19.000000')
+
+    event_data = self._GetEventDataOfEvent(storage_writer, event)
+    self.assertEqual(event_data.command, '/usr/local/bin/splunk -p 8080')
+
   def testParsingExtractionDesync(self):
     """Tests that the parser correctly handles a desynchronized file.
 
@@ -49,7 +59,6 @@ class BashHistoryTest(test_lib.ParserTestCase):
     storage_writer = self._ParseFile(['bash_history_desync'], parser)
     self._TestEventsFromFile(storage_writer, expected_number_of_warnings=1)
 
-  @shared_test_lib.skipUnlessHasTestFile(['bash_history'])
   def testParsingExtractionSync(self):
     """Tests that the parser correctly handles a synchronized file.
 

@@ -319,7 +319,8 @@ class TaskManager(object):
     Args:
       session_identifier (str): the identifier of the session the task is
           part of.
-      storage_format (str): TODO
+      storage_format (Optional[str]): the storage format that the task should be
+          stored in.
 
     Returns:
       Task: task attribute container.
@@ -448,7 +449,6 @@ class TaskManager(object):
       bool: True if there are tasks that are active, ready to be merged or
           need to be retried.
     """
-    logger.debug('Checking for pending tasks')
     with self._lock:
       self._AbandonInactiveProcessingTasks()
 

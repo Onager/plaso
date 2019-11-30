@@ -10,14 +10,12 @@ from plaso.formatters import chrome as _  # pylint: disable=unused-import
 from plaso.lib import definitions
 from plaso.parsers.sqlite_plugins import chrome
 
-from tests import test_lib as shared_test_lib
 from tests.parsers.sqlite_plugins import test_lib
 
 
 class GoogleChrome8HistoryPluginTest(test_lib.SQLitePluginTestCase):
   """Tests for the Google Chrome 8 history SQLite database plugin."""
 
-  @shared_test_lib.skipUnlessHasTestFile(['History'])
   def testProcess(self):
     """Tests the Process function on a Chrome History database file."""
     plugin = chrome.GoogleChrome8HistoryPlugin()
@@ -37,21 +35,21 @@ class GoogleChrome8HistoryPluginTest(test_lib.SQLitePluginTestCase):
     self.assertEqual(
         event.timestamp_desc, definitions.TIME_DESCRIPTION_LAST_VISITED)
 
+    event_data = self._GetEventDataOfEvent(storage_writer, event)
     expected_url = 'http://start.ubuntu.com/10.04/Google/'
-    self.assertEqual(event.url, expected_url)
-
-    expected_title = 'Ubuntu Start Page'
-    self.assertEqual(event.title, expected_title)
+    self.assertEqual(event_data.url, expected_url)
+    self.assertEqual(event_data.title, 'Ubuntu Start Page')
 
     expected_message = (
-        '{0:s} ({1:s}) [count: 0] '
+        '{0:s} '
+        '(Ubuntu Start Page) [count: 0] '
         'Visit Source: [SOURCE_FIREFOX_IMPORTED] Type: [LINK - User clicked '
         'a link] (URL not typed directly - no typed count)').format(
-            expected_url, expected_title)
-    expected_short_message = '{0:s} ({1:s})'.format(
-        expected_url, expected_title)
+            expected_url)
+    expected_short_message = '{0:s} (Ubuntu Start Page)'.format(expected_url)
 
-    self._TestGetMessageStrings(event, expected_message, expected_short_message)
+    self._TestGetMessageStrings(
+        event_data, expected_message, expected_short_message)
 
     # Check the first file downloaded entry.
     event = events[69]
@@ -60,13 +58,14 @@ class GoogleChrome8HistoryPluginTest(test_lib.SQLitePluginTestCase):
     self.assertEqual(
         event.timestamp_desc, definitions.TIME_DESCRIPTION_FILE_DOWNLOADED)
 
+    event_data = self._GetEventDataOfEvent(storage_writer, event)
     expected_url = (
         'http://fatloss4idiotsx.com/download/funcats/'
         'funcats_scr.exe')
-    self.assertEqual(event.url, expected_url)
+    self.assertEqual(event_data.url, expected_url)
 
     expected_full_path = '/home/john/Downloads/funcats_scr.exe'
-    self.assertEqual(event.full_path, expected_full_path)
+    self.assertEqual(event_data.full_path, expected_full_path)
 
     expected_message = (
         '{0:s} ({1:s}). '
@@ -74,13 +73,13 @@ class GoogleChrome8HistoryPluginTest(test_lib.SQLitePluginTestCase):
         '1132155 bytes.').format(expected_url, expected_full_path)
     expected_short_message = '{0:s} downloaded (1132155 bytes)'.format(
         expected_full_path)
-    self._TestGetMessageStrings(event, expected_message, expected_short_message)
+    self._TestGetMessageStrings(
+        event_data, expected_message, expected_short_message)
 
 
 class GoogleChrome27HistoryPluginTest(test_lib.SQLitePluginTestCase):
   """Tests for the Google Chrome 27 history SQLite database plugin."""
 
-  @shared_test_lib.skipUnlessHasTestFile(['History-57.0.2987.133'])
   def testProcess57(self):
     """Tests the Process function on a Google Chrome 57 History database."""
     plugin = chrome.GoogleChrome27HistoryPlugin()
@@ -100,13 +99,12 @@ class GoogleChrome27HistoryPluginTest(test_lib.SQLitePluginTestCase):
     self.assertEqual(
         event.timestamp_desc, definitions.TIME_DESCRIPTION_LAST_VISITED)
 
+    event_data = self._GetEventDataOfEvent(storage_writer, event)
     expected_url = (
         'https://raw.githubusercontent.com/dfirlabs/chrome-specimens/master/'
         'generate-specimens.sh')
-    self.assertEqual(event.url, expected_url)
-
-    expected_title = ''
-    self.assertEqual(event.title, expected_title)
+    self.assertEqual(event_data.url, expected_url)
+    self.assertEqual(event_data.title, '')
 
     expected_message = (
         '{0:s} '
@@ -115,7 +113,8 @@ class GoogleChrome27HistoryPluginTest(test_lib.SQLitePluginTestCase):
         '(URL not typed directly - no typed count)').format(expected_url)
     expected_short_message = '{0:s}...'.format(expected_url[:77])
 
-    self._TestGetMessageStrings(event, expected_message, expected_short_message)
+    self._TestGetMessageStrings(
+        event_data, expected_message, expected_short_message)
 
     # Check the file downloaded event.
     event = events[1]
@@ -124,13 +123,14 @@ class GoogleChrome27HistoryPluginTest(test_lib.SQLitePluginTestCase):
     self.assertEqual(
         event.timestamp_desc, definitions.TIME_DESCRIPTION_FILE_DOWNLOADED)
 
+    event_data = self._GetEventDataOfEvent(storage_writer, event)
     expected_url = (
         'https://raw.githubusercontent.com/log2timeline/l2tbinaries/master/'
         'win32/plaso-20171231.1.win32.msi')
-    self.assertEqual(event.url, expected_url)
+    self.assertEqual(event_data.url, expected_url)
 
     expected_full_path = '/home/ubuntu/Downloads/plaso-20171231.1.win32.msi'
-    self.assertEqual(event.full_path, expected_full_path)
+    self.assertEqual(event_data.full_path, expected_full_path)
 
     expected_message = (
         '{0:s} ({1:s}). '
@@ -138,9 +138,9 @@ class GoogleChrome27HistoryPluginTest(test_lib.SQLitePluginTestCase):
             expected_url, expected_full_path)
     expected_short_message = '{0:s} downloaded (3080192 bytes)'.format(
         expected_full_path)
-    self._TestGetMessageStrings(event, expected_message, expected_short_message)
+    self._TestGetMessageStrings(
+        event_data, expected_message, expected_short_message)
 
-  @shared_test_lib.skipUnlessHasTestFile(['History-58.0.3029.96'])
   def testProcess58(self):
     """Tests the Process function on a Google Chrome 58 History database."""
     plugin = chrome.GoogleChrome27HistoryPlugin()
@@ -160,13 +160,12 @@ class GoogleChrome27HistoryPluginTest(test_lib.SQLitePluginTestCase):
     self.assertEqual(
         event.timestamp_desc, definitions.TIME_DESCRIPTION_LAST_VISITED)
 
+    event_data = self._GetEventDataOfEvent(storage_writer, event)
     expected_url = (
         'https://raw.githubusercontent.com/dfirlabs/chrome-specimens/master/'
         'generate-specimens.sh')
-    self.assertEqual(event.url, expected_url)
-
-    expected_title = ''
-    self.assertEqual(event.title, expected_title)
+    self.assertEqual(event_data.url, expected_url)
+    self.assertEqual(event_data.title, '')
 
     expected_message = (
         '{0:s} '
@@ -175,7 +174,8 @@ class GoogleChrome27HistoryPluginTest(test_lib.SQLitePluginTestCase):
         '(URL not typed directly - no typed count)').format(expected_url)
     expected_short_message = '{0:s}...'.format(expected_url[:77])
 
-    self._TestGetMessageStrings(event, expected_message, expected_short_message)
+    self._TestGetMessageStrings(
+        event_data, expected_message, expected_short_message)
 
     # Check the file downloaded event.
     event = events[1]
@@ -184,13 +184,14 @@ class GoogleChrome27HistoryPluginTest(test_lib.SQLitePluginTestCase):
     self.assertEqual(
         event.timestamp_desc, definitions.TIME_DESCRIPTION_FILE_DOWNLOADED)
 
+    event_data = self._GetEventDataOfEvent(storage_writer, event)
     expected_url = (
         'https://raw.githubusercontent.com/log2timeline/l2tbinaries/master/'
         'win32/plaso-20171231.1.win32.msi')
-    self.assertEqual(event.url, expected_url)
+    self.assertEqual(event_data.url, expected_url)
 
     expected_full_path = '/home/ubuntu/Downloads/plaso-20171231.1.win32.msi'
-    self.assertEqual(event.full_path, expected_full_path)
+    self.assertEqual(event_data.full_path, expected_full_path)
 
     expected_message = (
         '{0:s} ({1:s}). '
@@ -198,9 +199,9 @@ class GoogleChrome27HistoryPluginTest(test_lib.SQLitePluginTestCase):
             expected_url, expected_full_path)
     expected_short_message = '{0:s} downloaded (3080192 bytes)'.format(
         expected_full_path)
-    self._TestGetMessageStrings(event, expected_message, expected_short_message)
+    self._TestGetMessageStrings(
+        event_data, expected_message, expected_short_message)
 
-  @shared_test_lib.skipUnlessHasTestFile(['History-59.0.3071.86'])
   def testProcess59(self):
     """Tests the Process function on a Google Chrome 59 History database."""
     plugin = chrome.GoogleChrome27HistoryPlugin()
@@ -220,13 +221,12 @@ class GoogleChrome27HistoryPluginTest(test_lib.SQLitePluginTestCase):
     self.assertEqual(
         event.timestamp_desc, definitions.TIME_DESCRIPTION_LAST_VISITED)
 
+    event_data = self._GetEventDataOfEvent(storage_writer, event)
     expected_url = (
         'https://raw.githubusercontent.com/dfirlabs/chrome-specimens/master/'
         'generate-specimens.sh')
-    self.assertEqual(event.url, expected_url)
-
-    expected_title = ''
-    self.assertEqual(event.title, expected_title)
+    self.assertEqual(event_data.url, expected_url)
+    self.assertEqual(event_data.title, '')
 
     expected_message = (
         '{0:s} '
@@ -235,7 +235,8 @@ class GoogleChrome27HistoryPluginTest(test_lib.SQLitePluginTestCase):
         '(URL not typed directly - no typed count)').format(expected_url)
     expected_short_message = '{0:s}...'.format(expected_url[:77])
 
-    self._TestGetMessageStrings(event, expected_message, expected_short_message)
+    self._TestGetMessageStrings(
+        event_data, expected_message, expected_short_message)
 
     # Check the file downloaded event.
     event = events[1]
@@ -244,13 +245,14 @@ class GoogleChrome27HistoryPluginTest(test_lib.SQLitePluginTestCase):
     self.assertEqual(
         event.timestamp_desc, definitions.TIME_DESCRIPTION_FILE_DOWNLOADED)
 
+    event_data = self._GetEventDataOfEvent(storage_writer, event)
     expected_url = (
         'https://raw.githubusercontent.com/log2timeline/l2tbinaries/master/'
         'win32/plaso-20171231.1.win32.msi')
-    self.assertEqual(event.url, expected_url)
+    self.assertEqual(event_data.url, expected_url)
 
     expected_full_path = '/home/ubuntu/Downloads/plaso-20171231.1.win32.msi'
-    self.assertEqual(event.full_path, expected_full_path)
+    self.assertEqual(event_data.full_path, expected_full_path)
 
     expected_message = (
         '{0:s} ({1:s}). '
@@ -258,7 +260,8 @@ class GoogleChrome27HistoryPluginTest(test_lib.SQLitePluginTestCase):
             expected_url, expected_full_path)
     expected_short_message = '{0:s} downloaded (3080192 bytes)'.format(
         expected_full_path)
-    self._TestGetMessageStrings(event, expected_message, expected_short_message)
+    self._TestGetMessageStrings(
+        event_data, expected_message, expected_short_message)
 
 
 if __name__ == '__main__':

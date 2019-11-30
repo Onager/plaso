@@ -10,14 +10,12 @@ from plaso.formatters import chrome_autofill as _  # pylint: disable=unused-impo
 from plaso.lib import definitions
 from plaso.parsers.sqlite_plugins import chrome_autofill
 
-from tests import test_lib as shared_test_lib
 from tests.parsers.sqlite_plugins import test_lib
 
 
 class ChromeAutofillPluginTest(test_lib.SQLitePluginTestCase):
   """Tests for the Google Chrome autofill entries database plugin."""
 
-  @shared_test_lib.skipUnlessHasTestFile(['Web Data'])
   def testProcess(self):
     """Tests the Process function on a Chrome autofill entries database."""
     plugin = chrome_autofill.ChromeAutofillPlugin()
@@ -35,9 +33,10 @@ class ChromeAutofillPluginTest(test_lib.SQLitePluginTestCase):
     self.assertEqual(
         event.timestamp_desc, definitions.TIME_DESCRIPTION_CREATION)
 
-    self.assertEqual(event.field_name, 'repo')
-    self.assertEqual(event.value, 'log2timeline/plaso')
-    self.assertEqual(event.usage_count, 1)
+    event_data = self._GetEventDataOfEvent(storage_writer, event)
+    self.assertEqual(event_data.field_name, 'repo')
+    self.assertEqual(event_data.value, 'log2timeline/plaso')
+    self.assertEqual(event_data.usage_count, 1)
 
     expected_message = (
         'Form field name: repo '
@@ -46,7 +45,8 @@ class ChromeAutofillPluginTest(test_lib.SQLitePluginTestCase):
     expected_short_message = (
         'repo: log2timeline/plaso (1)')
 
-    self._TestGetMessageStrings(event, expected_message, expected_short_message)
+    self._TestGetMessageStrings(
+        event_data, expected_message, expected_short_message)
 
 
 if __name__ == '__main__':

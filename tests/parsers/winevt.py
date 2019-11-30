@@ -10,14 +10,12 @@ from plaso.formatters import winevt as _  # pylint: disable=unused-import
 from plaso.lib import definitions
 from plaso.parsers import winevt
 
-from tests import test_lib as shared_test_lib
 from tests.parsers import test_lib
 
 
 class WinEvtParserTest(test_lib.ParserTestCase):
   """Tests for the Windows EventLog (EVT) parser."""
 
-  @shared_test_lib.skipUnlessHasTestFile(['SysEvent.Evt'])
   def testParse(self):
     """Tests the Parse function."""
     parser = winevt.WinEvtParser()
@@ -26,11 +24,11 @@ class WinEvtParserTest(test_lib.ParserTestCase):
     # Windows Event Log (EVT) information:
     #	Version                     : 1.1
     #	Number of records           : 6063
-    #	Number of recovered records : 437
+    #	Number of recovered records : 438
     #	Log type                    : System
 
     self.assertEqual(storage_writer.number_of_warnings, 0)
-    self.assertEqual(storage_writer.number_of_events, (6063 + 437) * 2)
+    self.assertEqual(storage_writer.number_of_events, (6063 + 438) * 2)
 
     events = list(storage_writer.GetEvents())
 
@@ -56,24 +54,25 @@ class WinEvtParserTest(test_lib.ParserTestCase):
     #                     security. Please ensure that you can contact the
     #                     server that authenticated you.\r\n (0xc0000388)"
 
-    self.assertEqual(event.record_number, 1392)
-    self.assertEqual(event.event_type, 2)
-    self.assertEqual(event.computer_name, 'WKS-WINXP32BIT')
-    self.assertEqual(event.source_name, 'LSASRV')
-    self.assertEqual(event.event_category, 3)
-    self.assertEqual(event.event_identifier, 40961)
-    self.assertEqual(event.strings[0], 'cifs/CONTROLLER')
+    self.CheckTimestamp(event.timestamp, '2011-07-27 06:41:47.000000')
+    self.assertEqual(
+        event.timestamp_desc, definitions.TIME_DESCRIPTION_WRITTEN)
+
+    event_data = self._GetEventDataOfEvent(storage_writer, event)
+    self.assertEqual(event_data.record_number, 1392)
+    self.assertEqual(event_data.event_type, 2)
+    self.assertEqual(event_data.computer_name, 'WKS-WINXP32BIT')
+    self.assertEqual(event_data.source_name, 'LSASRV')
+    self.assertEqual(event_data.event_category, 3)
+    self.assertEqual(event_data.event_identifier, 40961)
+    self.assertEqual(event_data.strings[0], 'cifs/CONTROLLER')
 
     expected_string = (
         '"The system detected a possible attempt to compromise security. '
         'Please ensure that you can contact the server that authenticated you.'
         '\r\n (0xc0000388)"')
 
-    self.assertEqual(event.strings[1], expected_string)
-
-    self.CheckTimestamp(event.timestamp, '2011-07-27 06:41:47.000000')
-    self.assertEqual(
-        event.timestamp_desc, definitions.TIME_DESCRIPTION_WRITTEN)
+    self.assertEqual(event_data.strings[1], expected_string)
 
     expected_message = (
         '[40961 / 0xa001] '
@@ -93,7 +92,8 @@ class WinEvtParserTest(test_lib.ParserTestCase):
         'Strings: [\'cifs/CONTROLLER\', '
         '\'"The system detected a possibl...')
 
-    self._TestGetMessageStrings(event, expected_message, expected_short_message)
+    self._TestGetMessageStrings(
+        event_data, expected_message, expected_short_message)
 
 
 if __name__ == '__main__':

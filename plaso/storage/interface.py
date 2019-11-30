@@ -16,7 +16,6 @@ from plaso.lib import definitions
 from plaso.serializer import json_serializer
 
 
-# pylint: disable=redundant-returns-doc,redundant-yields-doc
 class BaseStore(object):
   """Storage interface.
 
@@ -54,7 +53,6 @@ class BaseStore(object):
       _CONTAINER_TYPE_SYSTEM_CONFIGURATION,
       _CONTAINER_TYPE_TASK_COMPLETION,
       _CONTAINER_TYPE_TASK_START)
-
 
   def __init__(self):
     """Initializes a store."""
@@ -250,11 +248,10 @@ class BaseStore(object):
   def GetEvents(self):
     """Retrieves the events.
 
-    Yields:
-      EventObject: event.
+    Returns:
+      generator(Event): event  generator.
     """
-    for event in self._GetAttributeContainers(self._CONTAINER_TYPE_EVENT):
-      yield event
+    return self._GetAttributeContainers(self._CONTAINER_TYPE_EVENT)
 
   def GetEventSources(self):
     """Retrieves the event sources.
@@ -283,10 +280,10 @@ class BaseStore(object):
   def GetEventTags(self):
     """Retrieves the event tags.
 
-    Yields:
-      EventTag: event tag.
+    Returns:
+      generator(EventTag): event tag generator.
     """
-    self._GetAttributeContainers(self._CONTAINER_TYPE_EVENT_TAG)
+    return self._GetAttributeContainers(self._CONTAINER_TYPE_EVENT_TAG)
 
   def GetNumberOfAnalysisReports(self):
     """Retrieves the number analysis reports.
@@ -343,7 +340,7 @@ class BaseStore(object):
     Returns:
       bool: True if the store contains analysis reports.
     """
-    self._HasAttributeContainers(self._CONTAINER_TYPE_ANALYSIS_REPORT)
+    return self._HasAttributeContainers(self._CONTAINER_TYPE_ANALYSIS_REPORT)
 
   def HasWarnings(self):
     """Determines if a store contains extraction warnings.
@@ -621,30 +618,6 @@ class StorageReader(object):
     self.Close()
 
   @abc.abstractmethod
-  def GetFormatVersion(self):
-    """Retrieves the format version of the underlying store.
-
-    Returns:
-      int: the format version, or None if not available.
-    """
-
-  @abc.abstractmethod
-  def GetSerializationFormat(self):
-    """Retrieves the serialization format of the underlying store.
-
-    Returns:
-      str: the serialization format, or None if not available.
-    """
-
-  @abc.abstractmethod
-  def GetStorageType(self):
-    """Retrieves the storage type of the underlying store.
-
-    Returns:
-      str: the storage type, or None if not available.
-    """
-
-  @abc.abstractmethod
   def Close(self):
     """Closes the storage reader."""
 
@@ -724,6 +697,14 @@ class StorageReader(object):
 
     Returns:
       int: number of analysis reports.
+    """
+
+  @abc.abstractmethod
+  def GetNumberOfEventSources(self):
+    """Retrieves the number event sources.
+
+    Returns:
+      int: number of event sources.
     """
 
   @abc.abstractmethod
@@ -892,7 +873,7 @@ class StorageWriter(object):
 
   @abc.abstractmethod
   def CheckTaskReadyForMerge(self, task):
-    """Checks if a task is ready for merging with this session storage.
+    """Checks if a task is ready for merging into the store.
 
     Args:
       task (Task): task.

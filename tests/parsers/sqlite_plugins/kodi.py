@@ -10,14 +10,12 @@ from plaso.formatters import kodi as _  # pylint: disable=unused-import
 from plaso.lib import definitions
 from plaso.parsers.sqlite_plugins import kodi
 
-from tests import test_lib as shared_test_lib
 from tests.parsers.sqlite_plugins import test_lib
 
 
 class KodiVideosTest(test_lib.SQLitePluginTestCase):
   """Tests for the Kodi videos database plugin."""
 
-  @shared_test_lib.skipUnlessHasTestFile(['MyVideos107.db'])
   def testProcess(self):
     """Test the Process function on a Kodi Videos database."""
     plugin = kodi.KodiMyVideosPlugin()
@@ -39,13 +37,15 @@ class KodiVideosTest(test_lib.SQLitePluginTestCase):
     expected_filename = (
         'plugin://plugin.video.youtube/play/?video_id=7WX0-O_ENlk')
 
-    self.assertEqual(event.filename, expected_filename)
+    event_data = self._GetEventDataOfEvent(storage_writer, event)
+    self.assertEqual(event_data.filename, expected_filename)
 
     expected_message = (
         'Video: plugin://plugin.video.youtube/play/?video_id=7WX0-O_ENlk '
         'Play Count: 1')
     expected_short_message = expected_filename
-    self._TestGetMessageStrings(event, expected_message, expected_short_message)
+    self._TestGetMessageStrings(
+        event_data, expected_message, expected_short_message)
 
 
 if __name__ == '__main__':

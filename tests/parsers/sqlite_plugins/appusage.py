@@ -9,14 +9,12 @@ import unittest
 from plaso.formatters import appusage as _  # pylint: disable=unused-import
 from plaso.parsers.sqlite_plugins import appusage
 
-from tests import test_lib as shared_test_lib
 from tests.parsers.sqlite_plugins import test_lib
 
 
 class ApplicationUsagePluginTest(test_lib.SQLitePluginTestCase):
   """Tests for the MacOS application usage activity database plugin."""
 
-  @shared_test_lib.skipUnlessHasTestFile(['application_usage.sqlite'])
   def testProcess(self):
     """Tests the Process function."""
     plugin = appusage.ApplicationUsagePlugin()
@@ -33,10 +31,11 @@ class ApplicationUsagePluginTest(test_lib.SQLitePluginTestCase):
 
     self.CheckTimestamp(event.timestamp, '2014-05-07 18:52:02.000000')
 
-    self.assertEqual(event.application, '/Applications/Safari.app')
-    self.assertEqual(event.app_version, '9537.75.14')
-    self.assertEqual(event.bundle_id, 'com.apple.Safari')
-    self.assertEqual(event.count, 1)
+    event_data = self._GetEventDataOfEvent(storage_writer, event)
+    self.assertEqual(event_data.application, '/Applications/Safari.app')
+    self.assertEqual(event_data.app_version, '9537.75.14')
+    self.assertEqual(event_data.bundle_id, 'com.apple.Safari')
+    self.assertEqual(event_data.count, 1)
 
     expected_message = (
         '/Applications/Safari.app v.9537.75.14 '
@@ -45,7 +44,8 @@ class ApplicationUsagePluginTest(test_lib.SQLitePluginTestCase):
 
     expected_short_message = '/Applications/Safari.app (1 time(s))'
 
-    self._TestGetMessageStrings(event, expected_message, expected_short_message)
+    self._TestGetMessageStrings(
+        event_data, expected_message, expected_short_message)
 
 
 if __name__ == '__main__':
