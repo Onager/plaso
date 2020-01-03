@@ -33,7 +33,6 @@ class KikIOSMessageEventData(events.EventData):
     """Initializes event data."""
     super(KikIOSMessageEventData, self).__init__(data_type=self.DATA_TYPE)
     self.body = None
-    self.displayname = None
     self.message_status = None
     self.message_type = None
     self.username = None
