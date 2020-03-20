@@ -73,6 +73,7 @@ class SQLiteStorageMergeReader(interface.StorageMergeReader):
     self._container_types = None
     self._cursor = None
     self._event_data_identifier_mappings = {}
+    self._event_source_identifier_mappings = {}
     self._path = path
 
     # Create a runtime lookup table for the add container type method. This
@@ -102,6 +103,16 @@ class SQLiteStorageMergeReader(interface.StorageMergeReader):
     Args:
       event (EventObject): event.
     """
+    if hasattr(event, 'event_source_row_identifier'):
+      event_source_identifier = identifiers.SQLTableIdentifier(
+          self._CONTAINER_TYPE_EVENT_DATA,
+          event.event_source_row_identifier)
+      lookup_key = event_source_identifier.CopyToString()
+
+      event_source_identifier = self._event_source_identifier_mappings[
+          lookup_key]
+      event.SetEventSourceIdentifier(event_source_identifier)
+
     if hasattr(event, 'event_data_row_identifier'):
       event_data_identifier = identifiers.SQLTableIdentifier(
           self._CONTAINER_TYPE_EVENT_DATA,
@@ -135,7 +146,12 @@ class SQLiteStorageMergeReader(interface.StorageMergeReader):
     Args:
       event_source (EventSource): event source.
     """
+    identifier = event_source.Getidentifier()
+    lookup_key = identifier.CopyToString()
+
     self._storage_writer.AddEventSource(event_source)
+    identifier = event_source.GetIdentifier()
+    self._event_source_identifier_mappings[lookup_key] = identifier
 
   def _AddEventTag(self, event_tag):
     """Adds an event tag.

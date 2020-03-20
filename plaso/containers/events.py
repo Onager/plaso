@@ -18,7 +18,6 @@ class EventData(interface.AttributeContainer):
     offset (int): offset relative to the start of the data stream where
         the event data is stored.
     query (str): query that was used to obtain the event data.
-    pathspec (dfvfs.Pathspec): TODO
   """
   CONTAINER_TYPE = 'event_data'
 
@@ -31,7 +30,6 @@ class EventData(interface.AttributeContainer):
     super(EventData, self).__init__()
     self.data_type = data_type
     self.offset = None
-    self.pathspec = None
     self.query = None
 
 
@@ -46,10 +44,7 @@ class EventObject(interface.AttributeContainer):
   Attributes:
     data_type (str): event data type indicator.
     hostname (str): name of the host related to the event.
-    inode (int): inode of the file related to the event.
     offset (int): offset of the event data.
-    pathspec (dfvfs.PathSpec): path specification of the file related to
-        the event.
     tag (EventTag): event tag.
     timestamp (int): timestamp, which contains the number of microseconds
         since January 1, 1970, 00:00:00 UTC.
@@ -64,16 +59,13 @@ class EventObject(interface.AttributeContainer):
     """Initializes an event attribute container."""
     super(EventObject, self).__init__()
     self._event_data_identifier = None
+    self._event_source_identifier = None
     # TODO: move to event data
     self.data_type = self.DATA_TYPE
     # TODO: move to event data
     self.hostname = None
     # TODO: move to event data
-    self.inode = None
-    # TODO: move to event data
     self.offset = None
-    # TODO: move to event data
-    self.pathspec = None
     self.tag = None
     self.timestamp = None
     self.timestamp_desc = None
@@ -116,6 +108,28 @@ class EventObject(interface.AttributeContainer):
     """
     self._event_data_identifier = event_data_identifier
 
+
+  def GetEventSourceIdentifier(self):
+    """Retrieves the identifier of the event source associated with the event.
+
+    The event source identifier is a storage specific value that should not
+    be serialized.
+
+    Returns:
+      AttributeContainerIdentifier: event identifier or None when not set.
+    """
+    return self._event_source_identifier
+
+  def SetEventSourceIdentifier(self, event_source_identifier):
+    """Sets the identifier of the event source associated with the event.
+
+    The event source identifier is a storage specific value that should not
+    be serialized.
+
+    Args:
+      event_source_identifier (AttributeContainerIdentifier): event identifier.
+    """
+    self._event_source_identifier = event_source_identifier
 
 class EventTag(interface.AttributeContainer):
   """Event tag attribute container.

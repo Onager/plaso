@@ -55,6 +55,7 @@ class ParserMediator(object):
     self._abort = False
     self._cpu_time_profiler = None
     self._extra_event_attributes = {}
+    self._event_source = None
     self._file_entry = None
     self._knowledge_base = knowledge_base
     self._last_event_data_hash = None
@@ -391,14 +392,12 @@ class ParserMediator(object):
     self._parser_chain_components.pop()
 
   def ProcessEventData(
-      self, event_data, parser_chain=None, file_entry=None, query=None):
+      self, event_data, parser_chain=None, query=None):
     """Processes event data before it written to the storage.
 
     Args:
       event_data (EventData): event data.
       parser_chain (Optional[str]): parsing chain up to this point.
-      file_entry (Optional[dfvfs.FileEntry]): file entry, where None will
-          use the current file entry set in the mediator.
       query (Optional[str]): query that was used to obtain the event data.
 
     Raises:
@@ -413,8 +412,7 @@ class ParserMediator(object):
     if not getattr(event_data, 'text_prepend', None) and self._text_prepend:
       event_data.text_prepend = self._text_prepend
 
-    if file_entry is None:
-      file_entry = self._file_entry
+    file_entry = self._file_entry
 
     display_name = None
     if file_entry:
@@ -495,8 +493,7 @@ class ParserMediator(object):
       event_data = copy.deepcopy(event_data)
 
       self.ProcessEventData(
-          event_data, parser_chain=self.GetParserChain(),
-          file_entry=self._file_entry)
+          event_data, parser_chain=self.GetParserChain())
 
       self._storage_writer.AddEventData(event_data)
 
@@ -611,13 +608,14 @@ class ParserMediator(object):
 
     self._mount_path = mount_path
 
-  def SetFileEntry(self, file_entry):
-    """Sets the active file entry.
+  def SetEventSource(self, event_source):
+    """Sets the active event source.
 
     Args:
-      file_entry (dfvfs.FileEntry): file entry.
+      event_source (EventSource): file entry.
     """
-    self._file_entry = file_entry
+    self._event_source = event_source
+    self._file_entry = event_source.file_entry
 
   def SetStorageWriter(self, storage_writer):
     """Sets the storage writer.
