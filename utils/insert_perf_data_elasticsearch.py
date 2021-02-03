@@ -1,14 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function
-from __future__ import unicode_literals
 import argparse
-
+import collections
+import datetime
+import json
 import os
 import re
-import json
-import datetime
 
 import elasticsearch
 
@@ -16,7 +14,6 @@ from plaso.cli import pinfo_tool
 from tests.cli import test_lib
 
 from utils.build_performance_csv import PlasoCIFetcher
-
 
 
 class ElasticImporter(object):
@@ -260,7 +257,11 @@ class TestReader(object):
       del events_counter['total']
     total_events = sum(events_counter.values())
 
-    warnings_by_parser_chain = counters['warnings_by_parser_chain']
+    warnings_by_parser_chain = counters.get(
+        'warnings_by_parser_chain', collections.Counter())
+    warnings_by_parser_chain = counters.get(
+        'warnings_by_parser', warnings_by_parser_chain)
+
     if '' in warnings_by_parser_chain:
       warnings_by_parser_chain['<no parser>'] = warnings_by_parser_chain.pop('')
     total_warnings = sum(warnings_by_parser_chain.values())
