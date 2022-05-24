@@ -348,7 +348,7 @@ class KeychainParser(
     table = tables.get(record_type, None)
     if not table:
       raise errors.ParseError(
-          'Missing table for relation identifier: 0x{0:08}'.format(record_type))
+          f'Missing table for relation identifier: 0x{record_type:08}')
 
     record_header = self._ReadRecordHeader(file_object, record_offset)
 
@@ -490,8 +490,7 @@ class KeychainParser(
     table = tables.get(relation_identifier, None)
     if not table:
       raise errors.ParseError(
-          'Missing table for relation identifier: 0x{0:08}'.format(
-              relation_identifier))
+          f'Missing table for relation identifier: 0x{relation_identifier:08}')
 
     if attribute_name is None and attribute_value_offsets[1] != 0:
       attribute_value_offset = attribute_value_offsets[1]
@@ -707,7 +706,7 @@ class KeychainParser(
 
     if date_time_value[14] != 'Z':
       parser_mediator.ProduceExtractionWarning(
-          'invalid date and time value: {0!s}'.format(date_time_value))
+          f'invalid date and time value: {date_time_value!s}')
       return None
 
     try:
@@ -719,7 +718,7 @@ class KeychainParser(
       seconds = int(date_time_value[12:14], 10)
     except (TypeError, ValueError):
       parser_mediator.ProduceExtractionWarning(
-          'invalid date and time value: {0!s}'.format(date_time_value))
+          f'invalid date and time value: {date_time_value!s}')
       return None
 
     time_elements_tuple = (year, month, day_of_month, hours, minutes, seconds)
@@ -729,7 +728,7 @@ class KeychainParser(
           time_elements_tuple=time_elements_tuple)
     except ValueError:
       parser_mediator.ProduceExtractionWarning(
-          'invalid date and time value: {0!s}'.format(date_time_value))
+          f'invalid date and time value: {date_time_value!s}')
       return None
 
   def _ParseBinaryDataAsString(self, parser_mediator, binary_data_value):
@@ -752,8 +751,7 @@ class KeychainParser(
       return binary_data_value.decode('utf-8')
     except UnicodeDecodeError:
       parser_mediator.ProduceExtractionWarning(
-          'invalid binary data string value: {0:s}'.format(
-              repr(binary_data_value)))
+          f'invalid binary data string value: {repr(binary_data_value):s}')
       return None
 
   def _ParseIntegerTagString(self, integer_value):
@@ -770,7 +768,7 @@ class KeychainParser(
     if not integer_value:
       return None
 
-    tag_string = codecs.decode('{0:08x}'.format(integer_value), 'hex')
+    tag_string = codecs.decode(f'{integer_value:08x}', 'hex')
     return codecs.decode(tag_string, 'utf-8')
 
   def _ParseApplicationPasswordRecord(self, parser_mediator, record):
@@ -830,7 +828,7 @@ class KeychainParser(
           'Unsupported Internet password record key value does not start '
           'with: "ssgp".'))
 
-    protocol_string = codecs.decode('{0:08x}'.format(record['ptcl']), 'hex')
+    protocol_string = codecs.decode(f"{record['ptcl']:08x}", 'hex')
     protocol_string = codecs.decode(protocol_string, 'utf-8')
 
     event_data = KeychainInternetRecordEventData()

@@ -483,7 +483,7 @@ class FirefoxHistoryPlugin(interface.SQLitePlugin):
       return ''
 
     hostname = self._ReverseHostname(reverse_host)
-    return '{0:s} ({1:s})'.format(url, hostname)
+    return f'{url:s} ({hostname:s})'
 
 
 sqlite.SQLiteParser.RegisterPlugin(FirefoxHistoryPlugin)

@@ -80,7 +80,7 @@ class MSIEZoneSettingsPluginTest(test_lib.RegistryPluginTestCase):
     expected_event_values = {
         'date_time': '2011-09-16 21:12:40.1455141',
         'data_type': 'windows:registry:msie_zone_settings',
-        'key_path': '{0:s}\\0 (My Computer)'.format(key_path),
+        'key_path': f'{key_path:s}\\0 (My Computer)',
         # This should just be the plugin name, as we're invoking it directly,
         # and not through the parser.
         'parser': plugin.NAME,
@@ -134,7 +134,7 @@ class MSIEZoneSettingsPluginTest(test_lib.RegistryPluginTestCase):
     expected_event_values = {
         'date_time': '2011-09-16 21:12:40.1455141',
         'data_type': 'windows:registry:msie_zone_settings',
-        'key_path': '{0:s}\\0 (My Computer)'.format(key_path),
+        'key_path': f'{key_path:s}\\0 (My Computer)',
         # This should just be the plugin name, as we're invoking it directly,
         # and not through the parser.
         'parser': plugin.NAME,
@@ -265,7 +265,7 @@ class MSIEZoneSettingsPluginTest(test_lib.RegistryPluginTestCase):
     expected_event_values = {
         'date_time': '2011-08-28 21:32:44.9376751',
         'data_type': 'windows:registry:msie_zone_settings',
-        'key_path': '{0:s}\\0 (My Computer)'.format(key_path),
+        'key_path': f'{key_path:s}\\0 (My Computer)',
         # This should just be the plugin name, as we're invoking it directly,
         # and not through the parser.
         'parser': plugin.NAME,
@@ -400,7 +400,7 @@ class MSIEZoneSettingsPluginTest(test_lib.RegistryPluginTestCase):
     expected_event_values = {
         'date_time': '2011-08-28 21:32:44.9376751',
         'data_type': 'windows:registry:msie_zone_settings',
-        'key_path': '{0:s}\\0 (My Computer)'.format(key_path),
+        'key_path': f'{key_path:s}\\0 (My Computer)',
         # This should just be the plugin name, as we're invoking it directly,
         # and not through the parser.
         'parser': plugin.NAME,

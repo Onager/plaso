@@ -22,8 +22,7 @@ class HashersManager(object):
     hasher_name = hasher_class.NAME.lower()
     if hasher_name not in cls._hasher_classes:
       raise KeyError(
-          'hasher class not set for name: {0:s}.'.format(
-              hasher_class.NAME))
+          f'hasher class not set for name: {hasher_class.NAME:s}.')
 
     del cls._hasher_classes[hasher_name]
 
@@ -104,7 +103,7 @@ class HashersManager(object):
     hasher_name = hasher_name.lower()
     if hasher_name not in cls._hasher_classes:
       raise KeyError(
-          'hasher class not set for name: {0:s}.'.format(hasher_name))
+          f'hasher class not set for name: {hasher_name:s}.')
 
     hasher_class = cls._hasher_classes[hasher_name]
     return hasher_class()

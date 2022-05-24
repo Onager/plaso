@@ -114,28 +114,26 @@ class SELinuxParser(text_parser.PyparsingSingleLineTextParser):
     """
     if key != 'line':
       raise errors.ParseError(
-          'Unable to parse record, unknown structure: {0:s}'.format(key))
+          f'Unable to parse record, unknown structure: {key:s}')
 
     msg_value = self._GetValueFromStructure(structure, 'msg')
     if not msg_value:
       parser_mediator.ProduceExtractionWarning(
-          'missing msg value: {0!s}'.format(structure))
+          f'missing msg value: {structure!s}')
       return
 
     try:
       seconds = int(msg_value[0], 10)
     except ValueError:
       parser_mediator.ProduceExtractionWarning(
-          'unsupported number of seconds in msg value: {0!s}'.format(
-              structure))
+          f'unsupported number of seconds in msg value: {structure!s}')
       return
 
     try:
       milliseconds = int(msg_value[1], 10)
     except ValueError:
       parser_mediator.ProduceExtractionWarning(
-          'unsupported number of milliseconds in msg value: {0!s}'.format(
-              structure))
+          f'unsupported number of milliseconds in msg value: {structure!s}')
       return
 
     timestamp = ((seconds * 1000) + milliseconds) * 1000
@@ -174,8 +172,7 @@ class SELinuxParser(text_parser.PyparsingSingleLineTextParser):
       structure = self._SELINUX_LOG_LINE.parseString(line)
     except pyparsing.ParseException as exception:
       logger.debug(
-          'Unable to parse SELinux audit.log file with error: {0!s}'.format(
-              exception))
+          f'Unable to parse SELinux audit.log file with error: {exception!s}')
       return False
 
     return 'type' in structure and 'msg' in structure

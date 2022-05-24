@@ -96,7 +96,7 @@ class ViperAnalysisArgumentsHelper(interface.ArgumentsHelper):
 
     if not analysis_plugin.TestConnection():
       raise errors.BadConfigOption(
-          'Unable to connect to Viper {0:s}:{1:d}'.format(host, port))
+          f'Unable to connect to Viper {host:s}:{port:d}')
 
 
 manager.ArgumentHelperManager.RegisterHelper(ViperAnalysisArgumentsHelper)

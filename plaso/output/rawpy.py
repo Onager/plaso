@@ -44,7 +44,7 @@ class NativePythonEventFormattingHelper(
     lines_of_text = [
         '+-' * 40,
         '[Timestamp]:',
-        '  {0:s}'.format(date_time_string)]
+        f'  {date_time_string:s}']
 
     path_specification = getattr(event_data_stream, 'path_spec', None)
     if not path_specification:
@@ -57,7 +57,7 @@ class NativePythonEventFormattingHelper(
           '',
           '[Pathspec]:'])
       lines_of_text.extend([
-          '  {0:s}'.format(line)
+          f'  {line:s}'
           for line in path_specification.comparable.split('\n')])
 
       # Remove additional empty line.
@@ -105,8 +105,7 @@ class NativePythonEventFormattingHelper(
       if attribute_name in ('path_spec', 'pathspec'):
         continue
 
-      attribute_string = '  {{{0!s}}} {1!s}'.format(
-          attribute_name, attribute_value)
+      attribute_string = f'  {{{attribute_name!s}}} {attribute_value!s}'
 
       if attribute_name in definitions.RESERVED_VARIABLE_NAMES:
         reserved_attributes.append(attribute_string)
@@ -118,11 +117,11 @@ class NativePythonEventFormattingHelper(
 
     if event_tag:
       labels = [
-          '\'{0:s}\''.format(label) for label in event_tag.labels]
+          f'\'{label:s}\'' for label in event_tag.labels]
       lines_of_text.extend([
           '',
           '[Tag]:',
-          '  {{labels}} [{0:s}]'.format(', '.join(labels))])
+          f"  {{labels}} [{', '.join(labels):s}]"])
 
     lines_of_text.append('')
 

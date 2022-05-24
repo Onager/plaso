@@ -26,7 +26,7 @@ class SHA256Hasher(interface.BaseHasher):
       str: string hash digest calculated over the data blocks passed to
           Update(). The string consists of printable Unicode characters.
     """
-    return '{0:s}'.format(self._sha256_context.hexdigest())
+    return f'{self._sha256_context.hexdigest():s}'
 
   def Update(self, data):
     """Updates the current state of the hasher with a new block of data.

@@ -169,9 +169,9 @@ class OperatingSystemArtifact(ArtifactAttributeContainer):
       suffix_segment_index = segment_index + 1
       if (suffix_segment_index < number_of_segments and
           product_lower_case[suffix_segment_index] == 'r2'):
-        return 'Windows {0:s} R2'.format(product[segment_index])
+        return f'Windows {product[segment_index]:s} R2'
 
-      return 'Windows {0:s}'.format(product[segment_index])
+      return f'Windows {product[segment_index]:s}'
 
     return None
 

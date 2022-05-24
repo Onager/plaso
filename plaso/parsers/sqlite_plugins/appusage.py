@@ -83,7 +83,7 @@ class ApplicationUsagePlugin(interface.SQLitePlugin):
     # TODO: replace usage by definition(s) in eventdata. Not sure which values
     # it will hold here.
     application_name = self._GetRowValue(query_hash, row, 'event')
-    usage = 'Application {0:s}'.format(application_name)
+    usage = f'Application {application_name:s}'
 
     event_data = MacOSApplicationUsageEventData()
     event_data.application = self._GetRowValue(query_hash, row, 'app_path')

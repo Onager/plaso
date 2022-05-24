@@ -74,7 +74,7 @@ class JSONAttributeContainerSerializer(object):
     encoded_value = codecs.decode(encoded_value, 'ascii')
     return {
         '__type__': 'bytes',
-        'stream': '{0:s}'.format(encoded_value)}
+        'stream': f'{encoded_value:s}'}
 
   @classmethod
   def _ConvertCollectionsCounterToJSON(cls, counter_value):
@@ -288,8 +288,7 @@ class JSONAttributeContainerSerializer(object):
 
     convert_function = cls._convert_json_to_value.get(json_dict_type, None)
     if not convert_function:
-      raise ValueError('Unsupported JSON dictionary type: {0:s}'.format(
-          json_dict_type))
+      raise ValueError(f'Unsupported JSON dictionary type: {json_dict_type:s}')
 
     return convert_function(json_dict)
 
@@ -523,8 +522,7 @@ class JSONAttributeContainerSerializer(object):
       return json_object
 
     if not isinstance(json_object, containers_interface.AttributeContainer):
-      raise TypeError('{0!s} is not an attribute container type.'.format(
-          type(json_object)))
+      raise TypeError(f'{type(json_object)!s} is not an attribute container type.')
 
     return json_object
 

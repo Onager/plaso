@@ -158,7 +158,7 @@ class MsieWebCacheESEDBPlugin(interface.ESEDBPlugin):
     if value:
       value = value.decode('utf-8')
       header_values = [value.strip() for value in value.split('\r\n') if value]
-      return '[{0:s}]'.format('; '.join(header_values))
+      return f"[{'; '.join(header_values):s}]"
 
     return None
 
@@ -338,7 +338,7 @@ class MsieWebCacheESEDBPlugin(interface.ESEDBPlugin):
                 container_identifier, container_name))
         continue
 
-      table_name = 'Container_{0:d}'.format(container_identifier)
+      table_name = f'Container_{container_identifier:d}'
       esedb_table = database.GetTableByName(table_name)
       if esedb_table:
         self._ParseContainerTable(parser_mediator, esedb_table, container_name)

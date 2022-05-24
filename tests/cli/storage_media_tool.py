@@ -670,7 +670,7 @@ class StorageMediaToolVolumeScannerTest(test_lib.CLIToolTestCase):
     test_scanner = storage_media_tool.StorageMediaToolVolumeScanner()
 
     options = storage_media_tool.StorageMediaToolVolumeScannerOptions()
-    options.credentials = [('password', '{0:s}'.format(self._APFS_PASSWORD))]
+    options.credentials = [('password', f'{self._APFS_PASSWORD:s}')]
     options.scan_mode = options.SCAN_MODE_ALL
     options.partitions = ['all']
     options.volumes = ['all']

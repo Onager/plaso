@@ -91,11 +91,9 @@ class JSONOutputTest(test_lib.OutputModuleTestCase):
     if sys.platform.startswith('win'):
       # The dict comparison is very picky on Windows hence we
       # have to make sure the drive letter is in the same case.
-      expected_os_location = os.path.abspath('\\{0:s}'.format(
-          os.path.join('cases', 'image.dd')))
+      expected_os_location = os.path.abspath(f"\\{os.path.join('cases', 'image.dd'):s}")
     else:
-      expected_os_location = '{0:s}{1:s}'.format(
-          os.path.sep, os.path.join('cases', 'image.dd'))
+      expected_os_location = f"{os.path.sep:s}{os.path.join('cases', 'image.dd'):s}"
 
     expected_json_dict = {
         'event_0': {
@@ -137,7 +135,7 @@ class JSONOutputTest(test_lib.OutputModuleTestCase):
 
     # We need to compare dicts since we cannot determine the order
     # of values in the string.
-    json_string = '{{ {0:s} }}'.format(event_body)
+    json_string = f'{{ {event_body:s} }}'
     json_dict = json.loads(json_string)
     self.assertEqual(json_dict, expected_json_dict)
 

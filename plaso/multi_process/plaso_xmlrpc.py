@@ -36,8 +36,7 @@ class XMLRPCClient(rpc.RPCClient):
     except (
         expat.ExpatError, SocketServer.socket.error,
         xmlrpclib.Fault) as exception:
-      logger.warning('Unable to make RPC call with error: {0!s}'.format(
-          exception))
+      logger.warning(f'Unable to make RPC call with error: {exception!s}')
       return None
 
   def Close(self):
@@ -54,7 +53,7 @@ class XMLRPCClient(rpc.RPCClient):
     Returns:
       bool: True if the communication channel was established.
     """
-    server_url = 'http://{0:s}:{1:d}'.format(hostname, port)
+    server_url = f'http://{hostname:s}:{port:d}'
 
     try:
       self._xmlrpc_proxy = xmlrpclib.ServerProxy(

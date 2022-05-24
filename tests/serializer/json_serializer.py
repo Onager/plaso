@@ -321,7 +321,7 @@ class JSONAttributeContainerSerializerTest(JSONSerializerTestCase):
   def testReadAndWriteSerializedSessionCompletion(self):
     """Test ReadSerialized and WriteSerialized of SessionCompletion."""
     timestamp = int(time.time() * 1000000)
-    session_identifier = '{0:s}'.format(uuid.uuid4().hex)
+    session_identifier = f'{uuid.uuid4().hex:s}'
 
     parsers_counter = collections.Counter()
     parsers_counter['filestat'] = 3
@@ -360,7 +360,7 @@ class JSONAttributeContainerSerializerTest(JSONSerializerTestCase):
   def testReadAndWriteSerializedSessionStart(self):
     """Test ReadSerialized and WriteSerialized of SessionStart."""
     timestamp = int(time.time() * 1000000)
-    session_identifier = '{0:s}'.format(uuid.uuid4().hex)
+    session_identifier = f'{uuid.uuid4().hex:s}'
 
     expected_session_start = sessions.SessionStart(
         identifier=session_identifier)
@@ -395,7 +395,7 @@ class JSONAttributeContainerSerializerTest(JSONSerializerTestCase):
 
   def testReadAndWriteSerializedTask(self):
     """Test ReadSerialized and WriteSerialized of Task."""
-    session_identifier = '{0:s}'.format(uuid.uuid4().hex)
+    session_identifier = f'{uuid.uuid4().hex:s}'
 
     expected_task = tasks.Task(session_identifier=session_identifier)
 

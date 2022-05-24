@@ -70,8 +70,7 @@ class LocateDatabaseParser(
           file_object, 0, locate_database_header_map)
     except (ValueError, errors.ParseError) as exception:
       raise errors.WrongParser(
-          'Unable to parse locate database header with error: {0!s}'.format(
-              exception))
+          f'Unable to parse locate database header with error: {exception!s}')
 
     # Skip configuration block for now.
     file_offset += locate_database_header.configuration_block_size

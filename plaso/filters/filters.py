@@ -28,7 +28,7 @@ class Filter(object):
     Args:
       arguments (Optional[object]): arguments.
     """
-    logger.debug('Adding {0!s}'.format(arguments))
+    logger.debug(f'Adding {arguments!s}')
 
     super(Filter, self).__init__()
     self.args = arguments or []
@@ -47,7 +47,7 @@ class Filter(object):
       return ''.join(value)
 
     if isinstance(value, int):
-      value = '{0:d}'.format(value)
+      value = f'{value:d}'
 
     if not isinstance(value, str):
       return codecs.decode(value, 'utf8', 'ignore')
@@ -247,8 +247,7 @@ class GenericBinaryOperator(BinaryOperator):
     """
     if attribute_name in self._DEPRECATED_ATTRIBUTE_NAMES:
       logger.warning(
-          'Expansion of {0:s} in event filter no longer supported'.format(
-              attribute_name))
+          f'Expansion of {attribute_name:s} in event filter no longer supported')
 
     if attribute_name in self._EVENT_ATTRIBUTE_NAMES:
       attribute_value = getattr(event, attribute_name, None)
@@ -480,14 +479,13 @@ class Regexp(GenericBinaryOperator):
     super(Regexp, self).__init__(arguments=arguments, **kwargs)
 
     # Note that right_operand is not necessarily a string.
-    logger.debug('Compiled: {0!s}'.format(self.right_operand))
+    logger.debug(f'Compiled: {self.right_operand!s}')
 
     try:
       expression = self._CopyValueToString(self.right_operand)
       compiled_re = re.compile(expression, re.DOTALL)
     except re.error:
-      raise ValueError('Regular expression "{0!s}" is malformed.'.format(
-          self.right_operand))
+      raise ValueError(f'Regular expression "{self.right_operand!s}" is malformed.')
 
     self.compiled_re = compiled_re
 
@@ -529,13 +527,12 @@ class RegexpInsensitive(Regexp):
     super(RegexpInsensitive, self).__init__(arguments=arguments, **kwargs)
 
     # Note that right_operand is not necessarily a string.
-    logger.debug('Compiled: {0!s}'.format(self.right_operand))
+    logger.debug(f'Compiled: {self.right_operand!s}')
 
     try:
       expression = self._CopyValueToString(self.right_operand)
       compiled_re = re.compile(expression, re.I | re.DOTALL)
     except re.error:
-      raise ValueError('Regular expression "{0!s}" is malformed.'.format(
-          self.right_operand))
+      raise ValueError(f'Regular expression "{self.right_operand!s}" is malformed.')
 
     self.compiled_re = compiled_re

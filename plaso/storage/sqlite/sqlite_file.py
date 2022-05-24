@@ -65,7 +65,7 @@ def PythonAST2SQL(ast_node):
 
   if isinstance(ast_node, ast.Constant):
     if isinstance(ast_node.value, str):
-      return '"{0:s}"'.format(ast_node.value)
+      return f'"{ast_node.value:s}"'
 
     return str(ast_node.value)
 
@@ -76,7 +76,7 @@ def PythonAST2SQL(ast_node):
     return str(ast_node.n)
 
   if isinstance(ast_node, ast.Str):
-    return '"{0:s}"'.format(ast_node.s)
+    return f'"{ast_node.s:s}"'
 
   raise TypeError(ast_node)
 
@@ -194,7 +194,7 @@ class SQLiteStorageFile(interface.BaseStore):
     if len(self._attribute_container_cache) >= self._MAXIMUM_CACHED_CONTAINERS:
       self._attribute_container_cache.popitem(last=True)
 
-    lookup_key = '{0:s}.{1:d}'.format(attribute_container.CONTAINER_TYPE, index)
+    lookup_key = f'{attribute_container.CONTAINER_TYPE:s}.{index:d}'
     self._attribute_container_cache[lookup_key] = attribute_container
     self._attribute_container_cache.move_to_end(lookup_key, last=False)
 
@@ -220,7 +220,7 @@ class SQLiteStorageFile(interface.BaseStore):
     try:
       format_version = int(format_version, 10)
     except (TypeError, ValueError):
-      raise IOError('Invalid format version: {0!s}.'.format(format_version))
+      raise IOError(f'Invalid format version: {format_version!s}.')
 
     if (not check_readable_only and
         format_version < cls._APPEND_COMPATIBLE_FORMAT_VERSION):
@@ -230,25 +230,21 @@ class SQLiteStorageFile(interface.BaseStore):
 
     if format_version < cls._READ_COMPATIBLE_FORMAT_VERSION:
       raise IOError(
-          'Format version: {0:d} is too old and can no longer be read.'.format(
-              format_version))
+          f'Format version: {format_version:d} is too old and can no longer be read.')
 
     if format_version > cls._FORMAT_VERSION:
       raise IOError(
-          'Format version: {0:d} is too new and not yet supported.'.format(
-              format_version))
+          f'Format version: {format_version:d} is too new and not yet supported.')
 
     metadata_values['format_version'] = format_version
 
     compression_format = metadata_values.get('compression_format', None)
     if compression_format not in definitions.COMPRESSION_FORMATS:
-      raise IOError('Unsupported compression format: {0!s}'.format(
-          compression_format))
+      raise IOError(f'Unsupported compression format: {compression_format!s}')
 
     serialization_format = metadata_values.get('serialization_format', None)
     if serialization_format != definitions.SERIALIZER_FORMAT_JSON:
-      raise IOError('Unsupported serialization format: {0!s}'.format(
-          serialization_format))
+      raise IOError(f'Unsupported serialization format: {serialization_format!s}')
 
   def _CreateAttributeContainerTable(self, container_type):
     """Creates a table for a specific attribute container type.
@@ -267,7 +263,7 @@ class SQLiteStorageFile(interface.BaseStore):
       for name, data_type in sorted(schema.items()):
         data_type = self._CONTAINER_SCHEMA_TO_SQLITE_TYPE_MAPPINGS.get(
               data_type, 'TEXT')
-        column_definitions.append('{0:s} {1:s}'.format(name, data_type))
+        column_definitions.append(f'{name:s} {data_type:s}')
 
     else:
       if self.compression_format == definitions.COMPRESSION_FORMAT_ZLIB:
@@ -278,17 +274,15 @@ class SQLiteStorageFile(interface.BaseStore):
       if container_type == self._CONTAINER_TYPE_EVENT:
         column_definitions.append('_timestamp BIGINT')
 
-      column_definitions.append('_data {0:s}'.format(data_column_type))
+      column_definitions.append(f'_data {data_column_type:s}')
 
     column_definitions = ', '.join(column_definitions)
-    query = 'CREATE TABLE {0:s} ({1:s});'.format(
-        container_type, column_definitions)
+    query = f'CREATE TABLE {container_type:s} ({column_definitions:s});'
 
     try:
       self._cursor.execute(query)
     except (sqlite3.InterfaceError, sqlite3.OperationalError) as exception:
-      raise IOError('Unable to query storage file with error: {0!s}'.format(
-          exception))
+      raise IOError(f'Unable to query storage file with error: {exception!s}')
 
     if container_type == self._CONTAINER_TYPE_EVENT_TAG:
       query = (
@@ -297,8 +291,7 @@ class SQLiteStorageFile(interface.BaseStore):
       try:
         self._cursor.execute(query)
       except (sqlite3.InterfaceError, sqlite3.OperationalError) as exception:
-        raise IOError('Unable to query storage file with error: {0!s}'.format(
-            exception))
+        raise IOError(f'Unable to query storage file with error: {exception!s}')
 
   def _CreatetAttributeContainerFromRow(
       self, container_type, column_names, row, first_column_index):
@@ -370,8 +363,7 @@ class SQLiteStorageFile(interface.BaseStore):
       IOError: when there is an error querying the storage file.
       OSError: when there is an error querying the storage file.
     """
-    query = 'SELECT _identifier, {0:s} FROM {1:s}'.format(
-        ', '.join(column_names), container_type)
+    query = f"SELECT _identifier, {', '.join(column_names):s} FROM {container_type:s}"
     if filter_expression:
       query = ' WHERE '.join([query, filter_expression])
     if order_by:
@@ -432,7 +424,7 @@ class SQLiteStorageFile(interface.BaseStore):
       IOError: when there is an error querying the storage file.
       OSError: when there is an error querying the storage file.
     """
-    lookup_key = '{0:s}.{1:d}'.format(container_type, index)
+    lookup_key = f'{container_type:s}.{index:d}'
     attribute_container = self._attribute_container_cache.get(lookup_key, None)
     if attribute_container:
       self._attribute_container_cache.move_to_end(lookup_key, last=False)
@@ -456,8 +448,7 @@ class SQLiteStorageFile(interface.BaseStore):
     try:
       self._cursor.execute(query)
     except (sqlite3.InterfaceError, sqlite3.OperationalError) as exception:
-      raise IOError('Unable to query storage file with error: {0!s}'.format(
-          exception))
+      raise IOError(f'Unable to query storage file with error: {exception!s}')
 
     return bool(self._cursor.fetchone())
 
@@ -501,8 +492,7 @@ class SQLiteStorageFile(interface.BaseStore):
     try:
       self._cursor.execute(query)
     except (sqlite3.InterfaceError, sqlite3.OperationalError) as exception:
-      raise IOError('Unable to query storage file with error: {0!s}'.format(
-          exception))
+      raise IOError(f'Unable to query storage file with error: {exception!s}')
 
     metadata_values = {row[0]: row[1] for row in self._cursor.fetchall()}
 
@@ -638,8 +628,7 @@ class SQLiteStorageFile(interface.BaseStore):
       try:
         self._cursor.execute(query)
       except (sqlite3.InterfaceError, sqlite3.OperationalError) as exception:
-        raise IOError('Unable to query storage file with error: {0!s}'.format(
-            exception))
+        raise IOError(f'Unable to query storage file with error: {exception!s}')
 
   def _WriteExistingAttributeContainer(self, container):
     """Writes an existing attribute container to the store.
@@ -656,14 +645,12 @@ class SQLiteStorageFile(interface.BaseStore):
     identifier = container.GetIdentifier()
     if not isinstance(identifier, identifiers.SQLTableIdentifier):
       raise IOError(
-          'Unsupported attribute container identifier type: {0!s}'.format(
-              type(identifier)))
+          f'Unsupported attribute container identifier type: {type(identifier)!s}')
 
     schema = self._GetAttributeContainerSchema(container.CONTAINER_TYPE)
     if not schema:
       raise IOError(
-          'Unsupported attribute container type: {0:s}'.format(
-              container.CONTAINER_TYPE))
+          f'Unsupported attribute container type: {container.CONTAINER_TYPE:s}')
 
     self._UpdateAttributeContainerBeforeSerialize(container)
 
@@ -679,7 +666,7 @@ class SQLiteStorageFile(interface.BaseStore):
           # TODO: add compression support
           attribute_value = self._serializer.WriteSerialized(attribute_value)
 
-      column_names.append('{0:s} = ?'.format(name))
+      column_names.append(f'{name:s} = ?')
       values.append(attribute_value)
 
     query = 'UPDATE {0:s} SET {1:s} WHERE _identifier = {2:d}'.format(
@@ -693,8 +680,7 @@ class SQLiteStorageFile(interface.BaseStore):
       self._cursor.execute(query, values)
 
     except (sqlite3.InterfaceError, sqlite3.OperationalError) as exception:
-      raise IOError('Unable to query storage file with error: {0!s}'.format(
-          exception))
+      raise IOError(f'Unable to query storage file with error: {exception!s}')
 
     finally:
       if self._storage_profiler:
@@ -710,11 +696,10 @@ class SQLiteStorageFile(interface.BaseStore):
     try:
       self._cursor.execute(self._CREATE_METADATA_TABLE_QUERY)
     except (sqlite3.InterfaceError, sqlite3.OperationalError) as exception:
-      raise IOError('Unable to query storage file with error: {0!s}'.format(
-          exception))
+      raise IOError(f'Unable to query storage file with error: {exception!s}')
 
     self._WriteMetadataValue(
-        'format_version', '{0:d}'.format(self._FORMAT_VERSION))
+        'format_version', f'{self._FORMAT_VERSION:d}')
     self._WriteMetadataValue('compression_format', self.compression_format)
     self._WriteMetadataValue('serialization_format', self.serialization_format)
 
@@ -732,8 +717,7 @@ class SQLiteStorageFile(interface.BaseStore):
     try:
       self._cursor.execute(self._INSERT_METADATA_VALUE_QUERY, (key, value))
     except (sqlite3.InterfaceError, sqlite3.OperationalError) as exception:
-      raise IOError('Unable to query storage file with error: {0!s}'.format(
-          exception))
+      raise IOError(f'Unable to query storage file with error: {exception!s}')
 
   def _WriteNewAttributeContainer(self, container):
     """Writes a new attribute container to the store.
@@ -807,8 +791,7 @@ class SQLiteStorageFile(interface.BaseStore):
       self._cursor.execute(query, values)
 
     except (sqlite3.InterfaceError, sqlite3.OperationalError) as exception:
-      raise IOError('Unable to query storage file with error: {0!s}'.format(
-          exception))
+      raise IOError(f'Unable to query storage file with error: {exception!s}')
 
     finally:
       if self._storage_profiler:
@@ -895,8 +878,7 @@ class SQLiteStorageFile(interface.BaseStore):
     """
     if not isinstance(identifier, identifiers.SQLTableIdentifier):
       raise IOError(
-          'Unsupported attribute container identifier type: {0!s}'.format(
-              type(identifier)))
+          f'Unsupported attribute container identifier type: {type(identifier)!s}')
 
     return self.GetAttributeContainerByIndex(
         container_type, identifier.sequence_number - 1)
@@ -935,8 +917,7 @@ class SQLiteStorageFile(interface.BaseStore):
     try:
       self._cursor.execute(query)
     except (sqlite3.InterfaceError, sqlite3.OperationalError) as exception:
-      raise IOError('Unable to query storage file with error: {0!s}'.format(
-          exception))
+      raise IOError(f'Unable to query storage file with error: {exception!s}')
 
     if self._storage_profiler:
       self._storage_profiler.StartTiming('get_container_by_index')
@@ -1012,13 +993,12 @@ class SQLiteStorageFile(interface.BaseStore):
     # Note that this is SQLite specific, and will give inaccurate results if
     # there are DELETE commands run on the table. The Plaso SQLite storage
     # implementation does not run any DELETE commands.
-    query = 'SELECT MAX(_ROWID_) FROM {0:s} LIMIT 1'.format(container_type)
+    query = f'SELECT MAX(_ROWID_) FROM {container_type:s} LIMIT 1'
 
     try:
       self._cursor.execute(query)
     except (sqlite3.InterfaceError, sqlite3.OperationalError) as exception:
-      raise IOError('Unable to query storage file with error: {0!s}'.format(
-          exception))
+      raise IOError(f'Unable to query storage file with error: {exception!s}')
 
     row = self._cursor.fetchone()
     if not row:
@@ -1106,7 +1086,7 @@ class SQLiteStorageFile(interface.BaseStore):
     try:
       path_uri = pathlib.Path(path).as_uri()
       if read_only:
-        path_uri = '{0:s}?mode=ro'.format(path_uri)
+        path_uri = f'{path_uri:s}?mode=ro'
 
     except ValueError:
       path_uri = None
@@ -1127,8 +1107,7 @@ class SQLiteStorageFile(interface.BaseStore):
       connection.execute('PRAGMA synchronous=OFF')
 
     except (sqlite3.InterfaceError, sqlite3.OperationalError) as exception:
-      raise IOError('Unable to query storage file with error: {0!s}'.format(
-          exception))
+      raise IOError(f'Unable to query storage file with error: {exception!s}')
 
     cursor = connection.cursor()
     if not cursor:

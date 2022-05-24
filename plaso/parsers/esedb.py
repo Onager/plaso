@@ -111,7 +111,7 @@ class ESEDBParser(interface.FileObjectParser):
       database.Open(file_object)
     except (IOError, ValueError) as exception:
       parser_mediator.ProduceExtractionWarning(
-          'unable to open file with error: {0!s}'.format(exception))
+          f'unable to open file with error: {exception!s}')
       return
 
     # Compare the list of available plugin objects.
@@ -129,8 +129,7 @@ class ESEDBParser(interface.FileObjectParser):
               display_name, plugin.NAME))
           continue
 
-        logger.debug('Parsing file: {0:s} with plugin: {1:s}'.format(
-            display_name, plugin.NAME))
+        logger.debug(f'Parsing file: {display_name:s} with plugin: {plugin.NAME:s}')
 
         try:
           plugin.UpdateChainAndProcess(

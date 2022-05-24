@@ -87,7 +87,7 @@ class Sqlite3DatabaseFile(object):
       raise RuntimeError('Cannot retrieve values database not opened.')
 
     if condition:
-      condition = ' WHERE {0:s}'.format(condition)
+      condition = f' WHERE {condition:s}'
 
     sql_query = 'SELECT {1:s} FROM {0:s}{2:s}'.format(
         ', '.join(table_names), ', '.join(column_names), condition)
@@ -161,7 +161,7 @@ class WinevtResourcesSqlite3DatabaseReader(object):
     """
     table_names = ['event_log_providers']
     column_names = ['event_log_provider_key']
-    condition = 'log_source == "{0:s}"'.format(log_source)
+    condition = f'log_source == "{log_source:s}"'
 
     values_list = list(self._database_file.GetValues(
         table_names, column_names, condition))
@@ -190,14 +190,14 @@ class WinevtResourcesSqlite3DatabaseReader(object):
     Raises:
       RuntimeError: if more than one value is found in the database.
     """
-    table_name = 'message_table_{0:d}_0x{1:08x}'.format(message_file_key, lcid)
+    table_name = f'message_table_{message_file_key:d}_0x{lcid:08x}'
 
     has_table = self._database_file.HasTable(table_name)
     if not has_table:
       return None
 
     column_names = ['message_string']
-    condition = 'message_identifier == "0x{0:08x}"'.format(message_identifier)
+    condition = f'message_identifier == "0x{message_identifier:08x}"'
 
     values = list(self._database_file.GetValues(
         [table_name], column_names, condition))
@@ -222,8 +222,7 @@ class WinevtResourcesSqlite3DatabaseReader(object):
     """
     table_names = ['message_file_per_event_log_provider']
     column_names = ['message_file_key']
-    condition = 'event_log_provider_key == {0:d}'.format(
-        event_log_provider_key)
+    condition = f'event_log_provider_key == {event_log_provider_key:d}'
 
     generator = self._database_file.GetValues(
         table_names, column_names, condition)
@@ -286,7 +285,7 @@ class WinevtResourcesSqlite3DatabaseReader(object):
       return None
 
     column_names = ['value']
-    condition = 'name == "{0:s}"'.format(attribute_name)
+    condition = f'name == "{attribute_name:s}"'
 
     values = list(self._database_file.GetValues(
         [table_name], column_names, condition))
@@ -318,15 +317,14 @@ class WinevtResourcesSqlite3DatabaseReader(object):
 
     version = self.GetMetadataAttribute('version')
     if not version or version != '20150315':
-      raise RuntimeError('Unsupported version: {0:s}'.format(version))
+      raise RuntimeError(f'Unsupported version: {version:s}')
 
     string_format = self.GetMetadataAttribute('string_format')
     if not string_format:
       string_format = 'wrc'
 
     if string_format not in ('pep3101', 'wrc'):
-      raise RuntimeError('Unsupported string format: {0:s}'.format(
-          string_format))
+      raise RuntimeError(f'Unsupported string format: {string_format:s}')
 
     self._string_format = string_format
     return True
@@ -375,7 +373,7 @@ class WinevtResourcesHelper(object):
     if len(self._message_string_cache) >= self._MAXIMUM_CACHED_MESSAGE_STRINGS:
       self._message_string_cache.popitem(last=True)
 
-    lookup_key = '{0:s}:0x{1:08x}'.format(log_source, message_identifier)
+    lookup_key = f'{log_source:s}:0x{message_identifier:08x}'
     self._message_string_cache[lookup_key] = message_string
     self._message_string_cache.move_to_end(lookup_key, last=False)
 
@@ -389,7 +387,7 @@ class WinevtResourcesHelper(object):
     Returns:
       str: message string or None if not available.
     """
-    lookup_key = '{0:s}:0x{1:08x}'.format(log_source, message_identifier)
+    lookup_key = f'{log_source:s}:0x{message_identifier:08x}'
     message_string = self._message_string_cache.get(lookup_key, None)
     if message_string:
       self._message_string_cache.move_to_end(lookup_key, last=False)

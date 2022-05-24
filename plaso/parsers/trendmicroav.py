@@ -148,7 +148,7 @@ class TrendMicroBaseParser(dsv_parser.DSVParser):
         timestamp = int(timestamp, 10)
       except (ValueError, TypeError):
         parser_mediator.ProduceExtractionWarning(
-            'Unable to parse timestamp value: {0!s}'.format(timestamp))
+            f'Unable to parse timestamp value: {timestamp!s}')
 
       return dfdatetime_posix_time.PosixTime(timestamp=timestamp)
 
@@ -185,11 +185,11 @@ class TrendMicroBaseParser(dsv_parser.DSVParser):
     # Check that the strings have the correct length.
     if len(date) != 8:
       raise ValueError(
-          'Unsupported length of date string: {0!s}'.format(repr(date)))
+          f'Unsupported length of date string: {repr(date)!s}')
 
     if len(time) < 3 or len(time) > 4:
       raise ValueError(
-          'Unsupported length of time string: {0!s}'.format(repr(time)))
+          f'Unsupported length of time string: {repr(time)!s}')
 
     # Extract the date.
     try:
@@ -197,14 +197,14 @@ class TrendMicroBaseParser(dsv_parser.DSVParser):
       month = int(date[4:6], 10)
       day = int(date[6:8], 10)
     except (TypeError, ValueError):
-      raise ValueError('Unable to parse date string: {0!s}'.format(repr(date)))
+      raise ValueError(f'Unable to parse date string: {repr(date)!s}')
 
     # Extract the time. Note that a single-digit hour value has no leading zero.
     try:
       hour = int(time[:-2], 10)
       minutes = int(time[-2:], 10)
     except (TypeError, ValueError):
-      raise ValueError('Unable to parse time string: {0!s}'.format(repr(date)))
+      raise ValueError(f'Unable to parse time string: {repr(date)!s}')
 
     time_elements_tuple = (year, month, day, hour, minutes, 0)
     date_time = dfdatetime_time_elements.TimeElements(

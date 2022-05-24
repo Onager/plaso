@@ -52,8 +52,7 @@ class TLNFieldFormattingHelper(formatting_helper.FieldFormattingHelper):
     message = self._FormatMessage(event, event_data, event_data_stream)
     message = message.replace(self._DESCRIPTION_FIELD_DELIMITER, ' ')
 
-    return '{0:s}; {1:s}; {2:s}'.format(
-        date_time_string, timestamp_description, message)
+    return f'{date_time_string:s}; {timestamp_description:s}; {message:s}'
 
   def _FormatNotes(self, event, event_data, event_data_stream):
     """Formats a notes field.
@@ -72,10 +71,10 @@ class TLNFieldFormattingHelper(formatting_helper.FieldFormattingHelper):
     if not notes:
       display_name = self._FormatDisplayName(
           event, event_data, event_data_stream)
-      notes = 'File: {0:s}'.format(display_name)
+      notes = f'File: {display_name:s}'
 
       if inode != '-':
-        notes = '{0:s} inode: {1:s}'.format(notes, inode)
+        notes = f'{notes:s} inode: {inode:s}'
 
     return notes
 
@@ -95,7 +94,7 @@ class TLNFieldFormattingHelper(formatting_helper.FieldFormattingHelper):
     else:
       posix_timestamp, _ = divmod(event.timestamp, 1000000)
 
-    return '{0:d}'.format(posix_timestamp or 0)
+    return f'{posix_timestamp or 0:d}'
 
 
 class TLNOutputModule(shared_dsv.DSVOutputModule):

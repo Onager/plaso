@@ -59,8 +59,7 @@ class FakeStore(interface.BaseStore):
     identifier = container.GetIdentifier()
     if not isinstance(identifier, identifiers.FakeIdentifier):
       raise IOError(
-          'Unsupported attribute container identifier type: {0!s}'.format(
-              type(identifier)))
+          f'Unsupported attribute container identifier type: {type(identifier)!s}')
 
     lookup_key = identifier.CopyToString()
 

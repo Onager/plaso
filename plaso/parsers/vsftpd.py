@@ -95,7 +95,7 @@ class VsftpdLogParser(text_parser.PyparsingSingleLineTextParser):
       date_time.is_local_time = True
     except ValueError:
       parser_mediator.ProduceExtractionWarning(
-          'invalid date time value: {0!s}'.format(time_elements_tuple))
+          f'invalid date time value: {time_elements_tuple!s}')
       return
 
     event_data = VsftpdEventData()
@@ -121,7 +121,7 @@ class VsftpdLogParser(text_parser.PyparsingSingleLineTextParser):
     """
     if key != 'logline':
       raise errors.ParseError(
-          'Unable to parse record, unknown structure: {0:s}'.format(key))
+          f'Unable to parse record, unknown structure: {key:s}')
 
     self._ParseLogLine(parser_mediator, structure)
 

@@ -44,8 +44,7 @@ class AppleAccountPlugin(interface.PlistPlugin):
     for name_account, account in accounts.items():
       first_name = account.get('FirstName', '<FirstName>')
       last_name = account.get('LastName', '<LastName>')
-      general_description = '{0:s} ({1:s} {2:s})'.format(
-          name_account, first_name, last_name)
+      general_description = f'{name_account:s} ({first_name:s} {last_name:s})'
 
       event_data = plist_event.PlistTimeEventData()
       event_data.key = name_account
@@ -53,8 +52,7 @@ class AppleAccountPlugin(interface.PlistPlugin):
 
       datetime_value = account.get('CreationDate', None)
       if datetime_value:
-        event_data.desc = 'Configured Apple account {0:s}'.format(
-            general_description)
+        event_data.desc = f'Configured Apple account {general_description:s}'
 
         date_time = dfdatetime_time_elements.TimeElementsInMicroseconds()
         date_time.CopyFromDatetime(datetime_value)
@@ -65,8 +63,7 @@ class AppleAccountPlugin(interface.PlistPlugin):
 
       datetime_value = account.get('LastSuccessfulConnect', None)
       if datetime_value:
-        event_data.desc = 'Connected Apple account {0:s}'.format(
-            general_description)
+        event_data.desc = f'Connected Apple account {general_description:s}'
 
         date_time = dfdatetime_time_elements.TimeElementsInMicroseconds()
         date_time.CopyFromDatetime(datetime_value)
@@ -77,8 +74,7 @@ class AppleAccountPlugin(interface.PlistPlugin):
 
       datetime_value = account.get('ValidationDate', None)
       if datetime_value:
-        event_data.desc = 'Last validation Apple account {0:s}'.format(
-            general_description)
+        event_data.desc = f'Last validation Apple account {general_description:s}'
 
         date_time = dfdatetime_time_elements.TimeElementsInMicroseconds()
         date_time.CopyFromDatetime(datetime_value)

@@ -121,8 +121,7 @@ class WinPrefetchParser(interface.FileObjectParser):
       mapped_file_string = file_metrics.filename
       if not mapped_file_string:
         parser_mediator.ProduceExtractionWarning(
-            'missing filename for file metrics entry: {0:d}'.format(
-                entry_index))
+            f'missing filename for file metrics entry: {entry_index:d}')
         continue
 
       file_reference = file_metrics.file_reference
@@ -165,8 +164,7 @@ class WinPrefetchParser(interface.FileObjectParser):
           continue
 
         date_time = dfdatetime_filetime.Filetime(timestamp=timestamp)
-        date_time_description = 'Previous {0:s}'.format(
-            definitions.TIME_DESCRIPTION_LAST_RUN)
+        date_time_description = f'Previous {definitions.TIME_DESCRIPTION_LAST_RUN:s}'
         event = time_events.DateTimeValuesEvent(
             date_time, date_time_description)
         parser_mediator.ProduceEventWithEventData(event, event_data)
@@ -185,14 +183,14 @@ class WinPrefetchParser(interface.FileObjectParser):
       scca_file.open_file_object(file_object)
     except IOError as exception:
       parser_mediator.ProduceExtractionWarning(
-          'unable to open file with error: {0!s}'.format(exception))
+          f'unable to open file with error: {exception!s}')
       return
 
     try:
       self._ParseSCCAFile(parser_mediator, scca_file)
     except IOError as exception:
       parser_mediator.ProduceExtractionWarning(
-          'unable to parse file with error: {0!s}'.format(exception))
+          f'unable to parse file with error: {exception!s}')
     finally:
       scca_file.close()
 

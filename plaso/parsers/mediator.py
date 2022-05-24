@@ -342,7 +342,7 @@ class ParserMediator(object):
 
     data_stream = getattr(self._file_entry.path_spec, 'data_stream', None)
     if data_stream:
-      return '{0:s}:{1:s}'.format(self._file_entry.name, data_stream)
+      return f'{self._file_entry.name:s}:{data_stream:s}'
 
     return self._file_entry.name
 
@@ -454,7 +454,7 @@ class ParserMediator(object):
           lookup_path, {})
 
       for filename, provider in providers_per_filename.items():
-        mui_filename = '{0:s}.mui'.format(filename)
+        mui_filename = f'{filename:s}.mui'
         if lookup_filename in (filename, mui_filename):
           windows_path = '\\'.join([lookup_path, filename])
           message_file = artifacts.WindowsEventLogMessageFileArtifact(
@@ -527,18 +527,15 @@ class ParserMediator(object):
 
     if event.date_time is None:
       raise errors.InvalidEvent(
-          'Date time value not set in event produced by: {0:s}.'.format(
-              parser_chain))
+          f'Date time value not set in event produced by: {parser_chain:s}.')
 
     if event.timestamp is None:
       raise errors.InvalidEvent(
-          'Timestamp value not set in event produced by: {0:s}.'.format(
-              parser_chain))
+          f'Timestamp value not set in event produced by: {parser_chain:s}.')
 
     if event.timestamp < self._INT64_MIN or event.timestamp > self._INT64_MAX:
       raise errors.InvalidEvent(
-          'Timestamp value out of bounds in event produced by: {0:s}.'.format(
-              parser_chain))
+          f'Timestamp value out of bounds in event produced by: {parser_chain:s}.')
 
     # TODO: rename this to event_data.parser_chain or equivalent.
     event_data.parser = parser_chain
@@ -691,13 +688,11 @@ class ParserMediator(object):
     lcid = None
     if language_tag is not None:
       if not isinstance(language_tag, str):
-        raise ValueError('Language tag: {0!s} is not a string.'.format(
-            language_tag))
+        raise ValueError(f'Language tag: {language_tag!s} is not a string.')
 
       lcid = languages.WindowsLanguageHelper.GetLCIDForLanguageTag(language_tag)
       if not lcid:
-        raise ValueError('No LCID found for language tag: {0:s}.'.format(
-            language_tag))
+        raise ValueError(f'No LCID found for language tag: {language_tag:s}.')
 
     self._language_tag = language_tag
     self._lcid = lcid
@@ -716,7 +711,7 @@ class ParserMediator(object):
       try:
         time_zone = pytz.timezone(time_zone)
       except pytz.UnknownTimeZoneError:
-        raise ValueError('Unsupported time zone: {0!s}'.format(time_zone))
+        raise ValueError(f'Unsupported time zone: {time_zone!s}')
 
     self._time_zone = time_zone
 
@@ -776,7 +771,7 @@ class ParserMediator(object):
       return
 
     if configuration.HaveProfileParsers():
-      identifier = '{0:s}-parsers'.format(identifier)
+      identifier = f'{identifier:s}-parsers'
 
       self._cpu_time_profiler = profilers.CPUTimeProfiler(
           identifier, configuration)

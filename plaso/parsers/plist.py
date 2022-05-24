@@ -87,11 +87,11 @@ class PlistParser(interface.FileObjectParser):
 
     if file_size <= 0:
       raise errors.WrongParser(
-          'File size: {0:d} bytes is less equal 0.'.format(file_size))
+          f'File size: {file_size:d} bytes is less equal 0.')
 
     if file_size > self._MAXIMUM_PLIST_FILE_SIZE:
       raise errors.WrongParser(
-          'File size: {0:d} bytes is larger than 50 MB.'.format(file_size))
+          f'File size: {file_size:d} bytes is larger than 50 MB.')
 
     plist_data = file_object.read()
 
@@ -126,7 +126,7 @@ class PlistParser(interface.FileObjectParser):
     except (AttributeError, binascii.Error, expat.ExpatError,
             plistlib.InvalidFileException) as exception:
       raise errors.WrongParser(
-          'Unable to parse plist with error: {0!s}'.format(exception))
+          f'Unable to parse plist with error: {exception!s}')
 
     except (LookupError, ValueError) as exception:
       # LookupError will be raised in cases where the plist is an XML file
@@ -134,7 +134,7 @@ class PlistParser(interface.FileObjectParser):
       # ValueError will be raised in cases where the plist is an XML file
       # that contains an unsupported date and time value.
       parser_mediator.ProduceExtractionWarning(
-          'unable to parse XML plist with error: {0!s}'.format(exception))
+          f'unable to parse XML plist with error: {exception!s}')
       return
 
     if not top_level_object:
@@ -156,8 +156,7 @@ class PlistParser(interface.FileObjectParser):
       top_level_keys = set(top_level_object.keys())
     except AttributeError as exception:
       raise errors.WrongParser(
-          'Unable to parse top level keys of: {0:s} with error: {1!s}.'.format(
-              filename, exception))
+          f'Unable to parse top level keys of: {filename:s} with error: {exception!s}.')
 
     found_matching_plugin = False
     for plugin in self._plugins:
@@ -181,8 +180,7 @@ class PlistParser(interface.FileObjectParser):
             display_name, plugin.NAME))
         continue
 
-      logger.debug('Parsing file: {0:s} with plugin: {1:s}'.format(
-          display_name, plugin.NAME))
+      logger.debug(f'Parsing file: {display_name:s} with plugin: {plugin.NAME:s}')
 
       try:
         plugin.UpdateChainAndProcess(

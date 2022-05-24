@@ -221,7 +221,7 @@ class FileStatTest(test_lib.ParserTestCase):
     expected_event_values = {
         'data_type': 'fs:stat',
         'date_time': '2012-07-28 16:44:07',
-        'display_name': 'GZIP:{0:s}'.format(test_path),
+        'display_name': f'GZIP:{test_path:s}',
         'file_entry_type': 'file',
         'file_size': 1247,
         'file_system_type': 'GZIP',
@@ -338,7 +338,7 @@ class FileStatTest(test_lib.ParserTestCase):
     expected_event_values = {
         'data_type': 'fs:stat',
         'date_time': '2012-07-28 16:44:43',
-        'display_name': 'GZIP:{0:s}'.format(test_path),
+        'display_name': f'GZIP:{test_path:s}',
         'file_entry_type': 'file',
         'file_size': 10240,
         'file_system_type': 'GZIP',

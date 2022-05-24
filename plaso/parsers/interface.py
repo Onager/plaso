@@ -106,8 +106,7 @@ class BaseParser(object):
     plugin_name = plugin_class.NAME.lower()
     if plugin_name not in cls._plugin_classes:
       raise KeyError(
-          'Plugin class not set for name: {0:s}.'.format(
-              plugin_class.NAME))
+          f'Plugin class not set for name: {plugin_class.NAME:s}.')
 
     del cls._plugin_classes[plugin_name]
 
@@ -123,7 +122,7 @@ class BaseParser(object):
     if not self._plugin_classes:
       return
 
-    default_plugin_name = '{0:s}_default'.format(self.NAME)
+    default_plugin_name = f'{self.NAME:s}_default'
     for plugin_name, plugin_class in self._plugin_classes.items():
       if plugin_name == default_plugin_name:
         self._default_plugin = plugin_class()

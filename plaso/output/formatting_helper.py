@@ -106,7 +106,7 @@ class FieldFormattingHelper(object):
         return 'Invalid'
 
       if iso8601_string[-1] == 'Z':
-        iso8601_string = '{0:s}+00:00'.format(iso8601_string[:-1])
+        iso8601_string = f'{iso8601_string[:-1]:s}+00:00'
 
       if (self._output_mediator.timezone != pytz.UTC or
           date_time.time_zone_offset):
@@ -276,7 +276,7 @@ class FieldFormattingHelper(object):
       inode = '-'
 
     elif isinstance(inode, int):
-      inode = '{0:d}'.format(inode)
+      inode = f'{inode:d}'
 
     return inode
 
@@ -469,7 +469,7 @@ class FieldFormattingHelper(object):
           'Defaulting to: "--:--:--"').format(event.timestamp))
       return '--:--:--'
 
-    return '{0:02d}:{1:02d}:{2:02d}'.format(hours, minutes, seconds)
+    return f'{hours:02d}:{minutes:02d}:{seconds:02d}'
 
   def _FormatTimeZone(self, event, event_data, event_data_stream):
     """Formats a time zone field.
@@ -577,7 +577,7 @@ class FieldFormattingHelper(object):
             try:
               self._source_mappings[row[0]] = (row[1], row[2])
             except IndexError:
-              logger.error('Invalid source mapping: {0!s}'.format(row))
+              logger.error(f'Invalid source mapping: {row!s}')
 
     except (IOError, TypeError, csv.Error):
       pass
@@ -630,6 +630,6 @@ class FieldFormattingHelper(object):
       output_value = '-'
 
     elif not isinstance(output_value, str):
-      output_value = '{0!s}'.format(output_value)
+      output_value = f'{output_value!s}'
 
     return output_value

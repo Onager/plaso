@@ -41,7 +41,7 @@ class WindowsDistributedLinkTrackingEventData(events.EventData):
     self.mac_address = mac_address
     # TODO: replace origin my something machine readable.
     self.origin = origin
-    self.uuid = '{0!s}'.format(uuid)
+    self.uuid = f'{uuid!s}'
 
 
 class WindowsRegistryEventData(events.EventData):

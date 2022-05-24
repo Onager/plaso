@@ -201,7 +201,7 @@ class PstealTool(
     try:
       self.ParseOptions(options)
     except errors.BadConfigOption as exception:
-      self._output_writer.Write('ERROR: {0!s}\n'.format(exception))
+      self._output_writer.Write(f'ERROR: {exception!s}\n')
       self._output_writer.Write('\n')
       self._output_writer.Write(argument_parser.format_usage())
       return False
@@ -287,7 +287,7 @@ class PstealTool(
 
     if os.path.exists(self._output_filename):
       raise errors.BadConfigOption(
-          'Output file already exists: {0:s}.'.format(self._output_filename))
+          f'Output file already exists: {self._output_filename:s}.')
 
     self._EnforceProcessMemoryLimit(self._process_memory_limit)
 
@@ -310,8 +310,7 @@ class PstealTool(
         self._storage_file_path)
     if not storage_reader:
       raise errors.BadConfigOption(
-          'Format of storage file: {0:s} not supported'.format(
-              self._storage_file_path))
+          f'Format of storage file: {self._storage_file_path:s} not supported')
 
     try:
       self._number_of_analysis_reports = (
@@ -366,5 +365,4 @@ class PstealTool(
 
     self._output_writer.Write('Processing completed.\n')
 
-    self._output_writer.Write('Storage file is {0:s}\n'.format(
-        self._storage_file_path))
+    self._output_writer.Write(f'Storage file is {self._storage_file_path:s}\n')

@@ -101,15 +101,15 @@ def _CheckPythonModule(
   module_object = _ImportPythonModule(module_name)
   if not module_object:
     if not is_required:
-      print('[OPTIONAL]\tmissing: {0:s}.'.format(module_name))
+      print(f'[OPTIONAL]\tmissing: {module_name:s}.')
       return True
 
-    print('[FAILURE]\tmissing: {0:s}.'.format(module_name))
+    print(f'[FAILURE]\tmissing: {module_name:s}.')
     return False
 
   if not version_attribute_name or not minimum_version:
     if verbose_output:
-      print('[OK]\t\t{0:s}'.format(module_name))
+      print(f'[OK]\t\t{module_name:s}')
     return True
 
   module_version = None
@@ -133,7 +133,7 @@ def _CheckPythonModule(
     return False
 
   # Make sure the module version is a string.
-  module_version = '{0!s}'.format(module_version)
+  module_version = f'{module_version!s}'
 
   # Remove a version suffix, such as: 0.7.0~rc1
   module_version_list = _VERSION_SPLIT_REGEX.split(module_version)
@@ -177,7 +177,7 @@ def _CheckPythonModule(
       return False
 
   if verbose_output:
-    print('[OK]\t\t{0:s} version: {1!s}'.format(module_name, module_version))
+    print(f'[OK]\t\t{module_name:s} version: {module_version!s}')
 
   return True
 

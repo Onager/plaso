@@ -92,7 +92,7 @@ class TestBagMRUWindowsRegistryPlugin(test_lib.RegistryPluginTestCase):
 
     expected_event_values = {
         'date_time': '2009-08-04 15:19:16.9977500',
-        'key_path': '{0:s}\\0\\0\\0\\0\\0'.format(key_path)}
+        'key_path': f'{key_path:s}\\0\\0\\0\\0\\0'}
 
     self.CheckEventValues(storage_writer, events[14], expected_event_values)
 

@@ -88,7 +88,7 @@ class UtmpxParser(interface.FileObjectParser, dtfabric_helper.DtFabricHelper):
           '{1!s}.').format(file_offset, exception))
 
     if entry.type not in self._SUPPORTED_TYPES:
-      raise errors.ParseError('Unsupported type: {0:d}'.format(entry.type))
+      raise errors.ParseError(f'Unsupported type: {entry.type:d}')
 
     encoding = parser_mediator.codepage or 'utf8'
 
@@ -164,8 +164,7 @@ class UtmpxParser(interface.FileObjectParser, dtfabric_helper.DtFabricHelper):
           parser_mediator, file_object, file_offset)
     except errors.ParseError as exception:
       raise errors.WrongParser(
-          'Unable to parse utmpx file header with error: {0!s}'.format(
-              exception))
+          f'Unable to parse utmpx file header with error: {exception!s}')
 
     if event_data.username != self._FILE_HEADER_USERNAME:
       raise errors.WrongParser(

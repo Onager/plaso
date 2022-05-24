@@ -147,8 +147,7 @@ class EventExtractionWorker(object):
       RuntimeError: if the file-like object cannot be retrieved from
           the file entry.
     """
-    logger.debug('[AnalyzeDataStream] analyzing file: {0:s}'.format(
-        display_name))
+    logger.debug(f'[AnalyzeDataStream] analyzing file: {display_name:s}')
 
     if self._processing_profiler:
       self._processing_profiler.StartTiming('analyzing')
@@ -166,8 +165,7 @@ class EventExtractionWorker(object):
       if self._processing_profiler:
         self._processing_profiler.StopTiming('analyzing')
 
-    logger.debug('[AnalyzeDataStream] completed analyzing file: {0:s}'.format(
-        display_name))
+    logger.debug(f'[AnalyzeDataStream] completed analyzing file: {display_name:s}')
 
   def _AnalyzeFileObject(self, file_object, display_name, event_data_stream):
     """Processes a file-like object with analyzers.
@@ -394,8 +392,7 @@ class EventExtractionWorker(object):
 
     display_name = mediator.GetDisplayName()
     logger.debug(
-        '[ExtractMetadataFromFileEntry] processing file entry: {0:s}'.format(
-            display_name))
+        f'[ExtractMetadataFromFileEntry] processing file entry: {display_name:s}')
 
     self.processing_status = definitions.STATUS_INDICATOR_EXTRACTING
 
@@ -658,7 +655,7 @@ class EventExtractionWorker(object):
     """
     display_name = mediator.GetDisplayName()
     logger.debug(
-        '[ProcessFileEntry] processing file entry: {0:s}'.format(display_name))
+        f'[ProcessFileEntry] processing file entry: {display_name:s}')
 
     if self._IsMetadataFile(file_entry):
       self._ProcessMetadataFile(mediator, file_entry)
@@ -685,8 +682,7 @@ class EventExtractionWorker(object):
         self._ProcessFileEntryDataStream(mediator, file_entry, None)
 
     logger.debug(
-        '[ProcessFileEntry] done processing file entry: {0:s}'.format(
-            display_name))
+        f'[ProcessFileEntry] done processing file entry: {display_name:s}')
 
   def _ProcessFileEntryDataStream(self, mediator, file_entry, data_stream):
     """Processes a specific data stream of a file entry.
@@ -735,7 +731,7 @@ class EventExtractionWorker(object):
     if skip_content_extraction:
       display_name = mediator.GetDisplayName()
       logger.debug(
-          'Skipping content extraction of: {0:s}'.format(display_name))
+          f'Skipping content extraction of: {display_name:s}')
       self.processing_status = definitions.STATUS_INDICATOR_IDLE
       return
 
@@ -856,8 +852,7 @@ class EventExtractionWorker(object):
     if file_entry is None:
       display_name = mediator.GetDisplayNameForPathSpec(path_spec)
       logger.warning(
-          'Unable to open file entry with path spec: {0:s}'.format(
-              display_name))
+          f'Unable to open file entry with path spec: {display_name:s}')
       self.processing_status = definitions.STATUS_INDICATOR_IDLE
       return
 

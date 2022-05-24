@@ -111,7 +111,7 @@ class OpenXMLPlugin(interface.CompoundZIPPlugin):
         property_value = property_value.decode('utf-8')
       except UnicodeDecodeError:
         parser_mediator.ProduceExtractionWarning(
-            'unable to decode property: {0:s}'.format(property_name))
+            f'unable to decode property: {property_name:s}')
 
     return property_value
 

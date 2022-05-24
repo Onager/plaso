@@ -223,8 +223,8 @@ class PinfoTool(tools.CLITool, tool_options.StorageFileOptions):
     if os.path.exists(storage_file_path):
       if not os.path.isfile(storage_file_path):
         raise errors.BadConfigOption(
-            'Storage file: {0:s} already exists and is not a file.'.format(
-                storage_file_path))
+            f'Storage file: {storage_file_path:s} already exists and is not a '
+            f'file.')
 
       if warn_about_existing:
         logger.warning('Appending to an already existing storage file.')
@@ -238,7 +238,7 @@ class PinfoTool(tools.CLITool, tool_options.StorageFileOptions):
 
     if not os.access(dirname, os.W_OK):
       raise errors.BadConfigOption(
-          'Unable to write to storage file: {0:s}'.format(storage_file_path))
+          f'Unable to write to storage file: {storage_file_path:s}')
 
   def _CompareCounter(self, counter, compare_counter):
     """Compares two counters.
@@ -433,11 +433,11 @@ class PinfoTool(tools.CLITool, tool_options.StorageFileOptions):
       storage_reader (StorageReader): storage reader.
     """
     column_titles = [
-        '{0:s} hash'.format(self._hash_type.upper()),
+        f'{self._hash_type.upper():s} hash',
         'Display name']
     self._GenerateReportHeader('file_hashes', column_titles)
 
-    hash_attribute_name = '{0:s}_hash'.format(self._hash_type)
+    hash_attribute_name = f'{self._hash_type:s}_hash'
     attribute_names = [hash_attribute_name, 'display_name']
     entry_format_string = self._GenerateReportEntryFormatString(attribute_names)
 
@@ -502,12 +502,12 @@ class PinfoTool(tools.CLITool, tool_options.StorageFileOptions):
           separated tables.
     """
     if self._output_format == 'json':
-      self._output_writer.Write('{{"{0:s}": [\n'.format(json_base_type))
+      self._output_writer.Write(f'{{"{json_base_type:s}": [\n')
 
     elif self._output_format == 'markdown':
-      self._output_writer.Write('{0:s}\n'.format(' | '.join(column_titles)))
+      self._output_writer.Write(f"{' | '.join(column_titles):s}\n")
       self._output_writer.Write(
-          '{0:s}\n'.format(' | '.join(['---'] * len(column_titles))))
+          f"{' | '.join(['---'] * len(column_titles)):s}\n")
 
     elif self._output_format == 'text':
       self._output_writer.Write('{0:s}\n'.format('\t'.join(column_titles)))
@@ -560,7 +560,7 @@ class PinfoTool(tools.CLITool, tool_options.StorageFileOptions):
         storage_factory.StorageFactory.CreateStorageReaderForFile(path))
     if not storage_reader:
       raise errors.BadConfigOption(
-          'Format of storage file: {0:s} not supported'.format(path))
+          f'Format of storage file: {path:s} not supported')
 
     return storage_reader
 
@@ -577,13 +577,13 @@ class PinfoTool(tools.CLITool, tool_options.StorageFileOptions):
     if self._output_format == 'json':
       json_string = json.dumps(analysis_reports_counter)
       self._output_writer.Write(
-          ', "analysis_reports": {0:s}'.format(json_string))
+          f', "analysis_reports": {json_string:s}')
 
     elif (self._output_format in ('markdown', 'text') and
           analysis_reports_counter):
       title = 'Reports generated per plugin'
       if session_identifier:
-        title = '{0:s}: {1:s}'.format(title, session_identifier)
+        title = f'{title:s}: {session_identifier:s}'
 
       table_view = views.ViewsFactory.GetTableView(
           self._views_format_type,
@@ -625,7 +625,7 @@ class PinfoTool(tools.CLITool, tool_options.StorageFileOptions):
               timestamp=analysis_report.time_compiled)
           date_time_string = date_time.CopyToDateTimeStringISO8601()
 
-        title = 'Analysis report: {0:d}'.format(index)
+        title = f'Analysis report: {index:d}'
         table_view = views.ViewsFactory.GetTableView(
             self._views_format_type, title=title)
 
@@ -673,7 +673,7 @@ class PinfoTool(tools.CLITool, tool_options.StorageFileOptions):
         self._views_format_type, column_names=column_names, title=title)
 
     for key, value in sorted(differences.items()):
-      value_string = '{0:d} ({1:d})'.format(value[0], value[1])
+      value_string = f'{value[0]:d} ({value[1]:d})'
       if reverse:
         table_view.AddRow([value_string, key])
       else:
@@ -692,7 +692,7 @@ class PinfoTool(tools.CLITool, tool_options.StorageFileOptions):
         self._CONTAINER_TYPE_EXTRACTION_WARNING)
 
     for index, warning in enumerate(generator):
-      title = 'Extraction warning: {0:d}'.format(index)
+      title = f'Extraction warning: {index:d}'
       table_view = views.ViewsFactory.GetTableView(
           self._views_format_type, title=title)
 
@@ -724,7 +724,7 @@ class PinfoTool(tools.CLITool, tool_options.StorageFileOptions):
     """
     if self._output_format == 'json':
       json_string = json.dumps(event_labels_counter)
-      self._output_writer.Write(', "event_labels": {0:s}'.format(json_string))
+      self._output_writer.Write(f', "event_labels": {json_string:s}')
 
     elif self._output_format in ('markdown', 'text'):
       if self._output_format == 'text' and not event_labels_counter:
@@ -734,15 +734,14 @@ class PinfoTool(tools.CLITool, tool_options.StorageFileOptions):
         title = 'Event tags generated per label'
 
         if session_identifier:
-          title = '{0:s}: {1:s}'.format(title, session_identifier)
+          title = f'{title:s}: {session_identifier:s}'
           title_level = 4
         else:
           title_level = 2
 
         if not event_labels_counter:
           if not session_identifier:
-            self._output_writer.Write('{0:s} {1:s}\n\nN/A\n\n'.format(
-                '#' * title_level, title))
+            self._output_writer.Write(f"{'#' * title_level:s} {title:s}\n\nN/A\n\n")
         else:
           table_view = views.ViewsFactory.GetTableView(
               self._views_format_type,
@@ -776,7 +775,7 @@ class PinfoTool(tools.CLITool, tool_options.StorageFileOptions):
         self._output_writer.Write(', ')
 
       json_string = json.dumps(parsers_counter)
-      self._output_writer.Write('"parsers": {0:s}'.format(json_string))
+      self._output_writer.Write(f'"parsers": {json_string:s}')
 
     elif self._output_format in ('markdown', 'text'):
       if self._output_format == 'text' and not parsers_counter:
@@ -786,15 +785,14 @@ class PinfoTool(tools.CLITool, tool_options.StorageFileOptions):
       else:
         title = 'Events generated per parser'
         if session_identifier:
-          title = '{0:s}: {1:s}'.format(title, session_identifier)
+          title = f'{title:s}: {session_identifier:s}'
           title_level = 4
         else:
           title_level = 2
 
         if not parsers_counter:
           if not session_identifier:
-            self._output_writer.Write('{0:s} {1:s}\n\nN/A\n\n'.format(
-                '#' * title_level, title))
+            self._output_writer.Write(f"{'#' * title_level:s} {title:s}\n\nN/A\n\n")
         else:
           table_view = views.ViewsFactory.GetTableView(
               self._views_format_type,
@@ -819,7 +817,7 @@ class PinfoTool(tools.CLITool, tool_options.StorageFileOptions):
         self._CONTAINER_TYPE_PREPROCESSING_WARNING)
 
     for index, warning in enumerate(generator):
-      title = 'Preprocessing warning: {0:d}'.format(index)
+      title = f'Preprocessing warning: {index:d}'
       table_view = views.ViewsFactory.GetTableView(
           self._views_format_type, title=title)
 
@@ -851,7 +849,7 @@ class PinfoTool(tools.CLITool, tool_options.StorageFileOptions):
         self._CONTAINER_TYPE_RECOVERY_WARNING)
 
     for index, warning in enumerate(generator):
-      title = 'Recovery warning: {0:d}'.format(index)
+      title = f'Recovery warning: {index:d}'
       table_view = views.ViewsFactory.GetTableView(
           self._views_format_type, title=title)
 
@@ -880,7 +878,7 @@ class PinfoTool(tools.CLITool, tool_options.StorageFileOptions):
     json_string = (
         json_serializer.JSONAttributeContainerSerializer.WriteSerialized(
             session))
-    self._output_writer.Write('"session": {0:s}'.format(json_string))
+    self._output_writer.Write(f'"session": {json_string:s}')
 
   def _PrintSessionDetailsAsTable(self, session, session_identifier):
     """Prints the details of a session as a table.
@@ -915,7 +913,7 @@ class PinfoTool(tools.CLITool, tool_options.StorageFileOptions):
       artifact_filters_string = 'N/A'
     filter_file = session.filter_file or 'N/A'
 
-    title = 'Session: {0:s}'.format(session_identifier)
+    title = f'Session: {session_identifier:s}'
     table_view = views.ViewsFactory.GetTableView(
         self._views_format_type, title=title)
 
@@ -946,7 +944,7 @@ class PinfoTool(tools.CLITool, tool_options.StorageFileOptions):
 
     for session_index, session in enumerate(storage_reader.GetSessions()):
       session_identifier = uuid.UUID(hex=session.identifier)
-      session_identifier = '{0!s}'.format(session_identifier)
+      session_identifier = f'{session_identifier!s}'
 
       if self._output_format == 'json':
         if session_index != 0:
@@ -994,7 +992,7 @@ class PinfoTool(tools.CLITool, tool_options.StorageFileOptions):
       start_time = date_time.CopyToDateTimeStringISO8601()
 
       session_identifier = uuid.UUID(hex=session.identifier)
-      session_identifier = '{0!s}'.format(session_identifier)
+      session_identifier = f'{session_identifier!s}'
       table_view.AddRow([session_identifier, start_time])
 
     table_view.Write(self._output_writer)
@@ -1027,7 +1025,7 @@ class PinfoTool(tools.CLITool, tool_options.StorageFileOptions):
 
     title = 'System configuration'
     if session_identifier:
-      title = '{0:s}: {1:s}'.format(title, session_identifier)
+      title = f'{title:s}: {session_identifier:s}'
 
     table_view = views.ViewsFactory.GetTableView(
         self._views_format_type, title=title)
@@ -1059,7 +1057,7 @@ class PinfoTool(tools.CLITool, tool_options.StorageFileOptions):
 
     title = 'Available time zones'
     if session_identifier:
-      title = '{0:s}: {1:s}'.format(title, session_identifier)
+      title = f'{title:s}: {session_identifier:s}'
 
     table_view = views.ViewsFactory.GetTableView(
         self._views_format_type,
@@ -1072,15 +1070,14 @@ class PinfoTool(tools.CLITool, tool_options.StorageFileOptions):
         hours_from_utc *= -1
       else:
         sign = '-'
-      time_zone_offset = '{0:s}{1:02d}:{2:02d}'.format(
-          sign, hours_from_utc, minutes_from_utc)
+      time_zone_offset = f'{sign:s}{hours_from_utc:02d}:{minutes_from_utc:02d}'
       table_view.AddRow([time_zone.name, time_zone_offset])
 
     table_view.Write(self._output_writer)
 
     title = 'User accounts'
     if session_identifier:
-      title = '{0:s}: {1:s}'.format(title, session_identifier)
+      title = f'{title:s}: {session_identifier:s}'
 
     table_view = views.ViewsFactory.GetTableView(
         self._views_format_type,
@@ -1113,7 +1110,7 @@ class PinfoTool(tools.CLITool, tool_options.StorageFileOptions):
             json_serializer.JSONAttributeContainerSerializer.WriteSerialized(
                 configuration.system_configuration))
         self._output_writer.Write(
-            '"system_configuration": {0:s}'.format(json_string))
+            f'"system_configuration": {json_string:s}')
 
       elif self._output_format in ('markdown', 'text'):
         self._PrintSourceConfiguration(
@@ -1196,7 +1193,7 @@ class PinfoTool(tools.CLITool, tool_options.StorageFileOptions):
         json_string = (
             json_serializer.JSONAttributeContainerSerializer.WriteSerialized(
                 source))
-        self._output_writer.Write('"source": {0:s}'.format(json_string))
+        self._output_writer.Write(f'"source": {json_string:s}')
 
       elif self._output_format in ('markdown', 'text'):
         if self._verbose or 'sources' in self._sections:
@@ -1207,7 +1204,7 @@ class PinfoTool(tools.CLITool, tool_options.StorageFileOptions):
               continue
 
             if path_index == 0:
-              table_view.AddRow(['{0:d}'.format(source_index), line])
+              table_view.AddRow([f'{source_index:d}', line])
             else:
               table_view.AddRow(['', line])
 
@@ -1217,7 +1214,7 @@ class PinfoTool(tools.CLITool, tool_options.StorageFileOptions):
       self._output_writer.Write('}')
     elif self._output_format in ('markdown', 'text'):
       if not (self._verbose or 'sources' in self._sections):
-        table_view.AddRow(['Total', '{0:d}'.format(number_of_event_sources)])
+        table_view.AddRow(['Total', f'{number_of_event_sources:d}'])
       table_view.Write(self._output_writer)
 
   def _PrintStorageOverviewAsTable(self, storage_reader):
@@ -1249,11 +1246,11 @@ class PinfoTool(tools.CLITool, tool_options.StorageFileOptions):
     """
     json_string = json.dumps(warnings_by_parser_chain)
     self._output_writer.Write(
-        ', "warnings_by_parser": {0:s}'.format(json_string))
+        f', "warnings_by_parser": {json_string:s}')
 
     json_string = json.dumps(warnings_by_path_spec)
     self._output_writer.Write(
-        ', "warnings_by_path_spec": {0:s}'.format(json_string))
+        f', "warnings_by_path_spec": {json_string:s}')
 
   def _PrintWarningCountersTable(
       self, description, warnings_by_path_spec, warnings_by_parser_chain):
@@ -1270,19 +1267,17 @@ class PinfoTool(tools.CLITool, tool_options.StorageFileOptions):
       table_view = views.ViewsFactory.GetTableView(
           self._views_format_type,
           column_names=['Parser (plugin) name', 'Number of warnings'],
-          title='{0:s} warnings generated per parser'.format(
-              description.title()))
+          title=f'{description.title():s} warnings generated per parser')
       for parser_chain, count in warnings_by_parser_chain.items():
         parser_chain = parser_chain or '<No parser>'
-        table_view.AddRow([parser_chain, '{0:d}'.format(count)])
+        table_view.AddRow([parser_chain, f'{count:d}'])
       table_view.Write(self._output_writer)
 
     if warnings_by_path_spec:
       table_view = views.ViewsFactory.GetTableView(
           self._views_format_type,
           column_names=['Number of warnings', 'Pathspec'],
-          title='Path specifications with most {0:s} warnings'.format(
-              description))
+          title=f'Path specifications with most {description:s} warnings')
 
       for path_spec, count in warnings_by_path_spec.most_common(10):
         for path_index, line in enumerate(path_spec.split('\n')):
@@ -1290,7 +1285,7 @@ class PinfoTool(tools.CLITool, tool_options.StorageFileOptions):
             continue
 
           if path_index == 0:
-            table_view.AddRow(['{0:d}'.format(count), line])
+            table_view.AddRow([f'{count:d}', line])
           else:
             table_view.AddRow(['', line])
 
@@ -1545,7 +1540,7 @@ class PinfoTool(tools.CLITool, tool_options.StorageFileOptions):
     try:
       self.ParseOptions(options)
     except errors.BadConfigOption as exception:
-      self._output_writer.Write('ERROR: {0!s}\n'.format(exception))
+      self._output_writer.Write(f'ERROR: {exception!s}\n')
       self._output_writer.Write('\n')
       self._output_writer.Write(argument_parser.format_usage())
       return False
@@ -1584,8 +1579,7 @@ class PinfoTool(tools.CLITool, tool_options.StorageFileOptions):
 
     if self._report_type != 'none':
       if self._report_type not in self._REPORTS:
-        raise errors.BadConfigOption('Unsupported report type: {0:s}.'.format(
-            self._report_type))
+        raise errors.BadConfigOption(f'Unsupported report type: {self._report_type:s}.')
 
       self.generate_report = True
 
@@ -1605,14 +1599,14 @@ class PinfoTool(tools.CLITool, tool_options.StorageFileOptions):
 
     if not os.path.isfile(self._storage_file_path):
       raise errors.BadConfigOption(
-          'No such storage file: {0:s}.'.format(self._storage_file_path))
+          f'No such storage file: {self._storage_file_path:s}.')
 
     compare_storage_file_path = self.ParseStringOption(
         options, 'compare_storage_file')
     if compare_storage_file_path:
       if not os.path.isfile(compare_storage_file_path):
         raise errors.BadConfigOption(
-            'No such storage file: {0:s}.'.format(compare_storage_file_path))
+            f'No such storage file: {compare_storage_file_path:s}.')
 
       self._compare_storage_file_path = compare_storage_file_path
       self.compare_storage_information = True
@@ -1622,7 +1616,7 @@ class PinfoTool(tools.CLITool, tool_options.StorageFileOptions):
     if self._output_filename:
       if os.path.exists(self._output_filename):
         raise errors.BadConfigOption(
-            'Output file already exists: {0:s}.'.format(self._output_filename))
+            f'Output file already exists: {self._output_filename:s}.')
       output_file_object = open(self._output_filename, 'wb')  # pylint: disable=consider-using-with
       self._output_writer = tools.FileObjectOutputWriter(output_file_object)
 

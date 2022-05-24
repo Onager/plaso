@@ -142,7 +142,7 @@ class WinLnkParser(interface.FileObjectParser):
       lnk_file.open_file_object(file_object)
     except IOError as exception:
       parser_mediator.ProduceExtractionWarning(
-          'unable to open file with error: {0!s}'.format(exception))
+          f'unable to open file with error: {exception!s}')
       return
 
     link_target = None
@@ -212,8 +212,7 @@ class WinLnkParser(interface.FileObjectParser):
             parser_mediator, lnk_file.droid_file_identifier, display_name)
       except (TypeError, ValueError) as exception:
         parser_mediator.ProduceExtractionWarning(
-            'unable to read droid file identifier with error: {0!s}.'.format(
-                exception))
+            f'unable to read droid file identifier with error: {exception!s}.')
 
     if lnk_file.birth_droid_file_identifier:  # pylint: disable=using-constant-test
       try:

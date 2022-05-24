@@ -72,7 +72,7 @@ class USBStorPlugin(interface.WindowsRegistryPlugin):
       # Normally we expect 4 fields here however that is not always the case.
       if number_of_name_values != 4:
         logger.warning(
-            'Expected 4 &-separated values in: {0:s}'.format(subkey_name))
+            f'Expected 4 &-separated values in: {subkey_name:s}')
 
       event_data = USBStorEventData()
       event_data.key_path = registry_key.path

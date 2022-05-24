@@ -70,7 +70,7 @@ class IOSSysdiagnoseLogdParser(text_parser.PyparsingSingleLineTextParser):
     """
     if key != 'log_entry':
       raise errors.ParseError(
-          'Unable to parse record, unknown structure: {0:s}'.format(key))
+          f'Unable to parse record, unknown structure: {key:s}')
 
     year = self._GetValueFromStructure(structure, 'year')
     month = self._GetValueFromStructure(structure, 'month')

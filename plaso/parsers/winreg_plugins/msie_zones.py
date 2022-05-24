@@ -179,7 +179,7 @@ class MSIEZoneSettingsPlugin(interface.WindowsRegistryPlugin):
     self._ProduceDefaultWindowsRegistryEvent(parser_mediator, registry_key)
 
     if registry_key.number_of_subkeys == 0:
-      error_string = 'Key: {0:s} missing subkeys.'.format(registry_key.path)
+      error_string = f'Key: {registry_key.path:s} missing subkeys.'
       parser_mediator.ProduceExtractionWarning(error_string)
       return
 
@@ -187,8 +187,7 @@ class MSIEZoneSettingsPlugin(interface.WindowsRegistryPlugin):
       # TODO: these values are stored in the Description value of the
       # zone key. This solution will break on zone values that are larger
       # than 5.
-      path = '{0:s}\\{1:s}'.format(
-          registry_key.path, self._ZONE_NAMES[zone_key.name])
+      path = f'{registry_key.path:s}\\{self._ZONE_NAMES[zone_key.name]:s}'
 
       settings = []
 
@@ -217,10 +216,10 @@ class MSIEZoneSettingsPlugin(interface.WindowsRegistryPlugin):
             value_string = self._CONTROL_VALUES_SAFETY.get(
                 value_integer, 'UNKNOWN')
           else:
-            value_string = '{0:d}'.format(value_integer)
+            value_string = f'{value_integer:d}'
 
         else:
-          value_string = '[{0:s}]'.format(value.data_type_string)
+          value_string = f'[{value.data_type_string:s}]'
 
         if len(value.name) == 4 and value.name != 'Icon':
           value_description = self._FEATURE_CONTROLS.get(value.name, 'UNKNOWN')
@@ -228,10 +227,9 @@ class MSIEZoneSettingsPlugin(interface.WindowsRegistryPlugin):
           value_description = self._FEATURE_CONTROLS.get(value.name, '')
 
         if value_description:
-          feature_control = '[{0:s}] {1:s}: {2:s}'.format(
-              value.name, value_description, value_string)
+          feature_control = f'[{value.name:s}] {value_description:s}: {value_string:s}'
         else:
-          feature_control = '[{0:s}]: {1:s}'.format(value.name, value_string)
+          feature_control = f'[{value.name:s}]: {value_string:s}'
 
         settings.append(feature_control)
 

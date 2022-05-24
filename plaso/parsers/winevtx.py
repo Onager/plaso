@@ -217,8 +217,7 @@ class WinEvtxParser(interface.FileObjectParser):
 
       except IOError as exception:
         parser_mediator.ProduceExtractionWarning(
-            'unable to parse event record: {0:d} with error: {1!s}'.format(
-                record_index, exception))
+            f'unable to parse event record: {record_index:d} with error: {exception!s}')
 
     for record_index in range(evtx_file.number_of_recovered_records):
       if parser_mediator.abort:
@@ -260,7 +259,7 @@ class WinEvtxParser(interface.FileObjectParser):
       evtx_file.open_file_object(file_object)
     except IOError as exception:
       parser_mediator.ProduceExtractionWarning(
-          'unable to open file with error: {0!s}'.format(exception))
+          f'unable to open file with error: {exception!s}')
       return
 
     try:

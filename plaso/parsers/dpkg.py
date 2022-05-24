@@ -139,7 +139,7 @@ class DpkgParser(text_parser.PyparsingSingleLineTextParser):
     """
     if key != 'line':
       raise errors.ParseError(
-          'Unable to parse record, unknown structure: {0:s}'.format(key))
+          f'Unable to parse record, unknown structure: {key:s}')
 
     # Ensure time_elements_tuple is not a pyparsing.ParseResults otherwise
     # copy.deepcopy() of the dfDateTime object will fail on Python 3.8 with:
@@ -157,7 +157,7 @@ class DpkgParser(text_parser.PyparsingSingleLineTextParser):
 
     except (TypeError, ValueError):
       parser_mediator.ProduceExtractionWarning(
-          'invalid date time value: {0!s}'.format(time_elements_structure))
+          f'invalid date time value: {time_elements_structure!s}')
       return
 
     body_text = self._GetValueFromStructure(structure, 'body')
@@ -186,8 +186,7 @@ class DpkgParser(text_parser.PyparsingSingleLineTextParser):
       structure = self._DPKG_LOG_LINE.parseString(line)
     except pyparsing.ParseException as exception:
       logger.debug(
-          'Unable to parse Debian dpkg.log file with error: {0!s}'.format(
-              exception))
+          f'Unable to parse Debian dpkg.log file with error: {exception!s}')
       return False
 
     return 'date_time' in structure and 'body' in structure

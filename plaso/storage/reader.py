@@ -138,7 +138,7 @@ class StorageReader(object):
       try:
         session_start = next(session_start_generator)
       except StopIteration:
-        raise IOError('Missing session start: {0:d}'.format(session_index))
+        raise IOError(f'Missing session start: {session_index:d}')
 
       try:
         session_completion = next(session_completion_generator)
@@ -150,8 +150,7 @@ class StorageReader(object):
         try:
           session_configuration = next(session_configuration_generator)
         except StopIteration:
-          raise IOError('Missing session configuration: {0:d}'.format(
-              session_index))
+          raise IOError(f'Missing session configuration: {session_index:d}')
 
       session = sessions.Session()
       session.CopyAttributesFromSessionStart(session_start)

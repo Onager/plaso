@@ -168,8 +168,7 @@ class PlistPlugin(plugins.BasePlugin):
     """
     if depth < 1:
       logger.debug(
-          'Maximum recursion depth of 15 reached for key: {0:s}'.format(
-              key_path))
+          f'Maximum recursion depth of 15 reached for key: {key_path:s}')
 
     elif isinstance(plist_item, (list, tuple)):
       for sub_plist_item in plist_item:
@@ -188,7 +187,7 @@ class PlistPlugin(plugins.BasePlugin):
 
         for sub_plist_item in value:
           if isinstance(sub_plist_item, dict):
-            subkey_path = '{0:s}/{1:s}'.format(key_path, subkey_name)
+            subkey_path = f'{key_path:s}/{subkey_name:s}'
             for subkey_values in self._RecurseKey(
                 sub_plist_item, depth=depth - 1, key_path=subkey_path):
               yield subkey_values

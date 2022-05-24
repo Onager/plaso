@@ -138,7 +138,7 @@ class CLITool(object):
         resource.setrlimit(resource.RLIMIT_DATA, (memory_limit, memory_limit))
       except ValueError:
         logger.warning(
-            'Unable to set memory limit to {0!s} current limit is {0!s}.'.format(
+            'Unable to set memory limit to {0!s} current limit is {1!s}.'.format(
             memory_limit, resource.getrlimit(resource.RLIMIT_DATA)))
 
   def _GetPathSpecificationString(self, path_spec):
@@ -196,7 +196,7 @@ class CLITool(object):
     Args:
       warning_text (str): text used to warn the user.
     """
-    warning_text = 'WARNING: {0:s}'.format(warning_text)
+    warning_text = f'WARNING: {warning_text:s}'
     warning_text = textwrap.wrap(warning_text, 80)
     print('\n'.join(warning_text))
     print('')
@@ -212,7 +212,7 @@ class CLITool(object):
     Returns:
       str: input read from the user.
     """
-    self._output_writer.Write('{0:s}: '.format(input_text))
+    self._output_writer.Write(f'{input_text:s}: ')
     return self._input_reader.Read()
 
   def _WaitUserWarning(self):
@@ -332,7 +332,7 @@ class CLITool(object):
     Returns:
       str: version information.
     """
-    return 'plaso - {0:s} version {1:s}'.format(self.NAME, plaso.__version__)
+    return f'plaso - {self.NAME:s} version {plaso.__version__:s}'
 
   def ListTimeZones(self):
     """Lists the timezones."""
@@ -355,14 +355,13 @@ class CLITool(object):
             'error: {1!s}').format(timezone_name, exception))
         continue
 
-      local_date_string = '{0!s}'.format(
-          local_timezone.localize(utc_date_time))
+      local_date_string = f'{local_timezone.localize(utc_date_time)!s}'
       if '+' in local_date_string:
         _, _, diff = local_date_string.rpartition('+')
-        diff_string = '+{0:s}'.format(diff)
+        diff_string = f'+{diff:s}'
       else:
         _, _, diff = local_date_string.rpartition('-')
-        diff_string = '-{0:s}'.format(diff)
+        diff_string = f'-{diff:s}'
 
       table_view.AddRow([timezone_name, diff_string])
 
@@ -395,8 +394,7 @@ class CLITool(object):
     except (TypeError, ValueError):
       name = name.replace('_', ' ')
       raise errors.BadConfigOption(
-          'Unsupported numeric value {0:s}: {1!s}.'.format(
-              name, numeric_value))
+          f'Unsupported numeric value {name:s}: {numeric_value!s}.')
 
   def ParseStringOption(self, options, argument_name, default_value=None):
     """Parses a string command line argument.
@@ -435,8 +433,7 @@ class CLITool(object):
 
     elif not isinstance(argument_value, str):
       raise errors.BadConfigOption(
-          'Unsupported option: {0:s} string type required.'.format(
-              argument_name))
+          f'Unsupported option: {argument_name:s} string type required.')
 
     return argument_value
 

@@ -89,24 +89,23 @@ class PsortTool(
 
     if not os.path.exists(storage_file_path):
       raise errors.BadConfigOption(
-          'No such storage file: {0:s}.'.format(storage_file_path))
+          f'No such storage file: {storage_file_path:s}.')
 
     if not os.path.isfile(storage_file_path):
       raise errors.BadConfigOption(
-          'Storage file: {0:s} already exists and is not a file.'.format(
-              storage_file_path))
+          f'Storage file: {storage_file_path:s} already exists and is not a file.')
 
     if not check_readable_only:
       storage_file_directory = os.path.dirname(storage_file_path) or '.'
       if not os.access(storage_file_directory, os.W_OK):
         raise errors.BadConfigOption(
-            'Unable to write to storage file: {0:s}'.format(storage_file_path))
+            f'Unable to write to storage file: {storage_file_path:s}')
 
     storage_file = storage_factory.StorageFactory.CreateStorageFile(
         definitions.STORAGE_FORMAT_SQLITE)
     if not storage_file:
       raise errors.BadConfigOption(
-          'Unable to open storage file: {0:s}'.format(storage_file_path))
+          f'Unable to open storage file: {storage_file_path:s}')
 
     try:
       storage_file.Open(
@@ -165,8 +164,7 @@ class PsortTool(
     difference = requested_plugin_names.difference(analysis_plugin_names)
     if difference:
       raise errors.BadConfigOption(
-          'Non-existent analysis plugins specified: {0:s}'.format(
-              ' '.join(difference)))
+          f"Non-existent analysis plugins specified: {' '.join(difference):s}")
 
     self._analysis_plugins = self._GetAnalysisPlugins(analysis_plugins)
 
@@ -351,7 +349,7 @@ class PsortTool(
     try:
       self.ParseOptions(options)
     except errors.BadConfigOption as exception:
-      self._output_writer.Write('ERROR: {0!s}\n'.format(exception))
+      self._output_writer.Write(f'ERROR: {exception!s}\n')
       self._output_writer.Write('\n')
       self._output_writer.Write(argument_parser.format_usage())
 
@@ -509,8 +507,7 @@ class PsortTool(
         self._output_mediator.SetPreferredLanguageIdentifier(
             preferred_language)
       except (KeyError, TypeError):
-        logger.warning('Unable to to set preferred language: {0!s}.'.format(
-            preferred_language))
+        logger.warning(f'Unable to to set preferred language: {preferred_language!s}.')
 
       self._output_mediator.SetTextPrepend(text_prepend)
       self._output_module.SetStorageReader(storage_reader)

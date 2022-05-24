@@ -70,8 +70,7 @@ class UTorrentBencodePlugin(interface.BencodePlugin):
       seedtime = bencoded_values.GetDecodedValue('seedtime')
       if not caption or not path or seedtime < 0:
         parser_mediator.ProduceExtractionWarning(
-            'key: {0:s} is missing valid caption, path and seedtime'.format(
-                key))
+            f'key: {key:s} is missing valid caption, path and seedtime')
         continue
 
       event_data = UTorrentEventData()

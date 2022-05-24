@@ -184,7 +184,7 @@ class YAMLFormattersFile(object):
     different_keys = set(formatter_definition_values) - self._SUPPORTED_KEYS
     if different_keys:
       different_keys = ', '.join(different_keys)
-      raise errors.ParseError('Undefined keys: {0:s}'.format(different_keys))
+      raise errors.ParseError(f'Undefined keys: {different_keys:s}')
 
     formatter_type = formatter_definition_values.get('type', None)
     if not formatter_type:
@@ -193,8 +193,7 @@ class YAMLFormattersFile(object):
 
     if formatter_type not in ('basic', 'conditional'):
       raise errors.ParseError(
-          'Invalid event formatter definition unsupported type: {0!s}.'.format(
-              formatter_type))
+          f'Invalid event formatter definition unsupported type: {formatter_type!s}.')
 
     data_type = formatter_definition_values.get('data_type', None)
     if not data_type:

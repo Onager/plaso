@@ -83,7 +83,7 @@ class NetworksWindowsRegistryPlugin(
             'DefaultGatewayMac')
         if default_gateway_mac_value:
           default_gateway_mac = ':'.join([
-              '{0:02x}'.format(octet)
+              f'{octet:02x}'
               for octet in bytearray(default_gateway_mac_value.data)])
         else:
           default_gateway_mac = None
@@ -118,8 +118,7 @@ class NetworksWindowsRegistryPlugin(
           byte_stream, 0, systemtime_map)
     except (ValueError, errors.ParseError) as exception:
       raise errors.ParseError(
-          'Unable to parse SYSTEMTIME value with error: {0!s}'.format(
-              exception))
+          f'Unable to parse SYSTEMTIME value with error: {exception!s}')
 
     system_time_tuple = (
         systemtime.year, systemtime.month, systemtime.weekday,
@@ -134,7 +133,7 @@ class NetworksWindowsRegistryPlugin(
           system_time_tuple=system_time_tuple)
     except ValueError:
       raise errors.ParseError(
-          'Invalid SYSTEMTIME value: {0!s}'.format(system_time_tuple))
+          f'Invalid SYSTEMTIME value: {system_time_tuple!s}')
 
   def ExtractEvents(self, parser_mediator, registry_key, **kwargs):
     """Extracts events from a Windows Registry key.
@@ -184,8 +183,7 @@ class NetworksWindowsRegistryPlugin(
         except errors.ParseError as exception:
           date_time = None
           parser_mediator.ProduceExtractionWarning(
-              'unable to parse date created with error: {0!s}'.format(
-                  exception))
+              f'unable to parse date created with error: {exception!s}')
 
         if date_time:
           event = time_events.DateTimeValuesEvent(
@@ -199,8 +197,7 @@ class NetworksWindowsRegistryPlugin(
         except errors.ParseError as exception:
           date_time = None
           parser_mediator.ProduceExtractionWarning(
-              'unable to parse date last connected with error: {0!s}'.format(
-                  exception))
+              f'unable to parse date last connected with error: {exception!s}')
 
         if date_time:
           event = time_events.DateTimeValuesEvent(

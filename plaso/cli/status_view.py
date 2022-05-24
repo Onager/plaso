@@ -186,10 +186,9 @@ class StatusView(object):
       magnitude_1024 += 1
 
     if 0 < magnitude_1024 <= 7:
-      return '{0:.1f} {1:s}'.format(
-          used_memory_1024, self._UNITS_1024[magnitude_1024])
+      return f'{used_memory_1024:.1f} {self._UNITS_1024[magnitude_1024]:s}'
 
-    return '{0:d} B'.format(size)
+    return f'{size:d} B'
 
   def _FormatProcessingTime(self, processing_status):
     """Formats the processing time.
@@ -213,10 +212,9 @@ class StatusView(object):
     elif days == 1:
       days_string = '1 day, '
     else:
-      days_string = '{0:d} days, '.format(days)
+      days_string = f'{days:d} days, '
 
-    return '{0:s}{1:02d}:{2:02d}:{3:02d}'.format(
-        days_string, hours, minutes, seconds)
+    return f'{days_string:s}{hours:02d}:{minutes:02d}:{seconds:02d}'
 
   def _PrintAnalysisStatusHeader(self, processing_status):
     """Prints the analysis status header.
@@ -225,11 +223,11 @@ class StatusView(object):
       processing_status (ProcessingStatus): processing status.
     """
     self._output_writer.Write(
-        'Storage file\t\t: {0:s}\n'.format(self._storage_file_path))
+        f'Storage file\t\t: {self._storage_file_path:s}\n')
 
     processing_time = self._FormatProcessingTime(processing_status)
     self._output_writer.Write(
-        'Processing time\t\t: {0:s}\n'.format(processing_time))
+        f'Processing time\t\t: {processing_time:s}\n')
 
     if processing_status and processing_status.events_status:
       self._PrintEventsStatus(processing_status.events_status)
@@ -263,7 +261,7 @@ class StatusView(object):
     """
     processing_time = self._FormatProcessingTime(processing_status)
     self._output_writer.Write(
-        'Processing time: {0:s}\n'.format(processing_time))
+        f'Processing time: {processing_time:s}\n')
 
     status_line = (
         '{0:s} (PID: {1:d}) status: {2:s}, events consumed: {3:d}\n').format(
@@ -291,8 +289,7 @@ class StatusView(object):
     if self._stdout_output_writer:
       self._ClearScreen()
 
-    output_text = 'plaso - {0:s} version {1:s}\n\n'.format(
-        self._tool_name, plaso.__version__)
+    output_text = f'plaso - {self._tool_name:s} version {plaso.__version__:s}\n\n'
     self._output_writer.Write(output_text)
 
     self._PrintAnalysisStatusHeader(processing_status)
@@ -326,7 +323,7 @@ class StatusView(object):
     """
     processing_time = self._FormatProcessingTime(processing_status)
     self._output_writer.Write(
-        'Processing time: {0:s}\n'.format(processing_time))
+        f'Processing time: {processing_time:s}\n')
 
     status_line = (
         '{0:s} (PID: {1:d}) status: {2:s}, events produced: {3:d}, file: '
@@ -358,8 +355,7 @@ class StatusView(object):
     if self._stdout_output_writer:
       self._ClearScreen()
 
-    output_text = 'plaso - {0:s} version {1:s}\n\n'.format(
-        self._tool_name, plaso.__version__)
+    output_text = f'plaso - {self._tool_name:s} version {plaso.__version__:s}\n\n'
     self._output_writer.Write(output_text)
 
     self.PrintExtractionStatusHeader(processing_status)
@@ -470,21 +466,19 @@ class StatusView(object):
       processing_status (ProcessingStatus): processing status.
     """
     self._output_writer.Write(
-        'Source path\t\t: {0:s}\n'.format(self._source_path))
+        f'Source path\t\t: {self._source_path:s}\n')
     self._output_writer.Write(
-        'Source type\t\t: {0:s}\n'.format(self._source_type))
+        f'Source type\t\t: {self._source_type:s}\n')
 
     if self._artifact_filters:
       artifacts_string = ', '.join(self._artifact_filters)
-      self._output_writer.Write('Artifact filters\t: {0:s}\n'.format(
-          artifacts_string))
+      self._output_writer.Write(f'Artifact filters\t: {artifacts_string:s}\n')
     if self._filter_file:
-      self._output_writer.Write('Filter file\t\t: {0:s}\n'.format(
-          self._filter_file))
+      self._output_writer.Write(f'Filter file\t\t: {self._filter_file:s}\n')
 
     processing_time = self._FormatProcessingTime(processing_status)
     self._output_writer.Write(
-        'Processing time\t\t: {0:s}\n'.format(processing_time))
+        f'Processing time\t\t: {processing_time:s}\n')
 
     self._PrintTasksStatus(processing_status)
     self._output_writer.Write('\n')

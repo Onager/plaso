@@ -142,7 +142,7 @@ class MacOSSecuritydLogParser(text_parser.PyparsingSingleLineTextParser):
           time_elements_tuple=time_elements_tuple)
     except ValueError:
       parser_mediator.ProduceExtractionWarning(
-          'invalid date time value: {0!s}'.format(time_elements_tuple))
+          f'invalid date time value: {time_elements_tuple!s}')
       return
 
     self._last_month = time_elements_tuple[1]
@@ -154,8 +154,7 @@ class MacOSSecuritydLogParser(text_parser.PyparsingSingleLineTextParser):
       repeat_count = self._GetValueFromStructure(structure, 'times')
       previous_message = self._GetValueFromStructure(
           self._previous_structure, 'message')
-      message = 'Repeated {0:d} times: {1:s}'.format(
-          repeat_count, previous_message)
+      message = f'Repeated {repeat_count:d} times: {previous_message:s}'
       structure = self._previous_structure
 
     # It uses CarsNotIn structure which leaves whitespaces
@@ -201,7 +200,7 @@ class MacOSSecuritydLogParser(text_parser.PyparsingSingleLineTextParser):
     """
     if key not in ('logline', 'repeated'):
       raise errors.ParseError(
-          'Unable to parse record, unknown structure: {0:s}'.format(key))
+          f'Unable to parse record, unknown structure: {key:s}')
 
     self._ParseLogLine(parser_mediator, structure, key)
 

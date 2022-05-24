@@ -121,7 +121,7 @@ class PyparsingSingleLineTextParserTest(test_lib.ParserTestCase):
 
     self._encoding_errors.append(
         (exception.start, exception.object[exception.start]))
-    escaped = '\\x{0:2x}'.format(exception.object[exception.start])
+    escaped = f'\\x{exception.object[exception.start]:2x}'
     return (escaped, exception.start + 1)
 
   def testIsText(self):

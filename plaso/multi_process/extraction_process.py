@@ -148,7 +148,7 @@ class ExtractionWorkerProcess(task_process.MultiProcessTaskProcess):
 
     # XML RPC does not support integer values > 2 GiB so we format them
     # as a string.
-    used_memory = '{0:d}'.format(used_memory)
+    used_memory = f'{used_memory:d}'
 
     status = {
         'display_name': self._current_display_name,
@@ -203,8 +203,7 @@ class ExtractionWorkerProcess(task_process.MultiProcessTaskProcess):
     if self._processing_profiler:
       self._extraction_worker.SetProcessingProfiler(self._processing_profiler)
 
-    logger.debug('Worker: {0!s} (PID: {1:d}) started.'.format(
-        self._name, self._pid))
+    logger.debug(f'Worker: {self._name!s} (PID: {self._pid:d}) started.')
 
     self._status = definitions.STATUS_INDICATOR_RUNNING
 
@@ -216,8 +215,7 @@ class ExtractionWorkerProcess(task_process.MultiProcessTaskProcess):
         try:
           task = self._task_queue.PopItem()
         except (errors.QueueClose, errors.QueueEmpty) as exception:
-          logger.debug('ConsumeItems exiting with exception: {0!s}.'.format(
-              type(exception)))
+          logger.debug(f'ConsumeItems exiting with exception: {type(exception)!s}.')
           break
 
         if isinstance(task, plaso_queue.QueueAbort):
@@ -233,8 +231,7 @@ class ExtractionWorkerProcess(task_process.MultiProcessTaskProcess):
     # from being killed by an uncaught exception.
     except Exception as exception:  # pylint: disable=broad-except
       logger.warning(
-          'Unhandled exception in process: {0!s} (PID: {1:d}).'.format(
-              self._name, self._pid))
+          f'Unhandled exception in process: {self._name!s} (PID: {self._pid:d}).')
       logger.exception(exception)
 
       self._abort = True
@@ -258,13 +255,12 @@ class ExtractionWorkerProcess(task_process.MultiProcessTaskProcess):
     else:
       self._status = definitions.STATUS_INDICATOR_COMPLETED
 
-    logger.debug('Worker: {0!s} (PID: {1:d}) stopped.'.format(
-        self._name, self._pid))
+    logger.debug(f'Worker: {self._name!s} (PID: {self._pid:d}) stopped.')
 
     try:
       self._task_queue.Close(abort=self._abort)
     except errors.QueueAlreadyClosed:
-      logger.error('Queue for {0:s} was already closed.'.format(self.name))
+      logger.error(f'Queue for {self.name:s} was already closed.')
 
   def _ProcessPathSpec(self, extraction_worker, parser_mediator, path_spec):
     """Processes a path specification.
@@ -312,7 +308,7 @@ class ExtractionWorkerProcess(task_process.MultiProcessTaskProcess):
     Args:
       task (Task): task.
     """
-    logger.debug('Started processing task: {0:s}.'.format(task.identifier))
+    logger.debug(f'Started processing task: {task.identifier:s}.')
 
     if self._tasks_profiler:
       self._tasks_profiler.Sample(task, 'processing_started')
@@ -365,7 +361,7 @@ class ExtractionWorkerProcess(task_process.MultiProcessTaskProcess):
     if self._tasks_profiler:
       self._tasks_profiler.Sample(task, 'processing_completed')
 
-    logger.debug('Completed processing task: {0:s}.'.format(task.identifier))
+    logger.debug(f'Completed processing task: {task.identifier:s}.')
 
   def SignalAbort(self):
     """Signals the process to abort."""

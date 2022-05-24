@@ -29,7 +29,7 @@ class FakeIdentifier(containers_interface.AttributeContainerIdentifier):
     if self.sequence_number is None:
       return None
 
-    return '{0:d}'.format(self.sequence_number)
+    return f'{self.sequence_number:d}'
 
 
 class RedisKeyIdentifier(containers_interface.AttributeContainerIdentifier):
@@ -58,7 +58,7 @@ class RedisKeyIdentifier(containers_interface.AttributeContainerIdentifier):
       str: unique identifier or None.
     """
     if self.name is not None and self.sequence_number is not None:
-      return '{0:s}.{1:d}'.format(self.name, self.sequence_number)
+      return f'{self.name:s}.{self.sequence_number:d}'
 
     return None
 
@@ -98,6 +98,6 @@ class SQLTableIdentifier(containers_interface.AttributeContainerIdentifier):
       str: unique identifier or None.
     """
     if self.name is not None and self.sequence_number is not None:
-      return '{0:s}.{1:d}'.format(self.name, self.sequence_number)
+      return f'{self.name:s}.{self.sequence_number:d}'
 
     return None

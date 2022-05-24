@@ -68,7 +68,7 @@ class BashHistoryParser(text_parser.PyparsingMultiLineTextParser):
     """
     if key != 'log_entry':
       raise errors.ParseError(
-          'Unable to parse record, unknown structure: {0:s}'.format(key))
+          f'Unable to parse record, unknown structure: {key:s}')
 
     event_data = BashHistoryEventData()
     event_data.command = self._GetValueFromStructure(structure, 'command')

@@ -58,11 +58,9 @@ class JSONEventFormattingHelperTest(test_lib.OutputModuleTestCase):
     if sys.platform.startswith('win'):
       # The dict comparison is very picky on Windows hence we
       # have to make sure the drive letter is in the same case.
-      expected_os_location = os.path.abspath('\\{0:s}'.format(
-          os.path.join('cases', 'image.dd')))
+      expected_os_location = os.path.abspath(f"\\{os.path.join('cases', 'image.dd'):s}")
     else:
-      expected_os_location = '{0:s}{1:s}'.format(
-          os.path.sep, os.path.join('cases', 'image.dd'))
+      expected_os_location = f"{os.path.sep:s}{os.path.join('cases', 'image.dd'):s}"
 
     expected_json_dict = {
         '__container_type__': 'event',
@@ -119,12 +117,10 @@ class JSONEventFormattingHelperTest(test_lib.OutputModuleTestCase):
     if sys.platform.startswith('win'):
       # The dict comparison is very picky on Windows hence we
       # have to make sure the drive letter is in the same case.
-      expected_os_location = os.path.abspath('\\{0:s}'.format(
-          os.path.join('cases', 'image.dd')))
+      expected_os_location = os.path.abspath(f"\\{os.path.join('cases', 'image.dd'):s}")
       expected_os_location = expected_os_location.replace('\\', '\\\\')
     else:
-      expected_os_location = '{0:s}{1:s}'.format(
-          os.path.sep, os.path.join('cases', 'image.dd'))
+      expected_os_location = f"{os.path.sep:s}{os.path.join('cases', 'image.dd'):s}"
 
     expected_json_string = (
         '{{"__container_type__": "event", "__type__": "AttributeContainer", '

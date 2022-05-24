@@ -74,8 +74,7 @@ class BaseEngine(object):
     """
     if not artifact_definitions_path:
       raise errors.BadConfigOption(
-          'No such artifact definitions: {0:s}.'.format(
-              artifact_definitions_path))
+          f'No such artifact definitions: {artifact_definitions_path:s}.')
 
     registry = artifacts_registry.ArtifactDefinitionsRegistry()
     reader = artifacts_reader.YamlArtifactsReader()
@@ -120,19 +119,19 @@ class BaseEngine(object):
       self._memory_profiler.Start()
 
     if configuration.HaveProfileAnalyzers():
-      identifier = '{0:s}-analyzers'.format(self._name)
+      identifier = f'{self._name:s}-analyzers'
       self._analyzers_profiler = profilers.AnalyzersProfiler(
           identifier, configuration)
       self._analyzers_profiler.Start()
 
     if configuration.HaveProfileProcessing():
-      identifier = '{0:s}-processing'.format(self._name)
+      identifier = f'{self._name:s}-processing'
       self._processing_profiler = profilers.ProcessingProfiler(
           identifier, configuration)
       self._processing_profiler.Start()
 
     if configuration.HaveProfileSerializers():
-      identifier = '{0:s}-serializers'.format(self._name)
+      identifier = f'{self._name:s}-serializers'
       self._serializers_profiler = profilers.SerializersProfiler(
           identifier, configuration)
       self._serializers_profiler.Start()
@@ -325,8 +324,7 @@ class BaseEngine(object):
 
     elif filter_file_path:
       logger.debug(
-          'building find specification based on filter file: {0:s}'.format(
-              filter_file_path))
+          f'building find specification based on filter file: {filter_file_path:s}')
 
       filter_file_path_lower = filter_file_path.lower()
       if (filter_file_path_lower.endswith('.yaml') or

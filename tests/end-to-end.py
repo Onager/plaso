@@ -85,14 +85,13 @@ class TestCase(object):
     if command[0].endswith('py'):
       command.insert(0, sys.executable)
     command_string = ' '.join(command)
-    logging.info('Running: {0:s}'.format(command_string))
+    logging.info(f'Running: {command_string:s}')
     with subprocess.Popen(command, stdout=stdout, stderr=stderr) as child:
       child.communicate()
       exit_code = child.returncode
 
     if exit_code != 0:
-      logging.error('Running: "{0:s}" failed (exit code {1:d}).'.format(
-          command_string, exit_code))
+      logging.error(f'Running: "{command_string:s}" failed (exit code {exit_code:d}).')
       return False
 
     return True
@@ -144,8 +143,7 @@ class TestCasesManager(object):
     test_case_name = test_case_class.NAME.lower()
     if test_case_name not in cls._test_case_classes:
       raise KeyError(
-          'Formatter class not set for name: {0:s}.'.format(
-              test_case_class.NAME))
+          f'Formatter class not set for name: {test_case_class.NAME:s}.')
 
     del cls._test_case_classes[test_case_name]
 
@@ -330,8 +328,7 @@ class TestDefinitionReader(object):
         test_definition.case = self.GetConfigValue(section_name, 'case')
         if not test_definition.case:
           logging.warning(
-              'Test case missing in test definition: {0:s}.'.format(
-                  section_name))
+              f'Test case missing in test definition: {section_name:s}.')
           continue
 
         test_case = TestCasesManager.GetTestCaseObject(
@@ -339,14 +336,12 @@ class TestDefinitionReader(object):
             self._test_references_path, self._test_results_path,
             debug_output=self._debug_output)
         if not test_case:
-          logging.warning('Undefined test case: {0:s}'.format(
-              test_definition.case))
+          logging.warning(f'Undefined test case: {test_definition.case:s}')
           continue
 
         if not test_case.ReadAttributes(self, test_definition):
           logging.warning(
-              'Unable to read attributes of test case: {0:s}'.format(
-                  test_definition.case))
+              f'Unable to read attributes of test case: {test_definition.case:s}')
           continue
 
         yield test_definition
@@ -396,8 +391,7 @@ class TestLauncher(object):
         test_definition.case, self._tools_path, self._test_sources_path,
         self._test_references_path, self._test_results_path)
     if not test_case:
-      logging.error('Unsupported test case: {0:s}'.format(
-          test_definition.case))
+      logging.error(f'Unsupported test case: {test_definition.case:s}')
       return False
 
     return test_case.Run(test_definition)
@@ -475,8 +469,7 @@ class StorageFileTestCase(TestCase):
             self._test_references_path, reference_output_file_path)
 
       if not os.path.exists(reference_output_file_path):
-        logging.error('No such reference output file: {0:s}'.format(
-            reference_output_file_path))
+        logging.error(f'No such reference output file: {reference_output_file_path:s}')
         return False
 
       with open(reference_output_file_path, 'r') as reference_output_file:
@@ -504,7 +497,7 @@ class StorageFileTestCase(TestCase):
         for difference in differences:
           differences_output.append(difference)
         differences_output = '\n'.join(differences_output)
-        logging.error('Differences: {0:s}'.format(differences_output))
+        logging.error(f'Differences: {differences_output:s}')
 
       if not differences:
         result = True
@@ -531,9 +524,9 @@ class StorageFileTestCase(TestCase):
       bool: True if pinfo ran successfully.
     """
     stdout_file = os.path.join(
-        temp_directory, '{0:s}-pinfo.out'.format(test_definition.name))
+        temp_directory, f'{test_definition.name:s}-pinfo.out')
     stderr_file = os.path.join(
-        temp_directory, '{0:s}-pinfo.err'.format(test_definition.name))
+        temp_directory, f'{test_definition.name:s}-pinfo.err')
     command = [self._pinfo_path, '--output-format', 'json', storage_file]
 
     with open(stdout_file, 'w') as stdout:
@@ -569,14 +562,13 @@ class StorageFileTestCase(TestCase):
           self._test_references_path, reference_storage_file)
 
     if not os.path.exists(reference_storage_file):
-      logging.error('No such reference storage file: {0:s}'.format(
-          reference_storage_file))
+      logging.error(f'No such reference storage file: {reference_storage_file:s}')
       return False
 
     stdout_file = os.path.join(
-        temp_directory, '{0:s}-compare-pinfo.out'.format(test_definition.name))
+        temp_directory, f'{test_definition.name:s}-compare-pinfo.out')
     stderr_file = os.path.join(
-        temp_directory, '{0:s}-compare-pinfo.err'.format(test_definition.name))
+        temp_directory, f'{test_definition.name:s}-compare-pinfo.err')
     command = [
         self._pinfo_path, '--compare', reference_storage_file, storage_file]
 
@@ -637,9 +629,9 @@ class StorageFileTestCase(TestCase):
         for option in test_definition.logging_options]
 
     stdout_file = os.path.join(
-        temp_directory, '{0:s}-psort.out'.format(test_definition.name))
+        temp_directory, f'{test_definition.name:s}-psort.out')
     stderr_file = os.path.join(
-        temp_directory, '{0:s}-psort.err'.format(test_definition.name))
+        temp_directory, f'{test_definition.name:s}-psort.err')
 
     command = [self._psort_path]
     command.extend(analysis_options)
@@ -763,9 +755,9 @@ class ExtractAndOutputTestCase(StorageFileTestCase):
         for option in test_definition.logging_options]
 
     stdout_file = os.path.join(
-        temp_directory, '{0:s}-log2timeline.out'.format(test_definition.name))
+        temp_directory, f'{test_definition.name:s}-log2timeline.out')
     stderr_file = os.path.join(
-        temp_directory, '{0:s}-log2timeline.err'.format(test_definition.name))
+        temp_directory, f'{test_definition.name:s}-log2timeline.err')
     command = [self._log2timeline_path]
     command.extend(extract_options)
     command.extend(logging_options)
@@ -853,12 +845,12 @@ class ExtractAndOutputTestCase(StorageFileTestCase):
       source_path = os.path.join(self._test_sources_path, source_path)
 
     if not os.path.exists(source_path):
-      logging.error('No such source: {0:s}'.format(source_path))
+      logging.error(f'No such source: {source_path:s}')
       return False
 
     with TempDirectory() as temp_directory:
       storage_file = os.path.join(
-          temp_directory, '{0:s}.plaso'.format(test_definition.name))
+          temp_directory, f'{test_definition.name:s}.plaso')
 
       # Extract events with log2timeline.
       if not self._RunLog2Timeline(
@@ -944,8 +936,8 @@ class ExtractAndOutputWithPstealTestCase(StorageFileTestCase):
       output_options.extend(['--output-format', output_format])
 
     psteal_options = [
-        '--source={0:s}'.format(source_path),
-        '--storage-file={0:s}'.format(storage_file)]
+        f'--source={source_path:s}',
+        f'--storage-file={storage_file:s}']
     psteal_options.extend(test_definition.extract_options)
 
     output_file_path = None
@@ -959,9 +951,9 @@ class ExtractAndOutputWithPstealTestCase(StorageFileTestCase):
         for option in test_definition.logging_options]
 
     stdout_file = os.path.join(
-        temp_directory, '{0:s}-psteal.out'.format(test_definition.name))
+        temp_directory, f'{test_definition.name:s}-psteal.out')
     stderr_file = os.path.join(
-        temp_directory, '{0:s}-psteal.err'.format(test_definition.name))
+        temp_directory, f'{test_definition.name:s}-psteal.err')
 
     command = [self._psteal_path]
     command.extend(psteal_options)
@@ -1045,12 +1037,12 @@ class ExtractAndOutputWithPstealTestCase(StorageFileTestCase):
       source_path = os.path.join(self._test_sources_path, source_path)
 
     if not os.path.exists(source_path):
-      logging.error('No such source: {0:s}'.format(source_path))
+      logging.error(f'No such source: {source_path:s}')
       return False
 
     with TempDirectory() as temp_directory:
       storage_file = os.path.join(
-          temp_directory, '{0:s}.plaso'.format(test_definition.name))
+          temp_directory, f'{test_definition.name:s}.plaso')
 
       # Extract and output events with psteal.
       if not self._RunPsteal(
@@ -1109,12 +1101,12 @@ class ExtractAndAnalyzeTestCase(ExtractAndOutputTestCase):
       source_path = os.path.join(self._test_sources_path, source_path)
 
     if not os.path.exists(source_path):
-      logging.error('No such source: {0:s}'.format(source_path))
+      logging.error(f'No such source: {source_path:s}')
       return False
 
     with TempDirectory() as temp_directory:
       storage_file = os.path.join(
-          temp_directory, '{0:s}.plaso'.format(test_definition.name))
+          temp_directory, f'{test_definition.name:s}.plaso')
 
       # Extract events with log2timeline.
       if not self._RunLog2Timeline(
@@ -1182,12 +1174,12 @@ class ExtractAndTagTestCase(ExtractAndOutputTestCase):
       source_path = os.path.join(self._test_sources_path, source_path)
 
     if not os.path.exists(source_path):
-      logging.error('No such source: {0:s}'.format(source_path))
+      logging.error(f'No such source: {source_path:s}')
       return False
 
     with TempDirectory() as temp_directory:
       storage_file = os.path.join(
-          temp_directory, '{0:s}.plaso'.format(test_definition.name))
+          temp_directory, f'{test_definition.name:s}.plaso')
 
       # Extract events with log2timeline.
       if not self._RunLog2Timeline(
@@ -1267,8 +1259,7 @@ class ImageExportTestCase(TestCase):
             self._test_references_path, reference_hashes_file_path)
 
       if not os.path.exists(reference_hashes_file_path):
-        logging.error('No such reference hashes file: {0:s}'.format(
-            reference_hashes_file_path))
+        logging.error(f'No such reference hashes file: {reference_hashes_file_path:s}')
         return False
 
       with open(reference_hashes_file_path, 'r') as reference_hashes_file:
@@ -1285,7 +1276,7 @@ class ImageExportTestCase(TestCase):
         for difference in differences:
           differences_output.append(difference)
         differences_output = '\n'.join(differences_output)
-        logging.error('Differences: {0:s}'.format(differences_output))
+        logging.error(f'Differences: {differences_output:s}')
 
       if not differences:
         result = True
@@ -1340,7 +1331,7 @@ class ImageExportTestCase(TestCase):
         for difference in differences:
           differences_output.append(difference)
         differences_output = '\n'.join(differences_output)
-        logging.error('Differences: {0:s}'.format(differences_output))
+        logging.error(f'Differences: {differences_output:s}')
 
       if not differences:
         result = True
@@ -1418,9 +1409,9 @@ class ImageExportTestCase(TestCase):
         for option in test_definition.logging_options]
 
     stdout_file = os.path.join(
-        temp_directory, '{0:s}-image_export.out'.format(test_definition.name))
+        temp_directory, f'{test_definition.name:s}-image_export.out')
     stderr_file = os.path.join(
-        temp_directory, '{0:s}-image_export.err'.format(test_definition.name))
+        temp_directory, f'{test_definition.name:s}-image_export.err')
 
     command = [self._image_export_path]
     command.extend(export_options)
@@ -1448,7 +1439,7 @@ class ImageExportTestCase(TestCase):
     if os.path.exists(hashes_json_file_path):
       result_hashes_json_file_path = os.path.join(
           self._test_results_path,
-          '{0:s}-hashes.json'.format(test_definition.name))
+          f'{test_definition.name:s}-hashes.json')
       shutil.copy(hashes_json_file_path, result_hashes_json_file_path)
 
     return result
@@ -1506,7 +1497,7 @@ class ImageExportTestCase(TestCase):
       source_path = os.path.join(self._test_sources_path, source_path)
 
     if not os.path.exists(source_path):
-      logging.error('No such source: {0:s}'.format(source_path))
+      logging.error(f'No such source: {source_path:s}')
       return False
 
     with TempDirectory() as temp_directory:
@@ -1601,7 +1592,7 @@ class MultiExtractAndOutputTestCase(ExtractAndOutputTestCase):
       source1_path = os.path.join(self._test_sources_path, source1_path)
 
     if not os.path.exists(source1_path):
-      logging.error('No such source: {0:s}'.format(source1_path))
+      logging.error(f'No such source: {source1_path:s}')
       return False
 
     source2_path = test_definition.source2
@@ -1609,12 +1600,12 @@ class MultiExtractAndOutputTestCase(ExtractAndOutputTestCase):
       source2_path = os.path.join(self._test_sources_path, source2_path)
 
     if not os.path.exists(source2_path):
-      logging.error('No such source: {0:s}'.format(source2_path))
+      logging.error(f'No such source: {source2_path:s}')
       return False
 
     with TempDirectory() as temp_directory:
       storage_file = os.path.join(
-          temp_directory, '{0:s}.plaso'.format(test_definition.name))
+          temp_directory, f'{test_definition.name:s}.plaso')
 
       # Extract events with log2timeline.
       if not self._RunLog2Timeline(
@@ -1734,7 +1725,7 @@ class AnalyzeAndOutputTestCase(StorageFileTestCase):
       source_path = os.path.join(self._test_sources_path, source_path)
 
     if not os.path.exists(source_path):
-      logging.error('No such source: {0:s}'.format(source_path))
+      logging.error(f'No such source: {source_path:s}')
       return False
 
     with TempDirectory() as temp_directory:
@@ -1829,7 +1820,7 @@ class MultiAnalyzeAndOutputTestCase(AnalyzeAndOutputTestCase):
       source_path = os.path.join(self._test_sources_path, source_path)
 
     if not os.path.exists(source_path):
-      logging.error('No such source: {0:s}'.format(source_path))
+      logging.error(f'No such source: {source_path:s}')
       return False
 
     with TempDirectory() as temp_directory:
@@ -1939,7 +1930,7 @@ class OutputTestCase(StorageFileTestCase):
       source_path = os.path.join(self._test_sources_path, source_path)
 
     if not os.path.exists(source_path):
-      logging.error('No such source: {0:s}'.format(source_path))
+      logging.error(f'No such source: {source_path:s}')
       return False
 
     with TempDirectory() as temp_directory:
@@ -2017,7 +2008,7 @@ def Main():
         options.config_file, 'config', 'end-to-end.ini')
 
   if not os.path.exists(options.config_file):
-    print('No such config file: {0:s}.'.format(options.config_file))
+    print(f'No such config file: {options.config_file:s}.')
     print('')
     return False
 
@@ -2031,13 +2022,13 @@ def Main():
 
   test_sources_path = options.sources_directory
   if test_sources_path and not os.path.isdir(test_sources_path):
-    print('No such sources directory: {0:s}.'.format(test_sources_path))
+    print(f'No such sources directory: {test_sources_path:s}.')
     print('')
     return False
 
   test_references_path = options.references_directory
   if test_references_path and not os.path.isdir(test_references_path):
-    print('No such references directory: {0:s}.'.format(test_references_path))
+    print(f'No such references directory: {test_references_path:s}.')
     print('')
     return False
 
@@ -2046,7 +2037,7 @@ def Main():
     test_results_path = os.getcwd()
 
   if not os.path.isdir(test_results_path):
-    print('No such results directory: {0:s}.'.format(test_results_path))
+    print(f'No such results directory: {test_results_path:s}.')
     print('')
     return False
 
@@ -2067,7 +2058,7 @@ def Main():
   if failed_tests:
     print('Failed tests:')
     for failed_test in failed_tests:
-      print(' {0:s}'.format(failed_test))
+      print(f' {failed_test:s}')
 
     print('')
     return False

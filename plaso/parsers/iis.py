@@ -237,8 +237,7 @@ class WinIISParser(text_parser.PyparsingSingleLineTextParser):
       if not field_structure:
         field_structure = self.URI
         parser_mediator.ProduceExtractionWarning(
-            'missing definition for field: {0:s} defaulting to URI'.format(
-                member))
+            f'missing definition for field: {member:s} defaulting to URI')
 
       log_line_structure += field_structure
 
@@ -289,7 +288,7 @@ class WinIISParser(text_parser.PyparsingSingleLineTextParser):
           time_elements_tuple=time_elements_tuple)
     except ValueError:
       parser_mediator.ProduceExtractionWarning(
-          'invalid date time value: {0!s}'.format(time_elements_tuple))
+          f'invalid date time value: {time_elements_tuple!s}')
       return
 
     event_data = IISEventData()
@@ -332,7 +331,7 @@ class WinIISParser(text_parser.PyparsingSingleLineTextParser):
     """
     if key not in ('comment', 'logline'):
       raise errors.ParseError(
-          'Unable to parse record, unknown structure: {0:s}'.format(key))
+          f'Unable to parse record, unknown structure: {key:s}')
 
     if key == 'logline':
       self._ParseLogLine(parser_mediator, structure)

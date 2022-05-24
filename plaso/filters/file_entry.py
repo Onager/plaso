@@ -86,7 +86,7 @@ class DateTimeFileEntryFilter(FileEntryFilter):
 
     time_value_lower = time_value.lower()
     if time_value_lower not in self._SUPPORTED_TIME_VALUES:
-      raise ValueError('Unsupported time value: {0:s}.'.format(time_value))
+      raise ValueError(f'Unsupported time value: {time_value:s}.')
 
     start_date_time = None
     if start_time_string:
@@ -210,8 +210,7 @@ class ExtensionsFileEntryFilter(FileEntryFilter):
       output_writer (CLIOutputWriter): output writer.
     """
     if self._extensions:
-      output_writer.Write('\textensions: {0:s}\n'.format(
-          ', '.join(self._extensions)))
+      output_writer.Write(f"\textensions: {', '.join(self._extensions):s}\n")
 
 
 class NamesFileEntryFilter(FileEntryFilter):
@@ -247,8 +246,7 @@ class NamesFileEntryFilter(FileEntryFilter):
       output_writer (CLIOutputWriter): output writer.
     """
     if self._names:
-      output_writer.Write('\tnames: {0:s}\n'.format(
-          ', '.join(self._names)))
+      output_writer.Write(f"\tnames: {', '.join(self._names):s}\n")
 
 
 class SignaturesFileEntryFilter(FileEntryFilter):

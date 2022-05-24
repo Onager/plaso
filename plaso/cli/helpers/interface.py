@@ -91,8 +91,7 @@ class ArgumentsHelper(object):
 
     elif not isinstance(argument_value, str):
       raise errors.BadConfigOption(
-          'Unsupported option: {0:s} string type required.'.format(
-              argument_name))
+          f'Unsupported option: {argument_name:s} string type required.')
 
     return argument_value
 

@@ -231,7 +231,7 @@ class PopularityContestParser(text_parser.PyparsingSingleLineTextParser):
     """
     if key not in self._SUPPORTED_KEYS:
       raise errors.ParseError(
-          'Unable to parse record, unknown structure: {0:s}'.format(key))
+          f'Unable to parse record, unknown structure: {key:s}')
 
     # TODO: Add anomaly objects for abnormal timestamps, such as when the log
     # timestamp is greater than the session start.
@@ -241,15 +241,14 @@ class PopularityContestParser(text_parser.PyparsingSingleLineTextParser):
     else:
       timestamp = self._GetValueFromStructure(structure, 'timestamp')
       if timestamp is None:
-        logger.debug('[{0:s}] {1:s} with invalid timestamp.'.format(
-            self.NAME, key))
+        logger.debug(f'[{self.NAME:s}] {key:s} with invalid timestamp.')
         return
 
       session = self._GetValueFromStructure(structure, 'session')
 
       event_data = PopularityContestSessionEventData()
       # TODO: determine why session is formatted as a string.
-      event_data.session = '{0!s}'.format(session)
+      event_data.session = f'{session!s}'
 
       if key == 'header':
         event_data.details = self._GetValueFromStructure(structure, 'details')

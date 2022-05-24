@@ -90,7 +90,7 @@ class BaseChromeCookiePlugin(interface.SQLitePlugin):
     else:
       scheme = 'http'
 
-    url = '{0:s}://{1:s}{2:s}'.format(scheme, hostname, path)
+    url = f'{scheme:s}://{hostname:s}{path:s}'
 
     event_data = ChromeCookieEventData()
     event_data.cookie_name = cookie_name
@@ -133,8 +133,7 @@ class BaseChromeCookiePlugin(interface.SQLitePlugin):
 
       except Exception as exception:  # pylint: disable=broad-except
         parser_mediator.ProduceExtractionWarning(
-            'plugin: {0:s} unable to parse cookie with error: {1!s}'.format(
-                plugin.NAME, exception))
+            f'plugin: {plugin.NAME:s} unable to parse cookie with error: {exception!s}')
 
 
 class Chrome17CookiePlugin(BaseChromeCookiePlugin):

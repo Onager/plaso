@@ -126,7 +126,7 @@ class GCPLogJSONLPlugin(interface.JSONLPlugin):
     request_metadata = self._GetJSONValue(
         proto_payload, 'requestMetadata', default_value={})
     event_data.request_metadata = [
-        '{0:s}: {1!s}'.format(name, value)
+        f'{name:s}: {value!s}'
         for name, value in request_metadata.items()]
 
     event_data.service_name = self._GetJSONValue(proto_payload, 'serviceName')
@@ -170,7 +170,7 @@ class GCPLogJSONLPlugin(interface.JSONLPlugin):
       ip_protocol = self._GetJSONValue(allowed, 'IPProtocol')
       ports = self._GetJSONValue(allowed, 'ports', default_value='all')
 
-      firewall_rule = 'ALLOW: {0:s} {1!s}'.format(ip_protocol, ports)
+      firewall_rule = f'ALLOW: {ip_protocol:s} {ports!s}'
       firewall_rules.append(firewall_rule)
 
     denieds = self._GetJSONValue(request, 'denieds', default_value=[])
@@ -178,7 +178,7 @@ class GCPLogJSONLPlugin(interface.JSONLPlugin):
       ip_protocol = self._GetJSONValue(denied, 'IPProtocol')
       ports = self._GetJSONValue(denied, 'ports', default_value='all')
 
-      firewall_rule = 'DENY: {0:s} {1!s}'.format(ip_protocol, ports)
+      firewall_rule = f'DENY: {ip_protocol:s} {ports!s}'
       firewall_rules.append(firewall_rule)
 
     event_data.firewall_rules = firewall_rules or None
@@ -215,7 +215,7 @@ class GCPLogJSONLPlugin(interface.JSONLPlugin):
           binding_delta_value, 'member', default_value='')
       role = self._GetJSONValue(binding_delta_value, 'role', default_value='')
 
-      policy_delta = '{0:s} {1:s} with role {2:s}'.format(action, member, role)
+      policy_delta = f'{action:s} {member:s} with role {role:s}'
       policy_deltas.append(policy_delta)
 
     event_data.policy_deltas = policy_deltas or None
@@ -239,7 +239,7 @@ class GCPLogJSONLPlugin(interface.JSONLPlugin):
     if resource:
       labels = self._GetJSONValue(resource, 'labels', default_value={})
       event_data.resource_labels = [
-        '{0:s}: {1!s}'.format(name, value) for name, value in labels.items()]
+        f'{name:s}: {value!s}' for name, value in labels.items()]
 
     event_data.severity = self._GetJSONValue(json_dict, 'severity')
     event_data.log_name = self._GetJSONValue(json_dict, 'logName')

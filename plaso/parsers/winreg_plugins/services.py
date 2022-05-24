@@ -123,7 +123,7 @@ class ServicesPlugin(interface.WindowsRegistryPlugin):
          parser_mediator, registry_key, names_to_skip=[
             'ErrorControl', 'ImagePath', 'ObjectName', 'Start', 'Type'])
     event_data.values = ' '.join([
-        '{0:s}: {1!s}'.format(name, value)
+        f'{name:s}: {value!s}'
         for name, value in sorted(values_dict.items())]) or None
 
     event = time_events.DateTimeValuesEvent(

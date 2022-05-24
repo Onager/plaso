@@ -112,7 +112,7 @@ class WinJobParser(interface.FileObjectParser, dtfabric_helper.DtFabricHelper):
             system_time_tuple=system_time_tuple)
       except ValueError:
         parser_mediator.ProduceExtractionWarning(
-            'invalid last run time: {0!s}'.format(system_time_tuple))
+            f'invalid last run time: {system_time_tuple!s}')
 
     return date_time
 
@@ -142,7 +142,7 @@ class WinJobParser(interface.FileObjectParser, dtfabric_helper.DtFabricHelper):
         date_time._precision = dfdatetime_definitions.PRECISION_1_DAY  # pylint: disable=protected-access
       except ValueError:
         parser_mediator.ProduceExtractionWarning(
-            'invalid trigger end time: {0!s}'.format(time_elements_tuple))
+            f'invalid trigger end time: {time_elements_tuple!s}')
 
     return date_time
 
@@ -173,7 +173,7 @@ class WinJobParser(interface.FileObjectParser, dtfabric_helper.DtFabricHelper):
         date_time._precision = dfdatetime_definitions.PRECISION_1_MINUTE  # pylint: disable=protected-access
       except ValueError:
         parser_mediator.ProduceExtractionWarning(
-            'invalid trigger start time: {0!s}'.format(time_elements_tuple))
+            f'invalid trigger start time: {time_elements_tuple!s}')
 
     return date_time
 
@@ -196,8 +196,7 @@ class WinJobParser(interface.FileObjectParser, dtfabric_helper.DtFabricHelper):
           file_object, 0, fixed_section_data_map)
     except (ValueError, errors.ParseError) as exception:
       raise errors.WrongParser(
-          'Unable to parse fixed-length data section with error: {0!s}'.format(
-              exception))
+          f'Unable to parse fixed-length data section with error: {exception!s}')
 
     if not fixed_length_section.product_version in self._PRODUCT_VERSIONS:
       raise errors.WrongParser(
@@ -206,8 +205,7 @@ class WinJobParser(interface.FileObjectParser, dtfabric_helper.DtFabricHelper):
 
     if not fixed_length_section.format_version == 1:
       raise errors.WrongParser(
-          'Unsupported format version in: {0:d}'.format(
-              fixed_length_section.format_version))
+          f'Unsupported format version in: {fixed_length_section.format_version:d}')
 
     variable_section_data_map = self._GetDataTypeMap(
         'job_variable_length_data_section')

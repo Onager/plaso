@@ -76,7 +76,7 @@ class ZshExtendedHistoryParser(text_parser.PyparsingMultiLineTextParser):
     """
     if key != 'command':
       raise errors.ParseError(
-          'Unable to parse record, unknown structure: {0:s}'.format(key))
+          f'Unable to parse record, unknown structure: {key:s}')
 
     event_data = ZshHistoryEventData()
     event_data.command = self._GetValueFromStructure(structure, 'command')

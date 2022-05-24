@@ -422,7 +422,7 @@ class BSMParser(interface.FileObjectParser, dtfabric_helper.DtFabricHelper):
       data = bytes(bytearray(token_data.data)).split(b'\x00', maxsplit=1)[0]
       data = data.decode('utf-8')
     else:
-      data = ''.join(['{0:02x}'.format(byte) for byte in token_data.data])
+      data = ''.join([f'{byte:02x}' for byte in token_data.data])
     return {
         'format': format_string,
         'data': data}
@@ -535,7 +535,7 @@ class BSMParser(interface.FileObjectParser, dtfabric_helper.DtFabricHelper):
     Returns:
       dict[str, str]: token values.
     """
-    data = ''.join(['{0:02x}'.format(byte) for byte in token_data.data])
+    data = ''.join([f'{byte:02x}' for byte in token_data.data])
     return {'IPv4_Header': data}
 
   def _FormatOpaqueToken(self, token_data):
@@ -547,7 +547,7 @@ class BSMParser(interface.FileObjectParser, dtfabric_helper.DtFabricHelper):
     Returns:
       dict[str, str]: token values.
     """
-    data = ''.join(['{0:02x}'.format(byte) for byte in token_data.data])
+    data = ''.join([f'{byte:02x}' for byte in token_data.data])
     return {'data': data}
 
   def _FormatOtherFileToken(self, token_data):
@@ -799,7 +799,7 @@ class BSMParser(interface.FileObjectParser, dtfabric_helper.DtFabricHelper):
     token_type = self._ParseTokenType(file_object, header_record_offset)
     if token_type not in self._HEADER_TOKEN_TYPES:
       raise errors.ParseError(
-          'Unsupported header token type: 0x{0:02x}'.format(token_type))
+          f'Unsupported header token type: 0x{token_type:02x}')
 
     token_type, token_data = self._ParseToken(file_object, header_record_offset)
 
@@ -821,8 +821,7 @@ class BSMParser(interface.FileObjectParser, dtfabric_helper.DtFabricHelper):
     while file_offset < record_end_offset:
       token_type, token_data = self._ParseToken(file_object, file_offset)
       if not token_data:
-        raise errors.ParseError('Unsupported token type: 0x{0:02x}'.format(
-            token_type))
+        raise errors.ParseError(f'Unsupported token type: 0x{token_type:02x}')
 
       file_offset = file_object.tell()
 
@@ -922,8 +921,7 @@ class BSMParser(interface.FileObjectParser, dtfabric_helper.DtFabricHelper):
       except errors.ParseError as exception:
         if file_offset == 0:
           raise errors.WrongParser(
-              'Unable to parse first event record with error: {0!s}'.format(
-                  exception))
+              f'Unable to parse first event record with error: {exception!s}')
 
         # TODO: skip to next event record.
 

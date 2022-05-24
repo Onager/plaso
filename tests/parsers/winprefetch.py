@@ -281,8 +281,7 @@ class WinPrefetchParserTest(test_lib.ParserTestCase):
     expected_event_values = {
         'date_time': '2013-10-04 15:28:09.0103565',
         'mapped_files': expected_mapped_files,
-        'timestamp_desc': 'Previous {0:s}'.format(
-            definitions.TIME_DESCRIPTION_LAST_RUN)}
+        'timestamp_desc': f'Previous {definitions.TIME_DESCRIPTION_LAST_RUN:s}'}
 
     self.CheckEventValues(storage_writer, events[2], expected_event_values)
 
@@ -328,8 +327,7 @@ class WinPrefetchParserTest(test_lib.ParserTestCase):
     # The prefetch previous last run event.
     expected_event_values = {
         'date_time': '2015-05-14 22:11:55.3576520',
-        'timestamp_desc': 'Previous {0:s}'.format(
-            definitions.TIME_DESCRIPTION_LAST_RUN)}
+        'timestamp_desc': f'Previous {definitions.TIME_DESCRIPTION_LAST_RUN:s}'}
 
     self.CheckEventValues(storage_writer, events[2], expected_event_values)
 
@@ -377,8 +375,7 @@ class WinPrefetchParserTest(test_lib.ParserTestCase):
     # The prefetch previous last run event.
     expected_event_values = {
         'date_time': '2019-06-05 19:23:00.8157052',
-        'timestamp_desc': 'Previous {0:s}'.format(
-            definitions.TIME_DESCRIPTION_LAST_RUN)}
+        'timestamp_desc': f'Previous {definitions.TIME_DESCRIPTION_LAST_RUN:s}'}
 
     self.CheckEventValues(storage_writer, events[2], expected_event_values)
 

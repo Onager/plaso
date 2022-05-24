@@ -104,8 +104,7 @@ class GoogleDriveSyncLogParser(text_parser.PyparsingMultiLineTextParser):
       time_zone_offset_minutes = int(time_zone_offset[3:5], 10)
     except (IndexError, TypeError, ValueError) as exception:
       raise ValueError(
-          'unable to parse time zone offset with error: {0!s}.'.format(
-              exception))
+          f'unable to parse time zone offset with error: {exception!s}.')
 
     year = self._GetValueFromStructure(structure, 'year')
     month = self._GetValueFromStructure(structure, 'month')
@@ -124,8 +123,7 @@ class GoogleDriveSyncLogParser(text_parser.PyparsingMultiLineTextParser):
               time_zone_offset_minutes)
     except (TypeError, ValueError) as exception:
       raise ValueError(
-          'unable to format date time string with error: {0!s}.'.format(
-              exception))
+          f'unable to format date time string with error: {exception!s}.')
 
     return iso8601
 
@@ -147,7 +145,7 @@ class GoogleDriveSyncLogParser(text_parser.PyparsingMultiLineTextParser):
       date_time.CopyFromStringISO8601(datetime_iso8601)
     except ValueError:
       parser_mediator.ProduceExtractionWarning(
-          'invalid date time value: {0!s}'.format(time_elements_structure))
+          f'invalid date time value: {time_elements_structure!s}')
       return
 
     # Replace newlines with spaces in structure.message to preserve output.
@@ -183,7 +181,7 @@ class GoogleDriveSyncLogParser(text_parser.PyparsingMultiLineTextParser):
     """
     if key != 'logline':
       raise errors.ParseError(
-          'Unable to parse record, unknown structure: {0:s}'.format(key))
+          f'Unable to parse record, unknown structure: {key:s}')
 
     self._ParseRecordLogline(parser_mediator, structure)
 
@@ -201,7 +199,7 @@ class GoogleDriveSyncLogParser(text_parser.PyparsingMultiLineTextParser):
     try:
       structure = self._GDS_LINE.parseString(lines)
     except pyparsing.ParseException as exception:
-      logger.debug('Not a Google Drive Sync log file: {0!s}'.format(exception))
+      logger.debug(f'Not a Google Drive Sync log file: {exception!s}')
       return False
 
     date_time = dfdatetime_time_elements.TimeElementsInMilliseconds()

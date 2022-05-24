@@ -43,8 +43,7 @@ class WindowsPrefetchVolumesStringFormatterHelper(
       if not volume_serial_numbers:
         volume_serial_number = 'UNKNOWN'
       else:
-        volume_serial_number = '0x{0:08X}'.format(
-            volume_serial_numbers[volume_index])
+        volume_serial_number = f'0x{volume_serial_numbers[volume_index]:08X}'
 
       if not volume_device_paths:
         volume_device_path = 'UNKNOWN'

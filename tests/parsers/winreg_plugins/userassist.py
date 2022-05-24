@@ -68,7 +68,7 @@ class UserAssistPluginTest(test_lib.RegistryPluginTestCase):
 
     expected_event_values = {
         'date_time': '2009-08-04 15:11:22.8110676',
-        'key_path': '{0:s}\\Count'.format(key_path),
+        'key_path': f'{key_path:s}\\Count',
         'number_of_executions': 14,
         # This should just be the plugin name, as we're invoking it directly,
         # and not through the parser.
@@ -109,7 +109,7 @@ class UserAssistPluginTest(test_lib.RegistryPluginTestCase):
         'application_focus_count': 21,
         'application_focus_duration': 420000,
         'date_time': '2010-11-10 07:49:37.0780676',
-        'key_path': '{0:s}\\Count'.format(key_path),
+        'key_path': f'{key_path:s}\\Count',
         'number_of_executions': 14,
         # This should just be the plugin name, as we're invoking it directly,
         # and not through the parser.

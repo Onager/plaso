@@ -289,8 +289,7 @@ class DSVParser(interface.FileObjectParser):
 
       except csv.Error as exception:
         parser_mediator.ProduceExtractionWarning(
-            'unable to parse line: {0:d} with error: {1!s}'.format(
-                line_number, exception))
+            f'unable to parse line: {line_number:d} with error: {exception!s}')
         break
 
   @abc.abstractmethod

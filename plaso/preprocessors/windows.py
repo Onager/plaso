@@ -42,7 +42,7 @@ class WindowsEnvironmentVariableArtifactPreprocessorPlugin(
     except KeyError:
       mediator.ProducePreprocessingWarning(
           self.ARTIFACT_DEFINITION_NAME,
-          'Unable to set environment variable: {0:s}.'.format(self._NAME))
+          f'Unable to set environment variable: {self._NAME:s}.')
 
 
 class WindowsProfilePathEnvironmentVariableArtifactPreprocessorPlugin(
@@ -116,7 +116,7 @@ class WindowsProfilePathEnvironmentVariableArtifactPreprocessorPlugin(
     except KeyError:
       mediator.ProducePreprocessingWarning(
           self.ARTIFACT_DEFINITION_NAME,
-          'Unable to set environment variable: {0:s}.'.format(self._NAME))
+          f'Unable to set environment variable: {self._NAME:s}.')
 
 
 class WindowsPathEnvironmentVariableArtifactPreprocessorPlugin(
@@ -162,7 +162,7 @@ class WindowsPathEnvironmentVariableArtifactPreprocessorPlugin(
     except KeyError:
       mediator.ProducePreprocessingWarning(
           self.ARTIFACT_DEFINITION_NAME,
-          'Unable to set environment variable: {0:s}.'.format(self._NAME))
+          f'Unable to set environment variable: {self._NAME:s}.')
 
 
 class WindowsAllUsersAppDataKnowledgeBasePlugin(
@@ -293,8 +293,7 @@ class WindowsAvailableTimeZonesPlugin(
     if not tzi_value:
       mediator.ProducePreprocessingWarning(
           self.ARTIFACT_DEFINITION_NAME,
-          'TZI value missing from Windows Registry key: {0:s}'.format(
-              registry_key.key_path))
+          f'TZI value missing from Windows Registry key: {registry_key.key_path:s}')
       return
 
     time_zone_artifact = artifacts.TimeZoneArtifact(
@@ -365,7 +364,7 @@ class WindowsCodepagePlugin(
               type(value_data), self.ARTIFACT_DEFINITION_NAME))
 
     # Map the Windows code page name to a Python equivalent name.
-    codepage = 'cp{0:s}'.format(value_data)
+    codepage = f'cp{value_data:s}'
 
     try:
       mediator.SetCodepage(codepage)
@@ -397,8 +396,7 @@ class WindowsEventLogPublishersPlugin(
     if not registry_value:
       mediator.ProducePreprocessingWarning(
           self.ARTIFACT_DEFINITION_NAME,
-          'EventLog source missing for: {0:s}'.format(
-              registry_key.name))
+          f'EventLog source missing for: {registry_key.name:s}')
       return
 
     log_source = registry_value.GetDataAsObject()
@@ -486,8 +484,7 @@ class WindowsEventLogSourcesPlugin(
     except KeyError:
       mediator.ProducePreprocessingWarning(
           self.ARTIFACT_DEFINITION_NAME,
-          'Unable to set add Windows EventLog provider: {0:s}/{1:s}.'.format(
-              log_type, log_source))
+          f'Unable to set add Windows EventLog provider: {log_type:s}/{log_source:s}.')
 
 
 class WindowsHostnamePlugin(
@@ -555,8 +552,7 @@ class WindowsLanguagePlugin(
     else:
       mediator.ProducePreprocessingWarning(
           self.ARTIFACT_DEFINITION_NAME,
-          'Unable to determine language tag for LCID: {0:s}.'.format(
-              value_data))
+          f'Unable to determine language tag for LCID: {value_data:s}.')
 
 
 class WindowsMountedDevicesPlugin(
@@ -639,8 +635,7 @@ class WindowsMountedDevicesPlugin(
       except KeyError:
         mediator.ProducePreprocessingWarning(
             self.ARTIFACT_DEFINITION_NAME,
-            'Unable to add Windows mounted device: {0:s} artifact.'.format(
-                registry_value.name))
+            f'Unable to add Windows mounted device: {registry_value.name:s} artifact.')
 
 
 class WindowsProgramDataEnvironmentVariablePlugin(
@@ -863,8 +858,7 @@ class WindowsTimeZonePlugin(
     except ValueError as execption:
       mediator.ProducePreprocessingWarning(
           self.ARTIFACT_DEFINITION_NAME,
-          'Unable to map: "{0:s}" to time zone with error: {1!s}'.format(
-              value_data, execption))
+          f'Unable to map: "{value_data:s}" to time zone with error: {execption!s}')
 
 
 class WindowsUserAccountsPlugin(

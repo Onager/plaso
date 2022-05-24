@@ -64,7 +64,7 @@ class ExplorerProgramCacheWindowsRegistryPluginTest(
         'localized_name': '@shell32.dll,-21782',
         'long_name': 'Programs',
         'name': 'Programs',
-        'origin': '{0:s} ProgramsCache'.format(key_path),
+        'origin': f'{key_path:s} ProgramsCache',
         'parser': 'explorer_programscache/shell_items',
         'shell_item_path': 'Programs',
         'timestamp_desc': definitions.TIME_DESCRIPTION_CREATION}
@@ -152,7 +152,7 @@ class ExplorerProgramCacheWindowsRegistryPluginTest(
     expected_event_values = {
         'date_time': '2010-11-10 07:50:38',
         'data_type': 'windows:shell_item:file_entry',
-        'origin': '{0:s} ProgramsCache'.format(key_path),
+        'origin': f'{key_path:s} ProgramsCache',
         'parser': 'explorer_programscache/shell_items',
         'timestamp_desc': definitions.TIME_DESCRIPTION_CREATION}
 

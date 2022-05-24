@@ -116,8 +116,7 @@ class MacNotificationCenterPlugin(interface.SQLitePlugin):
 
     except (KeyError, plistlib.InvalidFileException) as exception:
       parser_mediator.ProduceExtractionWarning(
-          'unable to read plist from database with error: {0!s}'.format(
-              exception))
+          f'unable to read plist from database with error: {exception!s}')
       return
 
     event_data.title = req_property.get('titl', None)

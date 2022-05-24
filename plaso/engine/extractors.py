@@ -125,7 +125,7 @@ class EventExtractor(object):
         parser_filter_expression=parser_filter_expression)
 
     active_parser_names = ', '.join(sorted(self._parsers.keys()))
-    logger.debug('Active parsers: {0:s}'.format(active_parser_names))
+    logger.debug(f'Active parsers: {active_parser_names:s}')
 
     self._filestat_parser = self._parsers.get('filestat', None)
     if 'filestat' in self._parsers:
@@ -240,7 +240,7 @@ class EventExtractor(object):
       parser = self._parsers.get(parser_name, None)
       if not parser:
         raise RuntimeError(
-            'Parser object missing for parser: {0:s}'.format(parser_name))
+            f'Parser object missing for parser: {parser_name:s}')
 
       if parser.FILTERS:
         if not self._CheckParserCanProcessFileEntry(parser, file_entry):
@@ -374,12 +374,11 @@ class PathSpecExtractor(object):
     except (
         dfvfs_errors.AccessError, dfvfs_errors.BackEndError,
         dfvfs_errors.PathSpecError) as exception:
-      logger.error('Unable to open file entry with error: {0!s}'.format(
-          exception))
+      logger.error(f'Unable to open file entry with error: {exception!s}')
 
     if not file_entry:
       path_spec_string = self._GetPathSpecificationString(path_spec)
-      logger.warning('Unable to open: {0:s}'.format(path_spec_string))
+      logger.warning(f'Unable to open: {path_spec_string:s}')
 
     elif (not file_entry.IsDirectory() and not file_entry.IsFile() and
           not file_entry.IsDevice()):
@@ -452,7 +451,7 @@ class PathSpecExtractor(object):
       except (
           IOError, dfvfs_errors.AccessError, dfvfs_errors.BackEndError,
           dfvfs_errors.PathSpecError) as exception:
-        logger.warning('{0!s}'.format(exception))
+        logger.warning(f'{exception!s}')
 
   def _ExtractPathSpecsFromFile(self, file_entry):
     """Extracts path specification from a file.
@@ -504,8 +503,7 @@ class PathSpecExtractor(object):
     except (
         dfvfs_errors.AccessError, dfvfs_errors.BackEndError,
         dfvfs_errors.PathSpecError) as exception:
-      logger.error('Unable to open file system with error: {0!s}'.format(
-          exception))
+      logger.error(f'Unable to open file system with error: {exception!s}')
 
     if file_system:
       try:
@@ -528,7 +526,7 @@ class PathSpecExtractor(object):
       except (
           dfvfs_errors.AccessError, dfvfs_errors.BackEndError,
           dfvfs_errors.PathSpecError) as exception:
-        logger.warning('{0!s}'.format(exception))
+        logger.warning(f'{exception!s}')
 
   def _GetPathSpecificationString(self, path_spec):
     """Retrieves a printable string representation of the path specification.

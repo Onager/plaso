@@ -121,7 +121,7 @@ class HashAnalyzer(threading.Thread):
       ValueError: if the lookup hash is not supported.
     """
     if lookup_hash not in self.SUPPORTED_HASHES:
-      raise ValueError('Unsupported lookup hash: {0!s}'.format(lookup_hash))
+      raise ValueError(f'Unsupported lookup hash: {lookup_hash!s}')
 
     self.lookup_hash = lookup_hash
 
@@ -200,13 +200,11 @@ class HTTPHashAnalyzer(HashAnalyzer):
       response.raise_for_status()
 
     except requests.ConnectionError as exception:
-      error_string = 'Unable to connect to {0:s} with error: {1!s}'.format(
-          url, exception)
+      error_string = f'Unable to connect to {url:s} with error: {exception!s}'
       raise errors.ConnectionError(error_string)
 
     except requests.HTTPError as exception:
-      error_string = '{0:s} returned a HTTP error: {1!s}'.format(
-          url, exception)
+      error_string = f'{url:s} returned a HTTP error: {exception!s}'
       raise errors.ConnectionError(error_string)
 
     return response.json()
@@ -336,7 +334,7 @@ class HashTaggingAnalysisPlugin(interface.AnalysisPlugin):
         try:
           event_tag.AddLabels(labels)
         except (TypeError, ValueError):
-          error_label = 'error_{0:s}'.format(self.NAME)
+          error_label = f'error_{self.NAME:s}'
           logger.error((
               'unable to add labels: {0!s} for digest hash: {1:s} defaulting '
               'to: {2:s}').format(
@@ -418,7 +416,7 @@ class HashTaggingAnalysisPlugin(interface.AnalysisPlugin):
     if data_stream_identifier not in self._data_stream_identifiers:
       self._data_stream_identifiers.add(data_stream_identifier)
 
-      lookup_hash = '{0:s}_hash'.format(self._analyzer.lookup_hash)
+      lookup_hash = f'{self._analyzer.lookup_hash:s}_hash'
       lookup_hash = getattr(event_data_stream, lookup_hash, None)
 
       if lookup_hash:

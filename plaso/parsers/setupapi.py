@@ -192,7 +192,7 @@ class SetupapiLogParser(text_parser.PyparsingSingleLineTextParser):
       start_time = self._GetTimeElements(time_structure)
       if not start_time:
         parser_mediator.ProduceExtractionWarning(
-            'invalid date time value: {0!s}'.format(time_structure))
+            f'invalid date time value: {time_structure!s}')
         return
 
       event_data = SetupapiLogEventData()
@@ -211,7 +211,7 @@ class SetupapiLogParser(text_parser.PyparsingSingleLineTextParser):
       end_time = self._GetTimeElements(time_structure)
       if not end_time:
         parser_mediator.ProduceExtractionWarning(
-            'invalid date time value: {0!s}'.format(time_structure))
+            f'invalid date time value: {time_structure!s}')
       # Store last end time so that an event with the data from the
       # following exit status section can be created.
       self._last_end_time = end_time
@@ -234,7 +234,7 @@ class SetupapiLogParser(text_parser.PyparsingSingleLineTextParser):
         return
 
     raise errors.ParseError(
-        'Unable to parse record, unknown structure: {0:s}'.format(key))
+        f'Unable to parse record, unknown structure: {key:s}')
 
   def VerifyStructure(self, parser_mediator, line):
     """Verify that this file is a Windows Setupapi log file.
@@ -253,7 +253,7 @@ class SetupapiLogParser(text_parser.PyparsingSingleLineTextParser):
       self._last_end_time = None
       self._last_entry_type = None
     except pyparsing.ParseException as exception:
-      logger.debug('Not a Windows Setupapi log file: {0!s}'.format(exception))
+      logger.debug(f'Not a Windows Setupapi log file: {exception!s}')
       return False
 
     return True

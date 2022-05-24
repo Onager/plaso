@@ -186,8 +186,7 @@ class AnalysisMultiProcessEngine(task_engine.TaskMultiProcessEngine):
             merge_helper = merge_helpers.AnalysisTaskMergeHelper(
                 task_storage_reader, task.identifier)
 
-            logger.debug('Starting merge of task: {0:s}'.format(
-                merge_helper.task_identifier))
+            logger.debug(f'Starting merge of task: {merge_helper.task_identifier:s}')
 
             number_of_containers = self._MergeAttributeContainers(
                 storage_writer, merge_helper)
@@ -341,8 +340,7 @@ class AnalysisMultiProcessEngine(task_engine.TaskMultiProcessEngine):
 
       process = self._StartWorkerProcess(analysis_plugin.NAME)
       if not process:
-        logger.error('Unable to create analysis process: {0:s}'.format(
-            analysis_plugin.NAME))
+        logger.error(f'Unable to create analysis process: {analysis_plugin.NAME:s}')
 
     logger.info('Analysis plugins running')
 
@@ -357,10 +355,10 @@ class AnalysisMultiProcessEngine(task_engine.TaskMultiProcessEngine):
     """
     analysis_plugin = self._analysis_plugins.get(process_name, None)
     if not analysis_plugin:
-      logger.error('Missing analysis plugin: {0:s}'.format(process_name))
+      logger.error(f'Missing analysis plugin: {process_name:s}')
       return None
 
-    queue_name = '{0:s} output event queue'.format(process_name)
+    queue_name = f'{process_name:s} output event queue'
     output_event_queue = zeromq_queue.ZeroMQPushBindQueue(
         name=queue_name, timeout_seconds=self._QUEUE_TIMEOUT)
     # Open the queue so it can bind to a random port, and we can get the
@@ -369,7 +367,7 @@ class AnalysisMultiProcessEngine(task_engine.TaskMultiProcessEngine):
 
     self._event_queues[process_name] = output_event_queue
 
-    queue_name = '{0:s} input event queue'.format(process_name)
+    queue_name = f'{process_name:s} input event queue'
     input_event_queue = zeromq_queue.ZeroMQPullConnectQueue(
         name=queue_name, delay_open=True, port=output_event_queue.port,
         timeout_seconds=self._QUEUE_TIMEOUT)
@@ -382,8 +380,7 @@ class AnalysisMultiProcessEngine(task_engine.TaskMultiProcessEngine):
 
     process.start()
 
-    logger.info('Started analysis plugin: {0:s} (PID: {1:d}).'.format(
-        process_name, process.pid))
+    logger.info(f'Started analysis plugin: {process_name:s} (PID: {process.pid:d}).')
 
     try:
       self._StartMonitoringProcess(process)
@@ -672,8 +669,7 @@ class AnalysisMultiProcessEngine(task_engine.TaskMultiProcessEngine):
           definitions.STORAGE_FORMAT_SQLITE, session.identifier,
           abort=self._abort)
     except (IOError, OSError) as exception:
-      logger.error('Unable to stop task storage with error: {0!s}'.format(
-          exception))
+      logger.error(f'Unable to stop task storage with error: {exception!s}')
 
     if self._abort:
       logger.debug('Analysis aborted.')

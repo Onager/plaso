@@ -61,7 +61,7 @@ class LaunchdPlugin(interface.PlistPlugin):
     command = top_level.get('Program', '')
     program_arguments = top_level.get('ProgramArguments')
     for argument in program_arguments:
-      command += " %s" % argument
+      command += f" {argument}"
 
     user_name = top_level.get('UserName')
     group_name = top_level.get('GroupName')

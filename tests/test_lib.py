@@ -145,7 +145,7 @@ class BaseTestCase(unittest.TestCase):
     """
     if not os.path.exists(path):
       filename = os.path.basename(path)
-      raise unittest.SkipTest('missing test file: {0:s}'.format(filename))
+      raise unittest.SkipTest(f'missing test file: {filename:s}')
 
 
 class ImportCheckTestCase(BaseTestCase):
@@ -162,7 +162,7 @@ class ImportCheckTestCase(BaseTestCase):
       ignorable_files (list[str]): names of Python files that don't need to
           appear in __init__.py. For example, 'manager.py'.
     """
-    init_path = '{0:s}/__init__.py'.format(path)
+    init_path = f'{path:s}/__init__.py'
     with io.open(init_path, mode='r', encoding='utf-8') as init_file:
       init_content = init_file.read()
 
@@ -176,7 +176,7 @@ class ImportCheckTestCase(BaseTestCase):
 
         self.assertRegex(
             init_content, import_expression,
-            '{0:s} not imported in {1:s}'.format(module_name, init_path))
+            f'{module_name:s} not imported in {init_path:s}')
 
 
 class TempDirectory(object):

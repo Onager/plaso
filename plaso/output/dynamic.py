@@ -96,7 +96,7 @@ class DynamicFieldFormattingHelper(formatting_helper.FieldFormattingHelper):
           'Defaulting to: "0000-00-00"').format(event.timestamp))
       return '0000-00-00'
 
-    return '{0:04d}-{1:02d}-{2:02d}'.format(year, month, day_of_month)
+    return f'{year:04d}-{month:02d}-{day_of_month:02d}'
 
   def _FormatTimestampDescription(self, event, event_data, event_data_stream):
     """Formats a timestamp description field.

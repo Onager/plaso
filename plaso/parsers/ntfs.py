@@ -326,8 +326,7 @@ class NTFSMFTParser(interface.FileObjectParser):
             if not data_stream_name:
               path_hint_with_data_stream = path_hint
             else:
-              path_hint_with_data_stream = '{0:s}:{1:s}'.format(
-                  path_hint, data_stream_name)
+              path_hint_with_data_stream = f'{path_hint:s}:{data_stream_name:s}'
 
             path_hints_with_data_streams.append(path_hint_with_data_stream)
 
@@ -354,7 +353,7 @@ class NTFSMFTParser(interface.FileObjectParser):
       mft_metadata_file.open_file_object(file_object)
     except IOError as exception:
       parser_mediator.ProduceExtractionWarning(
-          'unable to open $MFT file with error: {0!s}'.format(exception))
+          f'unable to open $MFT file with error: {exception!s}')
       return
 
     for entry_index in range(0, mft_metadata_file.number_of_file_entries):
@@ -464,7 +463,7 @@ class NTFSUsnJrnlParser(
       fsntfs_volume.open_file_object(file_object)
     except IOError as exception:
       parser_mediator.ProduceExtractionWarning(
-          'unable to open NTFS volume with error: {0!s}'.format(exception))
+          f'unable to open NTFS volume with error: {exception!s}')
       return
 
     try:

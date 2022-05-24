@@ -81,13 +81,12 @@ class ExplorerProgramsCacheWindowsRegistryPlugin(
           value_data, 0, header_map)
     except (ValueError, errors.ParseError) as exception:
       parser_mediator.ProduceExtractionWarning(
-          'unable to parse header value with error: {0!s}'.format(
-              exception))
+          f'unable to parse header value with error: {exception!s}')
       return
 
     if header.format_version not in (1, 9, 12, 19):
       parser_mediator.ProduceExtractionWarning(
-          'unsupported format version: {0:d}'.format(header.format_version))
+          f'unsupported format version: {header.format_version:d}')
       return
 
     known_folder_identifier = None
@@ -141,8 +140,7 @@ class ExplorerProgramsCacheWindowsRegistryPlugin(
 
       value_data_offset += context.byte_size
 
-      display_name = '{0:s} {1:s}'.format(
-          registry_key.path, registry_value.name)
+      display_name = f'{registry_key.path:s} {registry_value.name:s}'
 
       shell_items_parser = shell_items.ShellItemsParser(display_name)
       shell_items_parser.ParseByteStream(
@@ -174,11 +172,11 @@ class ExplorerProgramsCacheWindowsRegistryPlugin(
     # TODO: recover remaining items.
 
     if known_folder_identifier:
-      known_folder_identifier = '{0!s}'.format(known_folder_identifier)
+      known_folder_identifier = f'{known_folder_identifier!s}'
 
     event_data = ExplorerProgramsCacheEventData()
     event_data.entries = ' '.join([
-        '{0:d}: {1:s}'.format(index, link_target)
+        f'{index:d}: {link_target:s}'
         for index, link_target in enumerate(link_targets)]) or None
     event_data.key_path = registry_key.path
     event_data.known_folder_identifier = known_folder_identifier

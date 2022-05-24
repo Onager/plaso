@@ -14,7 +14,7 @@ class PathHelper(object):
 
   _NON_PRINTABLE_CHARACTERS = list(range(0, 0x20)) + list(range(0x7f, 0xa0))
   _ESCAPE_CHARACTERS = str.maketrans({
-      value: '\\x{0:02x}'.format(value)
+      value: f'\\x{value:02x}'
       for value in _NON_PRINTABLE_CHARACTERS})
 
   _RECURSIVE_GLOB_LIMIT = 10
@@ -313,7 +313,7 @@ class PathHelper(object):
       return path_spec.type_indicator
 
     if text_prepend:
-      relative_path = '{0:s}{1:s}'.format(text_prepend, relative_path)
+      relative_path = f'{text_prepend:s}{relative_path:s}'
 
     path_type_indicator = path_spec.type_indicator
 
@@ -331,10 +331,9 @@ class PathHelper(object):
         dfvfs_definitions.TYPE_INDICATOR_VSHADOW):
       store_index = getattr(path_spec.parent, 'store_index', None)
       if store_index is not None:
-        return 'VSS{0:d}:{1:s}:{2:s}'.format(
-            store_index + 1, path_spec.type_indicator, relative_path)
+        return f'VSS{store_index + 1:d}:{path_spec.type_indicator:s}:{relative_path:s}'
 
-    display_name = '{0:s}:{1:s}'.format(path_type_indicator, relative_path)
+    display_name = f'{path_type_indicator:s}:{relative_path:s}'
 
     if cls._UNICODE_SURROGATES_RE.search(display_name):
       display_name = display_name.encode('utf-8', errors='surrogateescape')
@@ -373,7 +372,7 @@ class PathHelper(object):
     data_stream = getattr(path_spec, 'data_stream', None)
     if data_stream:
       data_stream = data_stream.translate(cls._ESCAPE_CHARACTERS)
-      location = '{0:s}:{1:s}'.format(location, data_stream)
+      location = f'{location:s}:{data_stream:s}'
 
     if path_spec.type_indicator != dfvfs_definitions.TYPE_INDICATOR_OS:
       return location

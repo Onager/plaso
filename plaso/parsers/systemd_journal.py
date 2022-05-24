@@ -93,8 +93,7 @@ class SystemdJournalParser(
           '{1!s}').format(file_offset, exception))
 
     if data_object.object_type != self._OBJECT_TYPE_DATA:
-      raise errors.ParseError('Unsupported object type: {0:d}.'.format(
-          data_object.object_type))
+      raise errors.ParseError(f'Unsupported object type: {data_object.object_type:d}.')
 
     if data_object.object_flags not in (
         0, self._OBJECT_COMPRESSED_FLAG_XZ, self._OBJECT_COMPRESSED_FLAG_LZ4):
@@ -183,8 +182,7 @@ class SystemdJournalParser(
           '{1!s}').format(file_offset, exception))
 
     if entry_object.object_type != self._OBJECT_TYPE_ENTRY:
-      raise errors.ParseError('Unsupported object type: {0:d}.'.format(
-          entry_object.object_type))
+      raise errors.ParseError(f'Unsupported object type: {entry_object.object_type:d}.')
 
     if entry_object.object_flags != 0:
       raise errors.ParseError('Unsupported object flags: 0x{0:02x}.'.format(
@@ -290,13 +288,11 @@ class SystemdJournalParser(
           file_object, 0, file_header_map)
     except (ValueError, errors.ParseError) as exception:
       raise errors.WrongParser(
-          'Unable to parse file header with error: {0!s}'.format(
-              exception))
+          f'Unable to parse file header with error: {exception!s}')
 
     if file_header.header_size not in self._SUPPORTED_FILE_HEADER_SIZES:
       raise errors.WrongParser(
-          'Unsupported file header size: {0:d}.'.format(
-              file_header.header_size))
+          f'Unsupported file header size: {file_header.header_size:d}.')
 
     data_hash_table_end_offset = (
         file_header.data_hash_table_offset +

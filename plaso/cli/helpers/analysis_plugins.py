@@ -74,8 +74,7 @@ class AnalysisPluginsArgumentsHelper(interface.ArgumentsHelper):
       difference = set(analysis_plugins).difference(plugin_names)
       if difference:
         raise errors.BadConfigOption(
-            'Non-existent analysis plugins specified: {0:s}'.format(
-                ' '.join(difference)))
+            f"Non-existent analysis plugins specified: {' '.join(difference):s}")
 
     setattr(configuration_object, '_analysis_plugins', analysis_plugins)
 

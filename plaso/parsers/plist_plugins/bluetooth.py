@@ -59,7 +59,7 @@ class BluetoothPlugin(interface.PlistPlugin):
       if datetime_value:
         event_data.desc = ' '.join(
             filter(None, ('Bluetooth Discovery', name)))
-        event_data.key = '{0:s}/LastInquiryUpdate'.format(device)
+        event_data.key = f'{device:s}/LastInquiryUpdate'
 
         date_time = dfdatetime_time_elements.TimeElementsInMicroseconds()
         date_time.CopyFromDatetime(datetime_value)
@@ -69,7 +69,7 @@ class BluetoothPlugin(interface.PlistPlugin):
         parser_mediator.ProduceEventWithEventData(event, event_data)
 
         if device in match.get('PairedDevices', []):
-          event_data.desc = 'Paired:True {0:s}'.format(name)
+          event_data.desc = f'Paired:True {name:s}'
           event_data.key = device
 
           date_time = dfdatetime_time_elements.TimeElementsInMicroseconds()
@@ -82,7 +82,7 @@ class BluetoothPlugin(interface.PlistPlugin):
       datetime_value = value.get('LastNameUpdate', None)
       if datetime_value:
         event_data.desc = ' '.join(filter(None, ('Device Name Set', name)))
-        event_data.key = '{0:s}/LastNameUpdate'.format(device)
+        event_data.key = f'{device:s}/LastNameUpdate'
 
         date_time = dfdatetime_time_elements.TimeElementsInMicroseconds()
         date_time.CopyFromDatetime(datetime_value)
@@ -94,7 +94,7 @@ class BluetoothPlugin(interface.PlistPlugin):
       datetime_value = value.get('LastServicesUpdate', None)
       if datetime_value:
         event_data.desc = ' '.join(filter(None, ('Services Updated', name)))
-        event_data.key = '{0:s}/LastServicesUpdate'.format(device)
+        event_data.key = f'{device:s}/LastServicesUpdate'
 
         date_time = dfdatetime_time_elements.TimeElementsInMicroseconds()
         date_time.CopyFromDatetime(datetime_value)

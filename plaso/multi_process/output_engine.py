@@ -58,7 +58,7 @@ class PsortEventHeap(object):
         event_data_stream_attributes = event_data_stream.GetAttributes()
         event_attributes.extend(event_data_stream_attributes)
 
-      attributes = ['data_type: {0:s}'.format(event_data.data_type)]
+      attributes = [f'data_type: {event_data.data_type:s}']
 
       for attribute_name, attribute_value in sorted(event_attributes):
         if (attribute_name in self._IDENTIFIER_EXCLUDED_ATTRIBUTES or
@@ -80,11 +80,9 @@ class PsortEventHeap(object):
           attribute_value = repr(attribute_value)
 
         try:
-          attribute_string = '{0:s}: {1!s}'.format(
-              attribute_name, attribute_value)
+          attribute_string = f'{attribute_name:s}: {attribute_value!s}'
         except UnicodeDecodeError:
-          logger.error('Failed to decode attribute {0:s}'.format(
-              attribute_name))
+          logger.error(f'Failed to decode attribute {attribute_name:s}')
         attributes.append(attribute_string)
 
       content_identifier = ', '.join(attributes)

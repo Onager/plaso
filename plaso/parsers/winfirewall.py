@@ -160,7 +160,7 @@ class WinFirewallParser(text_parser.PyparsingSingleLineTextParser):
 
     except (TypeError, ValueError):
       parser_mediator.ProduceExtractionWarning(
-          'invalid date time value: {0!s}'.format(time_elements_structure))
+          f'invalid date time value: {time_elements_structure!s}')
       return
 
     event_data = WinFirewallEventData()
@@ -205,7 +205,7 @@ class WinFirewallParser(text_parser.PyparsingSingleLineTextParser):
     """
     if key not in ('comment', 'logline'):
       raise errors.ParseError(
-          'Unable to parse record, unknown structure: {0:s}'.format(key))
+          f'Unable to parse record, unknown structure: {key:s}')
 
     if key == 'comment':
       self._ParseCommentRecord(structure)

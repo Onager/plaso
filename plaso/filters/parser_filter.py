@@ -89,7 +89,7 @@ class ParserFilterExpressionHelper(object):
           set(included_parsers_and_plugins) - overlapping_parser_filters)
 
     parser_filters = [
-        '!{0:s}'.format(parser_filter)
+        f'!{parser_filter:s}'
         for parser_filter in excluded_parsers_and_plugins]
     parser_filters.extend(included_parsers_and_plugins)
     return ','.join(parser_filters)

@@ -174,7 +174,7 @@ class CupsIppParser(interface.FileObjectParser, dtfabric_helper.DtFabricHelper):
 
     for index, value in enumerate(values):
       if ',' in value:
-        values[index] = '"{0:s}"'.format(value)
+        values[index] = f'"{value:s}"'
 
     return ', '.join(values)
 
@@ -198,7 +198,7 @@ class CupsIppParser(interface.FileObjectParser, dtfabric_helper.DtFabricHelper):
           file_object, file_offset, attribute_map)
     except (ValueError, errors.ParseError) as exception:
       raise errors.ParseError(
-          'Unable to parse attribute with error: {0!s}'.format(exception))
+          f'Unable to parse attribute with error: {exception!s}')
 
     value = None
     if attribute.tag_value in self._INTEGER_TAG_VALUES:
@@ -299,7 +299,7 @@ class CupsIppParser(interface.FileObjectParser, dtfabric_helper.DtFabricHelper):
           byte_stream, file_offset, datetime_value_map)
     except (ValueError, errors.ParseError) as exception:
       raise errors.ParseError(
-          'Unable to parse datetime value with error: {0!s}'.format(exception))
+          f'Unable to parse datetime value with error: {exception!s}')
 
     direction_from_utc = chr(value.direction_from_utc)
     rfc2579_date_time_tuple = (
@@ -330,7 +330,7 @@ class CupsIppParser(interface.FileObjectParser, dtfabric_helper.DtFabricHelper):
           byte_stream, file_offset, data_type_map)
     except (ValueError, errors.ParseError) as exception:
       raise errors.ParseError(
-          'Unable to parse integer value with error: {0!s}'.format(exception))
+          f'Unable to parse integer value with error: {exception!s}')
 
   def _ParseHeader(self, parser_mediator, file_object):
     """Parses a CUPS IPP header from a file-like object.
@@ -349,15 +349,12 @@ class CupsIppParser(interface.FileObjectParser, dtfabric_helper.DtFabricHelper):
       header, _ = self._ReadStructureFromFileObject(file_object, 0, header_map)
     except (ValueError, errors.ParseError) as exception:
       raise errors.WrongParser(
-          '[{0:s}] Unable to parse header with error: {1!s}'.format(
-              self.NAME, exception))
+          f'[{self.NAME:s}] Unable to parse header with error: {exception!s}')
 
-    format_version = '{0:d}.{1:d}'.format(
-        header.major_version, header.minor_version)
+    format_version = f'{header.major_version:d}.{header.minor_version:d}'
     if format_version not in self._SUPPORTED_FORMAT_VERSIONS:
       raise errors.WrongParser(
-          '[{0:s}] Unsupported format version {1:s}.'.format(
-              self.NAME, format_version))
+          f'[{self.NAME:s}] Unsupported format version {format_version:s}.')
 
     if header.operation_identifier != 5:
       # TODO: generate ExtractionWarning instead of printing debug output.

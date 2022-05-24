@@ -44,7 +44,7 @@ class SoftwareUpdatePlugin(interface.PlistPlugin):
     pending = match.get('LastUpdatesAvailable', None)
 
     event_data = plist_event.PlistTimeEventData()
-    event_data.desc = 'Last MacOS {0:s} full update.'.format(version)
+    event_data.desc = f'Last MacOS {version:s} full update.'
     event_data.key = ''
     event_data.root = '/'
 
@@ -64,7 +64,7 @@ class SoftwareUpdatePlugin(interface.PlistPlugin):
         identifier = update.get('Identifier', '<IDENTIFIER>')
         product_key = update.get('Product Key', '<PRODUCT_KEY>')
 
-        software.append('{0:s}({1:s})'.format(identifier, product_key))
+        software.append(f'{identifier:s}({product_key:s})')
 
       if not software:
         return

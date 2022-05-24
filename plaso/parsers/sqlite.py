@@ -232,7 +232,7 @@ class SQLiteDatabase(object):
     if wal_file_object:
       # Create WAL file using same filename so it is available for
       # sqlite3.connect()
-      temporary_filename = '{0:s}-wal'.format(self._temp_db_file_path)
+      temporary_filename = f'{self._temp_db_file_path:s}-wal'
 
       with open(temporary_filename, 'wb') as temporary_file:
         try:
@@ -260,7 +260,7 @@ class SQLiteDatabase(object):
         # The table name needs to be enclosed in quotes in case it contains
         # special characters like a dot.
         pragma_results = cursor.execute(
-            'PRAGMA table_info("{0:s}")'.format(table_name))
+            f'PRAGMA table_info("{table_name:s}")')
 
         for pragma_result in pragma_results:
           self.columns_per_table[table_name].append(pragma_result['name'])
@@ -327,7 +327,7 @@ class SQLiteParser(interface.FileEntryParser):
     if not path_spec or not location:
       return None, None
 
-    location_wal = '{0:s}-wal'.format(location)
+    location_wal = f'{location:s}-wal'
     file_system = database_file_entry.GetFileSystem()
     wal_path_spec = dfvfs_factory.Factory.NewPathSpec(
         file_system.type_indicator, parent=path_spec.parent,
@@ -375,8 +375,7 @@ class SQLiteParser(interface.FileEntryParser):
           display_name, plugin.NAME))
       return
 
-    logger.debug('Parsing file: {0:s} with plugin: {1:s}'.format(
-        display_name, plugin.NAME))
+    logger.debug(f'Parsing file: {display_name:s} with plugin: {plugin.NAME:s}')
 
     schema_match = plugin.CheckSchema(database)
     if plugin.REQUIRES_SCHEMA_MATCH and not schema_match:
@@ -422,7 +421,7 @@ class SQLiteParser(interface.FileEntryParser):
 
     except (IOError, ValueError, sqlite3.DatabaseError) as exception:
       parser_mediator.ProduceExtractionWarning(
-          'unable to open SQLite database with error: {0!s}'.format(exception))
+          f'unable to open SQLite database with error: {exception!s}')
       return
 
     # Create a cache in which the resulting tables are cached.

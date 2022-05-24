@@ -142,15 +142,13 @@ class SCCMParser(text_parser.PyparsingMultiLineTextParser):
     fraction_of_second_length = len(fraction_of_second)
     if fraction_of_second_length not in (3, 6, 7):
       raise ValueError(
-          'unsupported time fraction of second length: {0:d}'.format(
-              fraction_of_second_length))
+          f'unsupported time fraction of second length: {fraction_of_second_length:d}')
 
     try:
       fraction_of_second = int(fraction_of_second, 10)
     except (TypeError, ValueError) as exception:
       raise ValueError(
-          'unable to determine fraction of second with error: {0!s}'.format(
-              exception))
+          f'unable to determine fraction of second with error: {exception!s}')
 
     # TODO: improve precision support, but for now ignore the 100ns precision.
     if fraction_of_second_length == 7:
@@ -167,8 +165,7 @@ class SCCMParser(text_parser.PyparsingMultiLineTextParser):
         year, month, day_of_month, hours, minutes, seconds)
 
     if fraction_of_second_length > 0:
-      date_time_string = '{0:s}.{1:d}'.format(
-          date_time_string, fraction_of_second)
+      date_time_string = f'{date_time_string:s}.{fraction_of_second:d}'
 
     utc_offset_minutes = self._GetValueFromStructure(
         structure, 'utc_offset_minutes')
@@ -177,8 +174,7 @@ class SCCMParser(text_parser.PyparsingMultiLineTextParser):
         time_zone_offset = int(utc_offset_minutes[1:], 10)
       except (IndexError, ValueError) as exception:
         raise ValueError(
-            'Unable to parse time zone offset with error: {0!s}.'.format(
-                exception))
+            f'Unable to parse time zone offset with error: {exception!s}.')
 
       time_zone_hours, time_zone_minutes = divmod(time_zone_offset, 60)
       date_time_string = '{0:s}{1:s}{2:02d}:{3:02d}'.format(
@@ -204,14 +200,13 @@ class SCCMParser(text_parser.PyparsingMultiLineTextParser):
         'log_entry', 'log_entry_at_end', 'log_entry_offset',
         'log_entry_offset_at_end'):
       raise errors.ParseError(
-          'Unable to parse record, unknown structure: {0:s}'.format(key))
+          f'Unable to parse record, unknown structure: {key:s}')
 
     try:
       date_time_string = self._GetISO8601String(structure)
     except ValueError as exception:
       parser_mediator.ProduceExtractionWarning(
-          'unable to determine date time string with error: {0!s}'.format(
-              exception))
+          f'unable to determine date time string with error: {exception!s}')
 
     fraction_of_second = self._GetValueFromStructure(
         structure, 'fraction_of_second')

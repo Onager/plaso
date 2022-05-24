@@ -183,13 +183,13 @@ class EventFilterExpressionParser(object):
     Raises:
       ParseError: if the operator does not support negation.
     """
-    logger.debug('Storing argument: {0!s}'.format(value))
+    logger.debug(f'Storing argument: {value!s}')
 
     if self._have_negate_keyword:
       operator = self._current_expression.operator
       if operator and operator.lower() not in self._OPERATORS_WITH_NEGATION:
         raise errors.ParseError(
-            'Operator: {0:s} does not support negation (not).'.format(operator))
+            f'Operator: {operator:s} does not support negation (not).')
 
     # This expression is complete
     if self._current_expression.AddArgument(value):
@@ -226,8 +226,7 @@ class EventFilterExpressionParser(object):
             self._datetime_value))
 
     else:
-      raise errors.ParseError('unsupported datetime value: {0!s}.'.format(
-          self._datetime_value))
+      raise errors.ParseError(f'unsupported datetime value: {self._datetime_value!s}.')
 
     self._datetime_value = None
     return self._AddArgument(date_time)
@@ -251,7 +250,7 @@ class EventFilterExpressionParser(object):
     try:
       int_value = int(string)
     except (TypeError, ValueError):
-      raise errors.ParseError('{0:s} is not a valid integer.'.format(string))
+      raise errors.ParseError(f'{string:s} is not a valid integer.')
     return self._AddArgument(int_value)
 
   def _AddArgumentFloatingPoint(self, string='', **unused_kwargs):
@@ -273,7 +272,7 @@ class EventFilterExpressionParser(object):
     try:
       float_value = float(string)
     except (TypeError, ValueError):
-      raise errors.ParseError('{0:s} is not a valid float.'.format(string))
+      raise errors.ParseError(f'{string:s} is not a valid float.')
     return self._AddArgument(float_value)
 
   def _AddArgumentHexadecimalInteger(self, string='', **unused_kwargs):
@@ -296,7 +295,7 @@ class EventFilterExpressionParser(object):
       int_value = int(string, 16)
     except (TypeError, ValueError):
       raise errors.ParseError(
-          '{0:s} is not a valid base16 integer.'.format(string))
+          f'{string:s} is not a valid base16 integer.')
     return self._AddArgument(int_value)
 
   def _AddArgumentPath(self, **unused_kwargs):
@@ -475,7 +474,7 @@ class EventFilterExpressionParser(object):
     operator = self._current_expression.operator
     if operator and operator.lower() not in self._OPERATORS_WITH_NEGATION:
       raise errors.ParseError(
-          'Operator: {0:s} does not support negation.'.format(operator))
+          f'Operator: {operator:s} does not support negation.')
 
     self._have_negate_keyword = True
 
@@ -487,7 +486,7 @@ class EventFilterExpressionParser(object):
 
     Note that this function is used as a callback by _GetNextToken.
     """
-    logger.debug('Default handler: {0!s}'.format(kwarg))
+    logger.debug(f'Default handler: {kwarg!s}')
 
   def _PopState(self, **unused_kwargs):
     """Pops the previous state from the stack.
@@ -507,7 +506,7 @@ class EventFilterExpressionParser(object):
               len(self._processed_buffer), self._processed_buffer,
               self._buffer))
 
-    logger.debug('Returned state to {0:s}'.format(self._state))
+    logger.debug(f'Returned state to {self._state:s}')
     return self._state
 
   def _PushBack(self, string='', **unused_kwargs):
@@ -534,7 +533,7 @@ class EventFilterExpressionParser(object):
     Returns:
       str: next state, which is None.
     """
-    logger.debug('Storing state {0:s}'.format(repr(self._state)))
+    logger.debug(f'Storing state {repr(self._state):s}')
     self._state_stack.append(self._state)
 
     return None
@@ -602,7 +601,7 @@ class EventFilterExpressionParser(object):
     Returns:
       str: next state, which is the operator state.
     """
-    logger.debug('Storing attribute {0:s}'.format(repr(string)))
+    logger.debug(f'Storing attribute {repr(string):s}')
 
     self._current_expression.SetAttribute(string)
 
@@ -628,7 +627,7 @@ class EventFilterExpressionParser(object):
     try:
       self._datetime_value = int(string)
     except (TypeError, ValueError):
-      raise errors.ParseError('{0:s} is not a valid integer.'.format(string))
+      raise errors.ParseError(f'{string:s} is not a valid integer.')
 
     return self._STATE_DATETIME
 
@@ -643,7 +642,7 @@ class EventFilterExpressionParser(object):
     Returns:
       str: next state, which is None.
     """
-    logger.debug('Storing operator {0:s}'.format(repr(string)))
+    logger.debug(f'Storing operator {repr(string):s}')
     self._current_expression.SetOperator(string)
 
     return None
@@ -668,7 +667,7 @@ class EventFilterExpressionParser(object):
       ParseError: when the escaped string is not one of [\\'"rnbt].
     """
     if match.group(1) not in '\\\'"rnbt\\.ws':
-      raise errors.ParseError('Invalid escape character {0:s}.'.format(string))
+      raise errors.ParseError(f'Invalid escape character {string:s}.')
 
     decoded_string = codecs.decode(string, 'unicode_escape')
     return self._StringExpand(string=decoded_string)
@@ -735,14 +734,14 @@ class EventFilterExpressionParser(object):
     Raises:
       ParseError: if the string is not hex escaped.
     """
-    logger.debug('HexEscape matched {0:s}.'.format(string))
+    logger.debug(f'HexEscape matched {string:s}.')
     hex_string = match.group(1)
     try:
       hex_string = binascii.unhexlify(hex_string)
       hex_string = codecs.decode(hex_string, 'utf-8')
       self._string += hex_string
     except (TypeError, binascii.Error):
-      raise errors.ParseError('Invalid hex escape {0!s}.'.format(hex_string))
+      raise errors.ParseError(f'Invalid hex escape {hex_string!s}.')
 
     return None
 

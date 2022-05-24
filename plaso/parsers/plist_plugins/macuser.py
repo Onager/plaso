@@ -93,8 +93,7 @@ class MacUserPlugin(interface.PlistPlugin):
         except ValueError:
           date_time = None
           parser_mediator.ProduceExtractionWarning(
-              'unable to parse password last set time string: {0:s}'.format(
-                  time_string))
+              f'unable to parse password last set time string: {time_string:s}')
 
         shadow_hash_data = match.get('ShadowHashData', None)
         if date_time and isinstance(shadow_hash_data, (list, tuple)):
@@ -104,8 +103,7 @@ class MacUserPlugin(interface.PlistPlugin):
             property_list = plistlib.loads(shadow_hash_data[0])
           except plistlib.InvalidFileException as exception:
             parser_mediator.ProduceExtractionWarning(
-                'unable to parse ShadowHashData with error: {0!s}'.format(
-                    exception))
+                f'unable to parse ShadowHashData with error: {exception!s}')
             property_list = {}
 
           password_hash = 'N/A'
@@ -138,13 +136,11 @@ class MacUserPlugin(interface.PlistPlugin):
         except ValueError:
           date_time = None
           parser_mediator.ProduceExtractionWarning(
-              'unable to parse last login time string: {0:s}'.format(
-                  time_string))
+              f'unable to parse last login time string: {time_string:s}')
 
         if date_time:
           event_data = plist_event.PlistTimeEventData()
-          event_data.desc = 'Last login from {0:s} ({1!s})'.format(
-              account, uid)
+          event_data.desc = f'Last login from {account:s} ({uid!s})'
           event_data.key = 'lastLoginTimestamp'
           event_data.root = self._ROOT
 
@@ -160,8 +156,7 @@ class MacUserPlugin(interface.PlistPlugin):
         except ValueError:
           date_time = None
           parser_mediator.ProduceExtractionWarning(
-              'unable to parse failed login time string: {0:s}'.format(
-                  time_string))
+              f'unable to parse failed login time string: {time_string:s}')
 
         if date_time:
           event_data = plist_event.PlistTimeEventData()

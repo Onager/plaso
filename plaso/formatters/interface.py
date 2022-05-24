@@ -250,7 +250,7 @@ class EventFormatter(object):
 
       attribute_values = []
       for attribute, value in event_values.items():
-        attribute_values.append('{0:s}: {1!s}'.format(attribute, value))
+        attribute_values.append(f'{attribute:s}: {value!s}')
 
       message_string = ' '.join(attribute_values)
 
@@ -260,7 +260,7 @@ class EventFormatter(object):
       event_identifier = event_values.get('uuid', 'N/A')
       parser_chain = event_values.get('parser', 'N/A')
 
-      error_message = 'Unicode decode error: {0!s}'.format(exception)
+      error_message = f'Unicode decode error: {exception!s}'
       error_message = (
           'Event: {0:s} data type: {1:s} display name: {2:s} '
           'parser chain: {3:s} with error: {4:s}').format(
@@ -406,7 +406,7 @@ class BasicEventFormatter(EventFormatter):
 
     # Truncate the short message string if necessary.
     if len(short_message_string) > 80:
-      short_message_string = '{0:s}...'.format(short_message_string[:77])
+      short_message_string = f'{short_message_string[:77]:s}...'
 
     return short_message_string
 
@@ -580,6 +580,6 @@ class ConditionalEventFormatter(EventFormatter):
 
     # Truncate the short message string if necessary.
     if len(short_message_string) > 80:
-      short_message_string = '{0:s}...'.format(short_message_string[:77])
+      short_message_string = f'{short_message_string[:77]:s}...'
 
     return short_message_string

@@ -49,7 +49,7 @@ class KMLOutputModule(interface.TextFileOutputModule):
       name_xml_element = ElementTree.SubElement(placemark_xml_element, 'name')
 
       event_identifier = event.GetIdentifier()
-      name_xml_element.text = '{0!s}'.format(event_identifier.CopyToString())
+      name_xml_element.text = f'{event_identifier.CopyToString()!s}'
 
       description_xml_element = ElementTree.SubElement(
           placemark_xml_element, 'description')
@@ -57,14 +57,14 @@ class KMLOutputModule(interface.TextFileOutputModule):
       description_text = self._event_formatting_helper.GetFormattedEvent(
           event, event_data, event_data_stream, event_tag)
 
-      description_xml_element.text = '{0:s}\n'.format(description_text)
+      description_xml_element.text = f'{description_text:s}\n'
 
       point_xml_element = ElementTree.SubElement(
           placemark_xml_element, 'Point')
 
       coordinates_xml_element = ElementTree.SubElement(
           point_xml_element, 'coordinates')
-      coordinates_xml_element.text = '{0!s},{1!s}'.format(longitude, latitude)
+      coordinates_xml_element.text = f'{longitude!s},{latitude!s}'
 
       # Note that ElementTree.tostring() will appropriately escape
       # the input data.

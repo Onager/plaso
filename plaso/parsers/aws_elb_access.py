@@ -225,7 +225,7 @@ class AWSELBParser(text_parser.PyparsingSingleLineTextParser):
       date_time.CopyFromStringISO8601(time_structure)
     except ValueError:
       parser_mediator.ProduceExtractionWarning(
-          'invalid date time value: {0!s}'.format(time_structure))
+          f'invalid date time value: {time_structure!s}')
 
     return date_time
 
@@ -243,7 +243,7 @@ class AWSELBParser(text_parser.PyparsingSingleLineTextParser):
     """
     if key != 'elb_accesslog':
       raise errors.ParseError(
-          'Unable to parse record, unknown structure: {0:s}'.format(key))
+          f'Unable to parse record, unknown structure: {key:s}')
 
     time_response_sent = structure.get('time')
     time_request_received = structure.get('request_creation_time')

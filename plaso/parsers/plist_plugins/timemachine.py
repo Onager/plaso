@@ -61,16 +61,14 @@ class TimeMachinePlugin(
 
       except (ValueError, errors.ParseError) as exception:
         parser_mediator.ProduceExtractionWarning(
-            'unable to parse backup alias value with error: {0!s}'.format(
-                exception))
+            f'unable to parse backup alias value with error: {exception!s}')
         alias = 'Unknown alias'
 
       destination_identifier = (
           destination.get('DestinationID', None) or 'Unknown device')
 
       event_data = plist_event.PlistTimeEventData()
-      event_data.desc = 'TimeMachine Backup in {0:s} ({1:s})'.format(
-          alias, destination_identifier)
+      event_data.desc = f'TimeMachine Backup in {alias:s} ({destination_identifier:s})'
       event_data.key = 'item/SnapshotDates'
       event_data.root = '/Destinations'
 

@@ -128,10 +128,10 @@ class StatusViewTest(test_lib.CLIToolTestCase):
         'File')
 
     if not sys.platform.startswith('win'):
-      table_header = '\x1b[1m{0:s}\x1b[0m'.format(table_header)
+      table_header = f'[1m{table_header:s}[0m'
 
     expected_output = [
-        'plaso - test_tool version {0:s}'.format(plaso.__version__),
+        f'plaso - test_tool version {plaso.__version__:s}',
         '',
         'Source path\t\t: /test/source/path',
         'Source type\t\t: directory',
@@ -157,7 +157,7 @@ class StatusViewTest(test_lib.CLIToolTestCase):
     test_view._PrintExtractionStatusUpdateWindow(process_status)
 
     expected_output = [
-        'plaso - test_tool version {0:s}'.format(plaso.__version__),
+        f'plaso - test_tool version {plaso.__version__:s}',
         '',
         'Source path\t\t: /test/source/path',
         'Source type\t\t: directory',

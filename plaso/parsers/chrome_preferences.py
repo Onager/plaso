@@ -123,8 +123,7 @@ class ChromePreferencesParser(interface.FileObjectParser):
       install_time = extension.get('install_time', None)
       if not install_time:
         parser_mediator.ProduceExtractionWarning(
-            'installation time missing for extension ID {0:s}'.format(
-                extension_id))
+            f'installation time missing for extension ID {extension_id:s}')
         continue
 
       try:
@@ -138,7 +137,7 @@ class ChromePreferencesParser(interface.FileObjectParser):
       manifest = extension.get('manifest', None)
       if not manifest:
         parser_mediator.ProduceExtractionWarning(
-            'manifest missing for extension ID {0:s}'.format(extension_id))
+            f'manifest missing for extension ID {extension_id:s}')
         continue
 
       event_data = ChromeExtensionInstallationEventData()

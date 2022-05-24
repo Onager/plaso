@@ -94,7 +94,7 @@ class UtmpParser(interface.FileObjectParser, dtfabric_helper.DtFabricHelper):
           '{1!s}.').format(file_offset, exception))
 
     if entry.type not in self._SUPPORTED_TYPES:
-      raise errors.ParseError('Unsupported type: {0:d}'.format(entry.type))
+      raise errors.ParseError(f'Unsupported type: {entry.type:d}')
 
     encoding = parser_mediator.codepage or 'utf-8'
 
@@ -164,8 +164,7 @@ class UtmpParser(interface.FileObjectParser, dtfabric_helper.DtFabricHelper):
           parser_mediator, file_object, file_offset)
     except errors.ParseError as exception:
       raise errors.WrongParser(
-          'Unable to parse first utmp entry with error: {0!s}'.format(
-              exception))
+          f'Unable to parse first utmp entry with error: {exception!s}')
 
     if not timestamp:
       raise errors.WrongParser(
@@ -178,8 +177,7 @@ class UtmpParser(interface.FileObjectParser, dtfabric_helper.DtFabricHelper):
     if warning_strings:
       all_warnings = ', '.join(warning_strings)
       raise errors.WrongParser(
-          'Unable to parse first utmp entry with error: {0:s}'.format(
-              all_warnings))
+          f'Unable to parse first utmp entry with error: {all_warnings:s}')
 
     date_time = dfdatetime_posix_time.PosixTimeInMicroseconds(
         timestamp=timestamp)

@@ -73,4 +73,4 @@ class SyslogPlugin(plugins.BasePlugin):
       except pyparsing.ParseException:
         pass
 
-    raise errors.WrongPlugin('Unable to create event from: {0:s}'.format(body))
+    raise errors.WrongPlugin(f'Unable to create event from: {body:s}')

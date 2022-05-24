@@ -202,7 +202,7 @@ class GoogleLogParser(text_parser.PyparsingMultiLineTextParser):
       date_time.is_local_time = True
     except ValueError:
       parser_mediator.ProduceExtractionWarning(
-          'invalid date time value: {0!s}'.format(time_elements_tuple))
+          f'invalid date time value: {time_elements_tuple!s}')
       return
 
     event_data = GoogleLogEventData()
@@ -232,7 +232,7 @@ class GoogleLogParser(text_parser.PyparsingMultiLineTextParser):
     """
     if key not in self._SUPPORTED_KEYS:
       raise errors.ParseError(
-          'Unable to parse record, unknown structure: {0:s}'.format(key))
+          f'Unable to parse record, unknown structure: {key:s}')
 
     if key == 'greeting':
       self._ReadGreeting(structure)

@@ -116,7 +116,7 @@ class WinRegistryParser(interface.FileObjectParser):
       plugin.UpdateChainAndProcess(parser_mediator, registry_key)
     except (IOError, dfwinreg_errors.WinRegistryValueError) as exception:
       parser_mediator.ProduceExtractionWarning(
-          'in key: {0:s} error: {1!s}'.format(registry_key.path, exception))
+          f'in key: {registry_key.path:s} error: {exception!s}')
 
   def _NormalizeKeyPath(self, key_path):
     """Normalizes a Windows Registry key path.
@@ -149,8 +149,7 @@ class WinRegistryParser(interface.FileObjectParser):
     """
     matching_plugin = None
 
-    logger.debug('Parsing Windows Registry key: {0:s}'.format(
-        registry_key.path))
+    logger.debug(f'Parsing Windows Registry key: {registry_key.path:s}')
 
     normalized_key_path = self._NormalizeKeyPath(registry_key.path)
     if self._path_filter.CheckPath(normalized_key_path):
@@ -189,7 +188,7 @@ class WinRegistryParser(interface.FileObjectParser):
 
       except IOError as exception:
         parser_mediator.ProduceExtractionWarning(
-            'in key: {0:s} error: {1!s}'.format(registry_key.path, exception))
+            f'in key: {registry_key.path:s} error: {exception!s}')
 
   def _ParseKeysFromFindSpecs(self, parser_mediator, win_registry, find_specs):
     """Parses the Registry keys from FindSpecs.
@@ -224,8 +223,7 @@ class WinRegistryParser(interface.FileObjectParser):
       registry_file.Open(file_object)
     except IOError as exception:
       parser_mediator.ProduceExtractionWarning(
-          'unable to open Windows Registry file with error: {0!s}'.format(
-              exception))
+          f'unable to open Windows Registry file with error: {exception!s}')
       return
 
     try:
@@ -258,7 +256,7 @@ class WinRegistryParser(interface.FileObjectParser):
               parser_mediator, win_registry, registry_find_specs)
 
     except IOError as exception:
-      parser_mediator.ProduceExtractionWarning('{0!s}'.format(exception))
+      parser_mediator.ProduceExtractionWarning(f'{exception!s}')
 
     finally:
       if registry_file:

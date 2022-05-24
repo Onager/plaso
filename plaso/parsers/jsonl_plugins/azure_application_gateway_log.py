@@ -166,8 +166,7 @@ class AzureApplicationGatewayAccessLogJSONLPlugin(interface.JSONLPlugin):
       date_time.CopyFromStringISO8601(timestamp)
     except ValueError as exception:
       parser_mediator.ProduceExtractionWarning(
-          'Unable to parse timestamp value: {0:s} with error: {1!s}'.format(
-              timestamp, exception))
+          f'Unable to parse timestamp value: {timestamp:s} with error: {exception!s}')
       date_time = dfdatetime_semantic_time.InvalidTime()
 
     event = time_events.DateTimeValuesEvent(

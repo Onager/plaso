@@ -67,7 +67,7 @@ class CronSyslogPlugin(interface.SyslogPlugin):
       ValueError: If an unknown key is provided.
     """
     if key != 'task_run':
-      raise ValueError('Unknown grammar key: {0:s}'.format(key))
+      raise ValueError(f'Unknown grammar key: {key:s}')
 
     event_data = CronTaskRunEventData()
     event_data.body = tokens.get('body', None)

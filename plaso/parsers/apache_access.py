@@ -186,8 +186,7 @@ class ApacheAccessParser(text_parser.PyparsingSingleLineTextParser):
     try:
       month = self._MONTH_DICT.get(month.lower(), 0)
     except AttributeError as exception:
-      raise ValueError('unable to parse month with error: {0!s}.'.format(
-          exception))
+      raise ValueError(f'unable to parse month with error: {exception!s}.')
 
     day_of_month = self._GetValueFromStructure(structure, 'day')
     hours = self._GetValueFromStructure(structure, 'hours')
@@ -203,8 +202,7 @@ class ApacheAccessParser(text_parser.PyparsingSingleLineTextParser):
 
     except (TypeError, ValueError) as exception:
       raise ValueError(
-          'unable to parse time zone offset with error: {0!s}.'.format(
-              exception))
+          f'unable to parse time zone offset with error: {exception!s}.')
 
     time_elements_tuple = (year, month, day_of_month, hours, minutes, seconds)
 
@@ -226,7 +224,7 @@ class ApacheAccessParser(text_parser.PyparsingSingleLineTextParser):
     """
     if key not in self._SUPPORTED_KEYS:
       raise errors.ParseError(
-          'Unable to parse record, unknown structure: {0:s}'.format(key))
+          f'Unable to parse record, unknown structure: {key:s}')
 
     date_time_string = self._GetValueFromStructure(structure, 'date_time')
 

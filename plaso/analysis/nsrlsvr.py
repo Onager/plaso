@@ -52,8 +52,7 @@ class NsrlsvrAnalyzer(hash_tagging.HashAnalyzer):
 
     except socket.error as exception:
       connected_socket = None
-      logger.error('Unable to connect to nsrlsvr with error: {0!s}.'.format(
-          exception))
+      logger.error(f'Unable to connect to nsrlsvr with error: {exception!s}.')
 
     return connected_socket
 
@@ -68,9 +67,9 @@ class NsrlsvrAnalyzer(hash_tagging.HashAnalyzer):
       bool: True if the hash was found, False if not or None on error.
     """
     try:
-      query = 'QUERY {0:s}\n'.format(digest).encode('ascii')
+      query = f'QUERY {digest:s}\n'.encode('ascii')
     except UnicodeDecodeError:
-      logger.error('Unable to encode digest: {0!s} to ASCII.'.format(digest))
+      logger.error(f'Unable to encode digest: {digest!s} to ASCII.')
       return False
 
     response = None
@@ -80,8 +79,7 @@ class NsrlsvrAnalyzer(hash_tagging.HashAnalyzer):
       response = nsrl_socket.recv(self._RECEIVE_BUFFER_SIZE)
 
     except socket.error as exception:
-      logger.error('Unable to query nsrlsvr with error: {0!s}.'.format(
-          exception))
+      logger.error(f'Unable to query nsrlsvr with error: {exception!s}.')
 
     if not response:
       return False
@@ -101,8 +99,7 @@ class NsrlsvrAnalyzer(hash_tagging.HashAnalyzer):
     Returns:
       list[HashAnalysis]: analysis results, or an empty list on error.
     """
-    logger.debug('Opening connection to {0:s}:{1:d}'.format(
-        self._host, self._port))
+    logger.debug(f'Opening connection to {self._host:s}:{self._port:d}')
 
     nsrl_socket = self._GetSocket()
     if not nsrl_socket:
@@ -118,8 +115,7 @@ class NsrlsvrAnalyzer(hash_tagging.HashAnalyzer):
 
     nsrl_socket.close()
 
-    logger.debug('Closed connection to {0:s}:{1:d}'.format(
-        self._host, self._port))
+    logger.debug(f'Closed connection to {self._host:s}:{self._port:d}')
 
     return hash_analyses
 

@@ -212,7 +212,7 @@ class GoogleDrivePlugin(interface.SQLitePlugin):
     # Paths are built top level to root so we need to reverse the list to
     # represent them in the traditional order.
     paths.reverse()
-    return '/{0:s}/'.format('/'.join(paths))
+    return f"/{'/'.join(paths):s}/"
 
   def ParseCloudEntryRow(
       self, parser_mediator, query, row, cache=None, database=None,
@@ -234,7 +234,7 @@ class GoogleDrivePlugin(interface.SQLitePlugin):
     filename = self._GetRowValue(query_hash, row, 'filename')
 
     cloud_path = self.GetCloudPath(parent_resource_id, cache, database)
-    cloud_filename = '{0:s}{1:s}'.format(cloud_path, filename)
+    cloud_filename = f'{cloud_path:s}{filename:s}'
 
     event_data = GoogleDriveSnapshotCloudEntryEventData()
     event_data.document_type = self._GetRowValue(query_hash, row, 'doc_type')

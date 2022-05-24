@@ -55,7 +55,7 @@ class CustomDestinationsParser(
         definitions.TYPE_INDICATOR_DATA_RANGE, range_offset=file_offset,
         range_size=remaining_file_size, parent=file_entry.path_spec)
 
-    display_name = '{0:s} # 0x{1:08x}'.format(file_entry.name, file_offset)
+    display_name = f'{file_entry.name:s} # 0x{file_offset:08x}'
 
     try:
       lnk_file_object = resolver.Resolver.OpenFileObject(
@@ -163,8 +163,7 @@ class CustomDestinationsParser(
                   display_name, exception))
 
         parser_mediator.ProduceExtractionWarning(
-            'unable to parse entry header with error: {0!s}'.format(
-                exception))
+            f'unable to parse entry header with error: {exception!s}')
         break
 
       if entry_header.guid != self._LNK_GUID:

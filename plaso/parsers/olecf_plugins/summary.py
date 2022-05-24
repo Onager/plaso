@@ -92,7 +92,7 @@ class OLECFPropertySetStream(object):
         property_name = self._PROPERTY_NAMES.get(
             property_value.identifier, None)
         if not property_name:
-          property_name = '0x{0:04}'.format(property_value.identifier)
+          property_name = f'0x{property_value.identifier:04}'
 
         value = self._GetValueAsObject(property_value)
         if self._PROPERTY_VALUE_MAPPINGS:
@@ -179,8 +179,7 @@ class OLECFDocumentSummaryInformation(OLECFPropertySetStream):
     # The application version consists of 2 16-bit values that make up
     # the version number. Where the upper 16-bit is the major number
     # and the lower 16-bit the minor number.
-    return '{0:d}.{1:d}'.format(
-        application_version >> 16, application_version & 0xffff)
+    return f'{application_version >> 16:d}.{application_version & 65535:d}'
 
 
 class OLECFSummaryInformation(OLECFPropertySetStream):

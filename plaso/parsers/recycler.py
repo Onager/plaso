@@ -81,8 +81,7 @@ class WinRecycleBinParser(
           file_object, file_offset, data_type_map)
     except (ValueError, errors.ParseError) as exception:
       raise errors.ParseError(
-          'Unable to parse original filename with error: {0!s}'.format(
-              exception))
+          f'Unable to parse original filename with error: {exception!s}')
 
     if format_version == 1:
       return original_filename.rstrip('\x00')
@@ -119,8 +118,7 @@ class WinRecycleBinParser(
 
     if file_header.format_version not in self._SUPPORTED_FORMAT_VERSIONS:
       raise errors.WrongParser(
-          'Unsupported format version: {0:d}.'.format(
-              file_header.format_version))
+          f'Unsupported format version: {file_header.format_version:d}.')
 
     if file_header.deletion_time == 0:
       date_time = dfdatetime_semantic_time.NotSet()
@@ -134,8 +132,7 @@ class WinRecycleBinParser(
           file_object, file_header.format_version)
     except (ValueError, errors.ParseError) as exception:
       parser_mediator.ProduceExtractionWarning(
-          'unable to parse original filename with error: {0!s}.'.format(
-              exception))
+          f'unable to parse original filename with error: {exception!s}.')
 
     event_data.file_size = file_header.original_file_size
 
@@ -266,7 +263,7 @@ class WinRecyclerInfo2Parser(
     file_entry_size = file_header.file_entry_size
     if file_entry_size not in (280, 800):
       parser_mediator.ProduceExtractionWarning(
-          'unsupported file entry size: {0:d}'.format(file_entry_size))
+          f'unsupported file entry size: {file_entry_size:d}')
       return
 
     file_offset = file_object.get_offset()

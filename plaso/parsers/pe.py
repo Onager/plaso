@@ -99,9 +99,9 @@ class PEParser(interface.FileObjectParser, dtfabric_helper.DtFabricHelper):
       section_name = getattr(section, 'Name', b'')
       # Ensure the name is decoded correctly.
       try:
-        section_name = '{0:s}'.format(section_name.decode('unicode_escape'))
+        section_name = f"{section_name.decode('unicode_escape'):s}"
       except UnicodeDecodeError:
-        section_name = '{0:s}'.format(repr(section_name))
+        section_name = f'{repr(section_name):s}'
       section_names.append(section_name)
 
     return section_names
@@ -258,8 +258,7 @@ class PEParser(interface.FileObjectParser, dtfabric_helper.DtFabricHelper):
 
       timestamp = getattr(resource.directory, 'TimeDateStamp', None)
       if timestamp:
-        event_data.pe_attribute = 'DIRECTORY_ENTRY_RESOURCE: {0!s}'.format(
-            resource.id)
+        event_data.pe_attribute = f'DIRECTORY_ENTRY_RESOURCE: {resource.id!s}'
 
         date_time = dfdatetime_posix_time.PosixTime(timestamp=timestamp)
         event = time_events.DateTimeValuesEvent(
@@ -324,8 +323,7 @@ class PEParser(interface.FileObjectParser, dtfabric_helper.DtFabricHelper):
           data, data_offset, message_table_header_map, context=context)
     except (ValueError, errors.ParseError) as exception:
       raise errors.ParseError(
-          'Unable to read message table header with error: {0!s}'.format(
-              exception))
+          f'Unable to read message table header with error: {exception!s}')
 
     data_offset += context.byte_size
 
@@ -409,7 +407,7 @@ class PEParser(interface.FileObjectParser, dtfabric_helper.DtFabricHelper):
       pefile_object.parse_data_directories(directories=self._PE_DIRECTORIES)
     except Exception as exception:
       raise errors.WrongParser(
-          'Unable to read PE file with error: {0!s}'.format(exception))
+          f'Unable to read PE file with error: {exception!s}')
 
     event_data = PEEventData()
     # Note that the result of get_imphash() is an empty string if there is no

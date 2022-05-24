@@ -16,7 +16,7 @@ class TaskTest(shared_test_lib.BaseTestCase):
   # TODO: replace by GetAttributeNames test
   def testCopyToDict(self):
     """Tests the CopyToDict function."""
-    session_identifier = '{0:s}'.format(uuid.uuid4().hex)
+    session_identifier = f'{uuid.uuid4().hex:s}'
     task = tasks.Task(session_identifier=session_identifier)
 
     self.assertIsNotNone(task.identifier)
@@ -36,7 +36,7 @@ class TaskTest(shared_test_lib.BaseTestCase):
 
   def testCreateRetryTask(self):
     """Tests the CreateRetryTask function."""
-    session_identifier = '{0:s}'.format(uuid.uuid4().hex)
+    session_identifier = f'{uuid.uuid4().hex:s}'
     task = tasks.Task(session_identifier=session_identifier)
     task.path_spec = 'test_path_spec'
 
@@ -48,7 +48,7 @@ class TaskTest(shared_test_lib.BaseTestCase):
 
   def testUpdateProcessingTime(self):
     """Tests the UpdateProcessingTime function."""
-    session_identifier = '{0:s}'.format(uuid.uuid4().hex)
+    session_identifier = f'{uuid.uuid4().hex:s}'
     task = tasks.Task(session_identifier=session_identifier)
 
     self.assertIsNone(task.last_processing_time)

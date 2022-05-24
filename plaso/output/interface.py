@@ -84,12 +84,11 @@ class OutputModule(object):
       self.WriteEventBody(event, event_data, event_data_stream, event_tag)
 
     except errors.NoFormatterFound as exception:
-      error_message = 'unable to retrieve formatter with error: {0!s}'.format(
-          exception)
+      error_message = f'unable to retrieve formatter with error: {exception!s}'
       self._ReportEventError(event, event_data, error_message)
 
     except errors.WrongFormatter as exception:
-      error_message = 'wrong formatter with error: {0!s}'.format(exception)
+      error_message = f'wrong formatter with error: {exception!s}'
       self._ReportEventError(event, event_data, error_message)
 
   @abc.abstractmethod
@@ -205,7 +204,7 @@ class TextFileOutputModule(OutputModule):
     Args:
       text (str): text to output.
     """
-    self._file_object.write('{0:s}\n'.format(text))
+    self._file_object.write(f'{text:s}\n')
 
   def WriteText(self, text):
     """Writes text to the output file.

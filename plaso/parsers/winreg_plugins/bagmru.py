@@ -79,7 +79,7 @@ class BagMRUWindowsRegistryPlugin(
       tuple[str, str]: path and upper path segment of the shell item or
           None, None if not available.
     """
-    value = registry_key.GetValueByName('{0:d}'.format(entry_number))
+    value = registry_key.GetValueByName(f'{entry_number:d}')
     if value is None:
       parser_mediator.ProduceExtractionWarning(
           'Missing MRUListEx entry value: {0:d} in key: {1:s}.'.format(
@@ -146,7 +146,7 @@ class BagMRUWindowsRegistryPlugin(
       mrulistex = self._ParseMRUListExValue(registry_key)
     except (ValueError, errors.ParseError) as exception:
       parser_mediator.ProduceExtractionWarning(
-          'unable to parse MRUListEx value with error: {0!s}'.format(exception))
+          f'unable to parse MRUListEx value with error: {exception!s}')
       return
 
     if not mrulistex:
@@ -188,12 +188,11 @@ class BagMRUWindowsRegistryPlugin(
     parser_mediator.ProduceEventWithEventData(event, event_data)
 
     for entry_number, path_segment in entry_numbers.items():
-      sub_key_name = '{0:d}'.format(entry_number)
+      sub_key_name = f'{entry_number:d}'
       sub_key = registry_key.GetSubkeyByName(sub_key_name)
       if not sub_key:
         parser_mediator.ProduceExtractionWarning(
-            'Missing BagMRU sub key: {0:d} in key: {1:s}.'.format(
-                entry_number, registry_key.path))
+            f'Missing BagMRU sub key: {entry_number:d} in key: {registry_key.path:s}.')
         continue
 
       parent_path_segments.append(path_segment)

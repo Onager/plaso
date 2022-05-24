@@ -63,7 +63,7 @@ class Session(interface.AttributeContainer):
     # TODO: kept for backwards compatibility.
     self.event_labels_counter = None
     self.filter_file = None
-    self.identifier = '{0:s}'.format(uuid.uuid4().hex)
+    self.identifier = f'{uuid.uuid4().hex:s}'
     self.parser_filter_expression = None
     # TODO: kept for backwards compatibility.
     self.parsers_counter = None

@@ -34,7 +34,7 @@ class ParserTestCase(shared_test_lib.BaseTestCase):
     """
     resolver_context = dfvfs_context.Context()
 
-    location = '/{0:s}'.format(filename)
+    location = f'/{filename:s}'
     test_path_spec = fake_path_spec.FakePathSpec(location=location)
     file_object = fake_file_io.FakeFile(resolver_context, test_path_spec, data)
     file_object.Open()
@@ -166,7 +166,7 @@ class ParserTestCase(shared_test_lib.BaseTestCase):
       parser.Parse(parser_mediator, file_object)
 
     else:
-      self.fail('Got unsupported parser type: {0!s}'.format(type(parser)))
+      self.fail(f'Got unsupported parser type: {type(parser)!s}')
 
     return storage_writer
 

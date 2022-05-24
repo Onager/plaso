@@ -193,7 +193,7 @@ class TestMRUListExShellItemListWindowsRegistryPlugin(
         'date_time': '2011-08-28 22:48:28.1593086',
         'data_type': 'windows:registry:mrulistex',
         'entries': expected_entries,
-        'key_path': '{0:s}\\exe'.format(key_path),
+        'key_path': f'{key_path:s}\\exe',
         # This should just be the plugin name, as we're invoking it directly,
         # and not through the parser.
         'parser': plugin.NAME}
@@ -207,7 +207,7 @@ class TestMRUListExShellItemListWindowsRegistryPlugin(
         'name': 'ALLOYR~1',
         'long_name': 'Alloy Research',
         'file_reference': '44518-33',
-        'origin': '{0:s}\\*'.format(key_path),
+        'origin': f'{key_path:s}\\*',
         'shell_item_path': (
             '<Shared Documents Folder (Users Files)> '
             '<UNKNOWN: 0x00>\\Alloy Research')}

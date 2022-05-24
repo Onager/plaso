@@ -136,7 +136,7 @@ class MacWifiLogParser(text_parser.PyparsingSingleLineTextParser):
     # TODO: replace "x in y" checks by startswith if possible.
     if 'airportdProcessDLILEvent' in action:
       interface = text.split()[0]
-      return 'Interface {0:s} turn up.'.format(interface)
+      return f'Interface {interface:s} turn up.'
 
     if 'doAutoJoin' in action:
       match = self._CONNECTED_RE.match(text)
@@ -144,7 +144,7 @@ class MacWifiLogParser(text_parser.PyparsingSingleLineTextParser):
         ssid = match.group(1)[1:-1]
       else:
         ssid = 'Unknown'
-      return 'Wifi connected to SSID {0:s}'.format(ssid)
+      return f'Wifi connected to SSID {ssid:s}'
 
     if 'processSystemPSKAssoc' in action:
       wifi_parameters = self._WIFI_PARAMETERS_RE.search(text)
@@ -219,7 +219,7 @@ class MacWifiLogParser(text_parser.PyparsingSingleLineTextParser):
           time_elements_tuple=time_elements_tuple)
     except ValueError:
       parser_mediator.ProduceExtractionWarning(
-          'invalid date time value: {0!s}'.format(time_elements_tuple))
+          f'invalid date time value: {time_elements_tuple!s}')
       return
 
     self._last_month = time_elements_tuple[1]
@@ -258,7 +258,7 @@ class MacWifiLogParser(text_parser.PyparsingSingleLineTextParser):
     """
     if key not in self._SUPPORTED_KEYS:
       raise errors.ParseError(
-          'Unable to parse record, unknown structure: {0:s}'.format(key))
+          f'Unable to parse record, unknown structure: {key:s}')
 
     self._ParseLogLine(parser_mediator, key, structure)
 
@@ -302,8 +302,7 @@ class MacWifiLogParser(text_parser.PyparsingSingleLineTextParser):
           time_elements_tuple=time_elements_tuple)
     except ValueError:
       logger.debug(
-          'Not a Mac Wifi log file, invalid date and time: {0!s}'.format(
-              time_elements_tuple))
+          f'Not a Mac Wifi log file, invalid date and time: {time_elements_tuple!s}')
       return False
 
     self._last_month = time_elements_tuple[1]

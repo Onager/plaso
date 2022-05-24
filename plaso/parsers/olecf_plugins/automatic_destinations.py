@@ -92,7 +92,7 @@ class AutomaticDestinationsOLECFPlugin(
           date_time, definitions.TIME_DESCRIPTION_CREATION)
       parser_mediator.ProduceEventWithEventData(event, event_data)
 
-    return '{{{0!s}}}'.format(uuid_object)
+    return f'{{{uuid_object!s}}}'
 
   def ParseDestList(self, parser_mediator, olecf_item):
     """Parses the DestList OLECF item.
@@ -116,8 +116,7 @@ class AutomaticDestinationsOLECFPlugin(
           olecf_item, 0, header_map)
     except (ValueError, errors.ParseError) as exception:
       raise errors.WrongParser(
-          'Unable to parse DestList header with error: {0!s}'.format(
-              exception))
+          f'Unable to parse DestList header with error: {exception!s}')
 
     if header.format_version == 1:
       entry_map = self._GetDataTypeMap('dest_list_entry_v1')
@@ -125,7 +124,7 @@ class AutomaticDestinationsOLECFPlugin(
       entry_map = self._GetDataTypeMap('dest_list_entry_v3')
     else:
       parser_mediator.ProduceExtractionWarning(
-          'unsupported format version: {0:d}.'.format(header.format_version))
+          f'unsupported format version: {header.format_version:d}.')
       return
 
     while entry_offset < olecf_item.size:
@@ -134,10 +133,9 @@ class AutomaticDestinationsOLECFPlugin(
             olecf_item, entry_offset, entry_map)
       except (ValueError, errors.ParseError) as exception:
         raise errors.WrongParser(
-            'Unable to parse DestList entry with error: {0!s}'.format(
-                exception))
+            f'Unable to parse DestList entry with error: {exception!s}')
 
-      display_name = 'DestList entry at offset: 0x{0:08x}'.format(entry_offset)
+      display_name = f'DestList entry at offset: 0x{entry_offset:08x}'
 
       try:
         droid_volume_identifier = self._ParseDistributedTrackingIdentifier(
@@ -146,8 +144,7 @@ class AutomaticDestinationsOLECFPlugin(
       except (TypeError, ValueError) as exception:
         droid_volume_identifier = ''
         parser_mediator.ProduceExtractionWarning(
-            'unable to read droid volume identifier with error: {0!s}'.format(
-                exception))
+            f'unable to read droid volume identifier with error: {exception!s}')
 
       try:
         droid_file_identifier = self._ParseDistributedTrackingIdentifier(
@@ -156,8 +153,7 @@ class AutomaticDestinationsOLECFPlugin(
       except (TypeError, ValueError) as exception:
         droid_file_identifier = ''
         parser_mediator.ProduceExtractionWarning(
-            'unable to read droid file identifier with error: {0!s}'.format(
-                exception))
+            f'unable to read droid file identifier with error: {exception!s}')
 
       try:
         birth_droid_volume_identifier = (
@@ -231,9 +227,9 @@ class AutomaticDestinationsOLECFPlugin(
       elif self._RE_LNK_ITEM_NAME.match(item.name):
         display_name = parser_mediator.GetDisplayName()
         if display_name:
-          display_name = '{0:s} # {1:s}'.format(display_name, item.name)
+          display_name = f'{display_name:s} # {item.name:s}'
         else:
-          display_name = '# {0:s}'.format(item.name)
+          display_name = f'# {item.name:s}'
 
         parser_mediator.AppendToParserChain(self._WINLNK_PARSER)
         try:

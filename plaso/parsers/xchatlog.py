@@ -198,7 +198,7 @@ class XChatLogParser(text_parser.PyparsingSingleLineTextParser):
       date_time.is_local_time = True
     except ValueError:
       parser_mediator.ProduceExtractionWarning(
-          'invalid date time value: {0!s}'.format(time_elements_tuple))
+          f'invalid date time value: {time_elements_tuple!s}')
       return
 
     self._last_month = month
@@ -216,8 +216,7 @@ class XChatLogParser(text_parser.PyparsingSingleLineTextParser):
       event_data.text = 'XChat end logging'
 
     else:
-      logger.debug('Unknown log action: {0:s}.'.format(
-          ' '.join(log_action)))
+      logger.debug(f"Unknown log action: {' '.join(log_action):s}.")
       return
 
     event = time_events.DateTimeValuesEvent(
@@ -245,7 +244,7 @@ class XChatLogParser(text_parser.PyparsingSingleLineTextParser):
       date_time.is_local_time = True
     except ValueError:
       parser_mediator.ProduceExtractionWarning(
-          'invalid date time value: {0!s}'.format(time_elements_tuple))
+          f'invalid date time value: {time_elements_tuple!s}')
       return
 
     self._last_month = time_elements_tuple[1]
@@ -279,7 +278,7 @@ class XChatLogParser(text_parser.PyparsingSingleLineTextParser):
     """
     if key not in ('header', 'header_signature', 'logline'):
       raise errors.ParseError(
-          'Unable to parse record, unknown structure: {0:s}'.format(key))
+          f'Unable to parse record, unknown structure: {key:s}')
 
     if key == 'logline':
       self._ParseLogLine(parser_mediator, structure)
@@ -310,8 +309,7 @@ class XChatLogParser(text_parser.PyparsingSingleLineTextParser):
     try:
       structure = self._HEADER.parseString(line)
     except pyparsing.ParseException as exception:
-      logger.debug('Unable to parse XChat log file with error: {0!s}'.format(
-          exception))
+      logger.debug(f'Unable to parse XChat log file with error: {exception!s}')
       return False
 
     time_elements_tuple = self._GetValueFromStructure(structure, 'date_time')

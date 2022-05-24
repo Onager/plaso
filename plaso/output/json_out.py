@@ -40,8 +40,7 @@ class JSONOutputModule(interface.TextFileOutputModule):
     if self._event_counter != 0:
       self.WriteText(', ')
 
-    output_text = '"event_{0:d}": {1:s}\n'.format(
-        self._event_counter, output_text)
+    output_text = f'"event_{self._event_counter:d}": {output_text:s}\n'
     self.WriteText(output_text)
 
     self._event_counter += 1

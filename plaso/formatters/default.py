@@ -29,7 +29,7 @@ class DefaultEventFormatter(interface.BasicEventFormatter):
     text_pieces = []
     for key, value in event_values.items():
       if key not in definitions.RESERVED_VARIABLE_NAMES:
-        text_pieces.append('{0:s}: {1!s}'.format(key, value))
+        text_pieces.append(f'{key:s}: {value!s}')
 
     event_values['attribute_driven'] = ' '.join(text_pieces)
     event_values['data_type'] = self.DATA_TYPE

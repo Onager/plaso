@@ -175,8 +175,7 @@ class ImageExportTool(storage_media_tool.StorageMediaTool):
     target_directory = os.path.join(destination_path, *path_segments)
 
     if source_data_stream_name:
-      target_filename = '{0:s}_{1:s}'.format(
-          target_filename, source_data_stream_name)
+      target_filename = f'{target_filename:s}_{source_data_stream_name:s}'
 
     return target_directory, target_filename
 
@@ -208,8 +207,7 @@ class ImageExportTool(storage_media_tool.StorageMediaTool):
 
     if not digest:
       logger.error(
-          '[skipping] unable to read content of file entry: {0:s}'.format(
-              display_name))
+          f'[skipping] unable to read content of file entry: {display_name:s}')
       return
 
     target_directory, target_filename = self._CreateSanitizedDestination(
@@ -324,8 +322,7 @@ class ImageExportTool(storage_media_tool.StorageMediaTool):
           extraction_engine.knowledge_base, artifact_filters, filter_file)
     except errors.InvalidFilter as exception:
       raise errors.BadConfigOption(
-          'Unable to build collection filters with error: {0!s}'.format(
-              exception))
+          f'Unable to build collection filters with error: {exception!s}')
 
     filters_helper = extraction_engine.collection_filters_helper
 
@@ -347,8 +344,7 @@ class ImageExportTool(storage_media_tool.StorageMediaTool):
       if not file_entry:
         path_spec_string = self._GetPathSpecificationString(path_spec)
         logger.warning(
-            'Unable to open file entry for path specfication: {0:s}'.format(
-                path_spec_string))
+            f'Unable to open file entry for path specfication: {path_spec_string:s}')
         continue
 
       skip_file_entry = False
@@ -449,7 +445,7 @@ class ImageExportTool(storage_media_tool.StorageMediaTool):
     path = os.path.join(data_location, 'signatures.conf')
     if not os.path.exists(path):
       raise IOError(
-          'No such format specification file: {0:s}'.format(path))
+          f'No such format specification file: {path:s}')
 
     try:
       specification_store = self._ReadSpecificationFile(path)
@@ -485,7 +481,7 @@ class ImageExportTool(storage_media_tool.StorageMediaTool):
           resolver_context=self._resolver_context)
 
     except IOError as exception:
-      logger.error('Unable to preprocess with error: {0!s}'.format(exception))
+      logger.error(f'Unable to preprocess with error: {exception!s}')
 
     logger.debug('Preprocessing done.')
 
@@ -510,13 +506,13 @@ class ImageExportTool(storage_media_tool.StorageMediaTool):
         try:
           identifier, offset, pattern = line.split()
         except ValueError:
-          logger.error('[skipping] invalid line: {0:s}'.format(line))
+          logger.error(f'[skipping] invalid line: {line:s}')
           continue
 
         try:
           offset = int(offset, 10)
         except ValueError:
-          logger.error('[skipping] invalid offset in line: {0:s}'.format(line))
+          logger.error(f'[skipping] invalid offset in line: {line:s}')
           continue
 
         try:
@@ -527,7 +523,7 @@ class ImageExportTool(storage_media_tool.StorageMediaTool):
         # characters, such as "\xg1".
         except ValueError:
           logger.error(
-              '[skipping] invalid pattern in line: {0:s}'.format(line))
+              f'[skipping] invalid pattern in line: {line:s}')
           continue
 
         format_specification = specification.FormatSpecification(identifier)
@@ -603,7 +599,7 @@ class ImageExportTool(storage_media_tool.StorageMediaTool):
     path = os.path.join(self._data_location, 'signatures.conf')
     if not os.path.exists(path):
       raise errors.BadConfigOption(
-          'No such format specification file: {0:s}'.format(path))
+          f'No such format specification file: {path:s}')
 
     try:
       specification_store = self._ReadSpecificationFile(path)
@@ -670,7 +666,7 @@ class ImageExportTool(storage_media_tool.StorageMediaTool):
     argument_parser.add_argument(
         '--no_hashes', '--no-hashes', dest='no_hashes', action='store_true',
         default=False, help=(
-            'Do not generate the {0:s} file'.format(self._HASHES_FILENAME)))
+            f'Do not generate the {self._HASHES_FILENAME:s} file'))
 
     argument_parser.add_argument(
         self._SOURCE_OPTION, nargs='?', action='store', metavar='IMAGE',
@@ -691,7 +687,7 @@ class ImageExportTool(storage_media_tool.StorageMediaTool):
     try:
       self.ParseOptions(options)
     except errors.BadConfigOption as exception:
-      self._output_writer.Write('ERROR: {0!s}\n'.format(exception))
+      self._output_writer.Write(f'ERROR: {exception!s}\n')
       self._output_writer.Write('')
       self._output_writer.Write(argument_parser.format_usage())
       return False

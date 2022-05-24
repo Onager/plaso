@@ -79,7 +79,7 @@ class KnowledgeBase(object):
 
     available_time_zones = self._available_time_zones[self._active_session]
     if time_zone.name in available_time_zones:
-      raise KeyError('Time zone: {0:s} already exists.'.format(time_zone.name))
+      raise KeyError(f'Time zone: {time_zone.name:s} already exists.')
 
     available_time_zones[time_zone.name] = time_zone
 
@@ -114,8 +114,7 @@ class KnowledgeBase(object):
 
     user_accounts = self._user_accounts[self._active_session]
     if user_account.identifier in user_accounts:
-      raise KeyError('User account: {0:s} already exists.'.format(
-          user_account.identifier))
+      raise KeyError(f'User account: {user_account.identifier:s} already exists.')
 
     user_accounts[user_account.identifier] = user_account
 
@@ -131,8 +130,7 @@ class KnowledgeBase(object):
     """
     log_source = windows_eventlog_provider.log_source
     if log_source in self._windows_eventlog_providers:
-      raise KeyError('Windows Event Log provider: {0:s} already exists.'.format(
-          log_source))
+      raise KeyError(f'Windows Event Log provider: {log_source:s} already exists.')
 
     # TODO: store on a per-volume basis?
     self._windows_eventlog_providers[log_source] = windows_eventlog_provider
@@ -382,7 +380,7 @@ class KnowledgeBase(object):
       codecs.getencoder(codepage)
       self._codepage = codepage
     except LookupError:
-      raise ValueError('Unsupported codepage: {0:s}'.format(codepage))
+      raise ValueError(f'Unsupported codepage: {codepage:s}')
 
   def SetEnvironmentVariable(self, environment_variable):
     """Sets an environment variable.
@@ -439,7 +437,7 @@ class KnowledgeBase(object):
     try:
       self._time_zone = pytz.timezone(time_zone)
     except pytz.UnknownTimeZoneError:
-      raise ValueError('Unsupported time zone: {0!s}'.format(time_zone))
+      raise ValueError(f'Unsupported time zone: {time_zone!s}')
 
   def SetValue(self, identifier, value):
     """Sets a value by identifier.

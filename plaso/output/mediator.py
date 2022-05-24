@@ -260,8 +260,7 @@ class OutputMediator(object):
     message_formatter = self._message_formatters.get(data_type, None)
     if not message_formatter:
       logger.warning(
-          'Using default message formatter for data type: {0:s}'.format(
-              data_type))
+          f'Using default message formatter for data type: {data_type:s}')
       message_formatter = self._DEFAULT_MESSAGE_FORMATTER
 
     return message_formatter
@@ -347,13 +346,11 @@ class OutputMediator(object):
     lcid = None
     if language_tag:
       if not isinstance(language_tag, str):
-        raise ValueError('Language tag: {0!s} is not a string.'.format(
-            language_tag))
+        raise ValueError(f'Language tag: {language_tag!s} is not a string.')
 
       lcid = languages.WindowsLanguageHelper.GetLCIDForLanguageTag(language_tag)
       if not lcid:
-        raise ValueError('No LCID found for language tag: {0:s}.'.format(
-            language_tag))
+        raise ValueError(f'No LCID found for language tag: {language_tag:s}.')
 
     self._language_tag = language_tag
     self._lcid = lcid
@@ -388,6 +385,6 @@ class OutputMediator(object):
       try:
         time_zone = pytz.timezone(time_zone)
       except pytz.UnknownTimeZoneError:
-        raise ValueError('Unsupported time zone: {0:s}'.format(time_zone))
+        raise ValueError(f'Unsupported time zone: {time_zone:s}')
 
     self._time_zone = time_zone

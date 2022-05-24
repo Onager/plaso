@@ -50,8 +50,7 @@ class RedisStore(interface.BaseStore):
     Returns:
       str: a Redis key name.
     """
-    return '{0:s}-{1:s}-{2:s}'.format(
-        self._session_identifier, self._task_identifier, container_type)
+    return f'{self._session_identifier:s}-{self._task_identifier:s}-{container_type:s}'
 
   def _RaiseIfNotReadable(self):
     """Checks that the store is ready to for reading.
@@ -89,8 +88,7 @@ class RedisStore(interface.BaseStore):
       redis_client.client_setname(name)
     except redis.ResponseError as exception:
       logger.debug(
-          'Unable to set redis client name: {0:s} with error: {1!s}'.format(
-              name, exception))
+          f'Unable to set redis client name: {name:s} with error: {exception!s}')
 
   def _UpdateAttributeContainerAfterDeserialize(self, container):
     """Updates an attribute container after deserialization.
@@ -171,8 +169,7 @@ class RedisStore(interface.BaseStore):
     identifier = container.GetIdentifier()
     if not isinstance(identifier, identifiers.RedisKeyIdentifier):
       raise IOError(
-          'Unsupported attribute container identifier type: {0!s}'.format(
-              type(identifier)))
+          f'Unsupported attribute container identifier type: {type(identifier)!s}')
 
     redis_hash_name = self._GetRedisHashName(container.CONTAINER_TYPE)
     redis_key = identifier.CopyToString()
@@ -248,8 +245,7 @@ class RedisStore(interface.BaseStore):
     """
     if not isinstance(identifier, identifiers.RedisKeyIdentifier):
       raise IOError(
-          'Unsupported attribute container identifier type: {0!s}'.format(
-              type(identifier)))
+          f'Unsupported attribute container identifier type: {type(identifier)!s}')
 
     redis_hash_name = self._GetRedisHashName(container_type)
     redis_key = identifier.CopyToString()
@@ -279,7 +275,7 @@ class RedisStore(interface.BaseStore):
     """
     sequence_number = index + 1
     redis_hash_name = self._GetRedisHashName(container_type)
-    redis_key = '{0:s}.{1:d}'.format(container_type, sequence_number)
+    redis_key = f'{container_type:s}.{sequence_number:d}'
 
     serialized_data = self._redis_client.hget(redis_hash_name, redis_key)
     if not serialized_data:

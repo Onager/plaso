@@ -58,7 +58,7 @@ class Log2TimelineToolTest(test_lib.CLIToolTestCase):
     options.source = source_path
 
     if password:
-      options.credentials = ['password:{0:s}'.format(password)]
+      options.credentials = [f'password:{password:s}']
 
     return options
 
@@ -185,7 +185,7 @@ class Log2TimelineToolTest(test_lib.CLIToolTestCase):
 
       expected_output = [
           '',
-          'Source path\t\t: {0:s}'.format(options.source),
+          f'Source path\t\t: {options.source:s}',
           'Source type\t\t: directory',
           'Processing time\t\t: 00:00:00',
           '',
@@ -218,7 +218,7 @@ class Log2TimelineToolTest(test_lib.CLIToolTestCase):
 
       expected_output = [
           '',
-          'Source path\t\t: {0:s}'.format(options.source),
+          f'Source path\t\t: {options.source:s}',
           'Source type\t\t: storage media image',
           'Processing time\t\t: 00:00:00',
           '',
@@ -252,7 +252,7 @@ class Log2TimelineToolTest(test_lib.CLIToolTestCase):
 
       expected_output = [
           '',
-          'Source path\t\t: {0:s}'.format(options.source),
+          f'Source path\t\t: {options.source:s}',
           'Source type\t\t: storage media image',
           'Processing time\t\t: 00:00:00',
           '',
@@ -285,7 +285,7 @@ class Log2TimelineToolTest(test_lib.CLIToolTestCase):
 
       expected_output = [
           '',
-          'Source path\t\t: {0:s}'.format(options.source),
+          f'Source path\t\t: {options.source:s}',
           'Source type\t\t: storage media image',
           'Processing time\t\t: 00:00:00',
           '',
@@ -318,7 +318,7 @@ class Log2TimelineToolTest(test_lib.CLIToolTestCase):
 
       expected_output = [
           '',
-          'Source path\t\t: {0:s}'.format(options.source),
+          f'Source path\t\t: {options.source:s}',
           'Source type\t\t: storage media image',
           'Processing time\t\t: 00:00:00',
           '',
@@ -353,7 +353,7 @@ class Log2TimelineToolTest(test_lib.CLIToolTestCase):
 
       expected_output = [
           '',
-          'Source path\t\t: {0:s}'.format(options.source),
+          f'Source path\t\t: {options.source:s}',
           'Source type\t\t: storage media image',
           'Processing time\t\t: 00:00:00',
           '',
@@ -388,7 +388,7 @@ class Log2TimelineToolTest(test_lib.CLIToolTestCase):
 
       expected_output = [
           '',
-          'Source path\t\t: {0:s}'.format(options.source),
+          f'Source path\t\t: {options.source:s}',
           'Source type\t\t: storage media image',
           'Processing time\t\t: 00:00:00',
           '',
@@ -425,7 +425,7 @@ class Log2TimelineToolTest(test_lib.CLIToolTestCase):
 
       expected_output = [
           '',
-          'Source path\t\t: {0:s}'.format(options.source),
+          f'Source path\t\t: {options.source:s}',
           'Source type\t\t: single file',
           'Processing time\t\t: 00:00:00',
           '',
@@ -462,7 +462,7 @@ class Log2TimelineToolTest(test_lib.CLIToolTestCase):
 
       expected_output = [
           '',
-          'Source path\t\t: {0:s}'.format(options.source),
+          f'Source path\t\t: {options.source:s}',
           'Source type\t\t: directory',
           'Processing time\t\t: 00:00:00',
           '',
@@ -497,7 +497,7 @@ class Log2TimelineToolTest(test_lib.CLIToolTestCase):
 
       expected_output = [
           '',
-          'Source path\t\t: {0:s}'.format(options.source),
+          f'Source path\t\t: {options.source:s}',
           'Source type\t\t: single file',
           'Processing time\t\t: 00:00:00',
           '',

@@ -49,7 +49,7 @@ class RedisStoreTest(test_lib.StorageTestCase):
       session_identifier (str): the identifier of the session the tasks are
           part of.
     """
-    redis_hash_pattern = '{0:s}-*'.format(session_identifier)
+    redis_hash_pattern = f'{session_identifier:s}-*'
 
     for redis_hash_name in redis_client.keys(redis_hash_pattern):
       redis_client.delete(redis_hash_name)

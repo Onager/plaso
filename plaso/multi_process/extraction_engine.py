@@ -741,9 +741,9 @@ class ExtractionMultiProcessEngine(task_engine.TaskMultiProcessEngine):
       MultiProcessWorkerProcess: extraction worker process or None if the
           process could not be started.
     """
-    logger.debug('Starting worker process {0:s}'.format(process_name))
+    logger.debug(f'Starting worker process {process_name:s}')
 
-    queue_name = '{0:s} task queue'.format(process_name)
+    queue_name = f'{process_name:s} task queue'
     task_queue = zeromq_queue.ZeroMQRequestConnectQueue(
         delay_open=True, linger_seconds=0, name=queue_name,
         port=self._task_queue_port,
@@ -915,8 +915,7 @@ class ExtractionMultiProcessEngine(task_engine.TaskMultiProcessEngine):
       return
     except KeyError:
       logger.debug(
-          'Worker {0:s} is processing unknown task: {1:s}.'.format(
-              process.name, task_identifier))
+          f'Worker {process.name:s} is processing unknown task: {task_identifier:s}.')
 
   def _UpdateStatus(self):
     """Updates the status."""
@@ -988,11 +987,10 @@ class ExtractionMultiProcessEngine(task_engine.TaskMultiProcessEngine):
     self._StartTaskStorage(self._task_storage_format)
 
     for worker_number in range(self._number_of_worker_processes):
-      process_name = 'Worker_{0:02d}'.format(self._last_worker_number)
+      process_name = f'Worker_{self._last_worker_number:02d}'
       worker_process = self._StartWorkerProcess(process_name)
       if not worker_process:
-        logger.error('Unable to create worker process: {0:d}'.format(
-            worker_number))
+        logger.error(f'Unable to create worker process: {worker_number:d}')
 
     self._StartProfiling(self._processing_configuration.profiling)
     self._task_manager.StartProfiling(
@@ -1048,8 +1046,7 @@ class ExtractionMultiProcessEngine(task_engine.TaskMultiProcessEngine):
           self._task_storage_format, session_identifier,
           abort=task_storage_abort)
     except (IOError, OSError) as exception:
-      logger.error('Unable to stop task storage with error: {0!s}'.format(
-          exception))
+      logger.error(f'Unable to stop task storage with error: {exception!s}')
 
     if self._abort:
       logger.debug('Processing aborted.')

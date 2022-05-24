@@ -53,11 +53,11 @@ class BaseStore(object):
       attribute_container = self._serializer.ReadSerialized(serialized_string)
 
     except UnicodeDecodeError as exception:
-      raise IOError('Unable to decode serialized data: {0!s}'.format(exception))
+      raise IOError(f'Unable to decode serialized data: {exception!s}')
 
     except (TypeError, ValueError) as exception:
       # TODO: consider re-reading attribute container with error correction.
-      raise IOError('Unable to read serialized data: {0!s}'.format(exception))
+      raise IOError(f'Unable to read serialized data: {exception!s}')
 
     finally:
       if self._serializers_profiler:

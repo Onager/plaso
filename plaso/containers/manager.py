@@ -23,8 +23,7 @@ class AttributeContainersManager(object):
     container_class = cls._attribute_container_classes.get(
         container_type, None)
     if not container_class:
-      raise ValueError('Unsupported container type: {0:s}'.format(
-          container_type))
+      raise ValueError(f'Unsupported container type: {container_type:s}')
 
     return container_class()
 
@@ -76,8 +75,7 @@ class AttributeContainersManager(object):
     container_class = cls._attribute_container_classes.get(
         container_type, None)
     if not container_class:
-      raise ValueError('Unsupported container type: {0:s}'.format(
-          container_type))
+      raise ValueError(f'Unsupported container type: {container_type:s}')
 
     return getattr(container_class, 'SCHEMA', {})
 

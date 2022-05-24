@@ -351,7 +351,7 @@ class SyslogParser(text_parser.PyparsingMultiLineTextParser):
     """
     if key not in self._SUPPORTED_KEYS:
       raise errors.ParseError(
-          'Unable to parse record, unknown structure: {0:s}'.format(key))
+          f'Unable to parse record, unknown structure: {key:s}')
 
     if key in (
         'chromeos_syslog_line', 'rsyslog_line', 'rsyslog_protocol_23_line'):
@@ -362,7 +362,7 @@ class SyslogParser(text_parser.PyparsingMultiLineTextParser):
         date_time.CopyFromStringISO8601(iso8601_string)
       except ValueError:
         parser_mediator.ProduceExtractionWarning(
-            'invalid date time value: {0:s}'.format(iso8601_string))
+            f'invalid date time value: {iso8601_string:s}')
         return
 
     else:
@@ -373,7 +373,7 @@ class SyslogParser(text_parser.PyparsingMultiLineTextParser):
         month = self._MONTH_DICT.get(month.lower(), 0)
       except AttributeError:
         parser_mediator.ProduceExtractionWarning(
-            'invalid month value: {0!s}'.format(month))
+            f'invalid month value: {month!s}')
         return
 
       if month != 0:
@@ -393,7 +393,7 @@ class SyslogParser(text_parser.PyparsingMultiLineTextParser):
         date_time.is_local_time = True
       except ValueError:
         parser_mediator.ProduceExtractionWarning(
-            'invalid date time value: {0!s}'.format(time_elements_tuple))
+            f'invalid date time value: {time_elements_tuple!s}')
         return
 
     plugin = None
@@ -425,8 +425,7 @@ class SyslogParser(text_parser.PyparsingMultiLineTextParser):
         file_entry = parser_mediator.GetFileEntry()
         display_name = parser_mediator.GetDisplayName(file_entry)
 
-        logger.debug('Parsing file: {0:s} with plugin: {1:s}'.format(
-            display_name, plugin.NAME))
+        logger.debug(f'Parsing file: {display_name:s} with plugin: {plugin.NAME:s}')
 
         try:
           # TODO: pass event_data instead of attributes.

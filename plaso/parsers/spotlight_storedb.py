@@ -508,8 +508,7 @@ class SpotlightStoreDatabaseParser(
 
     except dtfabric_errors.MappingError as exception:
       raise errors.ParseError(
-          'Unable to parse array of byte values with error: {0!s}'.format(
-              exception))
+          f'Unable to parse array of byte values with error: {exception!s}')
 
     if bytes_read == 0:
       value = array_of_values[0]
@@ -666,8 +665,7 @@ class SpotlightStoreDatabaseParser(
 
     except dtfabric_errors.MappingError as exception:
       raise errors.ParseError(
-          'Unable to parse array of string values with error: {0!s}'.format(
-              exception))
+          f'Unable to parse array of string values with error: {exception!s}')
 
     if property_type & 0x03 == 0x03:
       value = array_of_values[0]
@@ -734,8 +732,7 @@ class SpotlightStoreDatabaseParser(
     if page_header.property_table_type not in (
         0x00000011, 0x00000021, 0x00000041, 0x00000081):
       raise errors.ParseError(
-          'Unsupported property table type: 0x{0:08x}'.format(
-              page_header.property_table_type))
+          f'Unsupported property table type: 0x{page_header.property_table_type:08x}')
 
     page_data = file_object.read(page_header.page_size - bytes_read)
 
@@ -948,8 +945,7 @@ class SpotlightStoreDatabaseParser(
 
     if page_header.property_table_type not in (0x00000009, 0x00001009):
       raise errors.ParseError(
-          'Unsupported property table type: 0x{0:08x}'.format(
-              page_header.property_table_type))
+          f'Unsupported property table type: 0x{page_header.property_table_type:08x}')
 
     page_data = file_object.read(page_header.page_size - bytes_read)
 
@@ -1088,8 +1084,7 @@ class SpotlightStoreDatabaseParser(
 
     except errors.ParseError as exception:
       parser_mediator.ProduceExtractionWarning(
-          'unable to read store database with error: {0!s}'.format(
-              exception))
+          f'unable to read store database with error: {exception!s}')
       return
 
     for map_value in self._map_values:

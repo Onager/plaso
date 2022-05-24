@@ -83,7 +83,7 @@ class BaseFirefoxCacheParser(interface.FileObjectParser):
     try:
       http_header_start = header_string.index('request-method')
     except ValueError:
-      logger.debug('No request method in header: "{0:s}"'.format(header_string))
+      logger.debug(f'No request method in header: "{header_string:s}"')
       return None, None
 
     # HTTP request and response headers.
@@ -103,7 +103,7 @@ class BaseFirefoxCacheParser(interface.FileObjectParser):
     try:
       response_head_start = http_headers.index('response-head')
     except ValueError:
-      logger.debug('No response head in header: "{0:s}"'.format(header_string))
+      logger.debug(f'No response head in header: "{header_string:s}"')
       return request_method, None
 
     # HTTP response headers.
@@ -197,8 +197,7 @@ class FirefoxCacheParser(
         return self.FIREFOX_CACHE_CONFIG(block_size, offset)
 
       except IOError:
-        logger.debug('[{0:s}] {1:s}:{2:d}: Invalid record.'.format(
-            self.NAME, display_name, offset))
+        logger.debug(f'[{self.NAME:s}] {display_name:s}:{offset:d}: Invalid record.')
 
     raise errors.WrongParser(
         'Could not find a valid cache record. Not a Firefox cache file.')
@@ -270,8 +269,7 @@ class FirefoxCacheParser(
           file_object, file_offset, cache_entry_header_map)
     except (ValueError, errors.ParseError) as exception:
       raise errors.ParseError(
-          'Unable to parse Firefox cache entry header with error: {0!s}'.format(
-              exception))
+          f'Unable to parse Firefox cache entry header with error: {exception!s}')
 
     if not self._ValidateCacheEntryHeader(cache_entry_header):
       # Skip to the next block potentially containing a cache entry.
@@ -407,8 +405,7 @@ class FirefoxCache2Parser(
           file_object, file_offset, metadata_size_map)
     except (ValueError, errors.ParseError) as exception:
       raise errors.WrongParser(
-          'Unable to parse cache file metadata size with error: {0!s}'.format(
-              exception))
+          f'Unable to parse cache file metadata size with error: {exception!s}')
 
     # Firefox splits the content into chunks.
     number_of_chunks, remainder = divmod(metadata_size, self._CHUNK_SIZE)

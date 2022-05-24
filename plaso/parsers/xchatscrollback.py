@@ -136,14 +136,14 @@ class XChatScrollbackParser(text_parser.PyparsingSingleLineTextParser):
     """
     if key != 'logline':
       logger.warning(
-          'Unable to parse record, unknown structure: {0:s}'.format(key))
+          f'Unable to parse record, unknown structure: {key:s}')
       return
 
     timestamp = self._GetValueFromStructure(structure, 'timestamp')
     try:
       timestamp = int(timestamp, 10)
     except (TypeError, ValueError):
-      logger.debug('Invalid timestamp {0!s}, skipping record'.format(timestamp))
+      logger.debug(f'Invalid timestamp {timestamp!s}, skipping record')
       return
 
     try:

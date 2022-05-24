@@ -171,9 +171,9 @@ class ChromeExtensionPlugin(interface.AnalysisPlugin):
     # manually deduce the username.
     if not username:
       if len(filename) > 25:
-        username = 'Not found ({0:s}...)'.format(filename[0:25])
+        username = f'Not found ({filename[0:25]:s}...)'
       else:
-        username = 'Not found ({0:s})'.format(filename)
+        username = f'Not found ({filename:s})'
 
     extension_string = self._GetTitleFromChromeWebStore(extension_identifier)
     if not extension_string:

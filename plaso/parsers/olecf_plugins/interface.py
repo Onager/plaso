@@ -32,16 +32,14 @@ class OLECFPlugin(plugins.BasePlugin):
       creation_time = olecf_item.get_creation_time_as_integer()
     except OverflowError as exception:
       logger.warning(
-          'Unable to read the creation time with error: {0!s}'.format(
-              exception))
+          f'Unable to read the creation time with error: {exception!s}')
       creation_time = 0
 
     try:
       modification_time = olecf_item.get_modification_time_as_integer()
     except OverflowError as exception:
       logger.warning(
-          'Unable to read the modification time with error: {0!s}'.format(
-              exception))
+          f'Unable to read the modification time with error: {exception!s}')
       modification_time = 0
 
     # If no useful events, return early.

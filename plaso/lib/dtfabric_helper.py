@@ -70,7 +70,7 @@ class DtFabricHelper(object):
     Returns:
       str: human readable IPv4 address.
     """
-    return '.'.join(['{0:d}'.format(octet) for octet in packed_ip_address[:4]])
+    return '.'.join([f'{octet:d}' for octet in packed_ip_address[:4]])
 
   def _FormatPackedIPv6Address(self, packed_ip_address):
     """Formats a packed IPv6 address as a human readable string.
@@ -86,7 +86,7 @@ class DtFabricHelper(object):
     octet_pairs = [octet1 << 8 | octet2 for octet1, octet2 in octet_pairs]
     # TODO: omit ":0000" from the string.
     return ':'.join([
-        '{0:04x}'.format(octet_pair) for octet_pair in octet_pairs])
+        f'{octet_pair:04x}' for octet_pair in octet_pairs])
 
   def _GetDataTypeMap(self, name):
     """Retrieves a data type map defined by the definition file.
@@ -139,7 +139,7 @@ class DtFabricHelper(object):
         read_error = 'missing data'
 
     except IOError as exception:
-      read_error = '{0!s}'.format(exception)
+      read_error = f'{exception!s}'
 
     if read_error:
       raise errors.ParseError(
@@ -257,5 +257,4 @@ class DtFabricHelper(object):
       data_size = data_type_map.GetSizeHint(context=context)
 
     raise errors.ParseError(
-        'Unable to read {0:s} at offset: 0x{1:08x}'.format(
-            data_type_map.name, file_offset))
+        f'Unable to read {data_type_map.name:s} at offset: 0x{file_offset:08x}')

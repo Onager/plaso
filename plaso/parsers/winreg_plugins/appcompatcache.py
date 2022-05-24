@@ -145,8 +145,7 @@ class AppCompatCacheWindowsRegistryPlugin(
           value_data, 0, signature_map)
     except (ValueError, errors.ParseError) as exception:
       raise errors.ParseError(
-          'Unable to parse signature value with error: {0!s}'.format(
-              exception))
+          f'Unable to parse signature value with error: {exception!s}')
 
     format_type = self._HEADER_SIGNATURES.get(signature, None)
 
@@ -187,8 +186,7 @@ class AppCompatCacheWindowsRegistryPlugin(
       ParseError: if the cached entry data type map cannot be determined.
     """
     if format_type not in self._SUPPORTED_FORMAT_TYPES:
-      raise errors.ParseError('Unsupported format type: {0:d}'.format(
-          format_type))
+      raise errors.ParseError(f'Unsupported format type: {format_type:d}')
 
     data_type_map_name = ''
 
@@ -212,13 +210,13 @@ class AppCompatCacheWindowsRegistryPlugin(
 
       if format_type == self._FORMAT_TYPE_2003:
         data_type_map_name = (
-            'appcompatcache_cached_entry_2003_{0:s}bit'.format(number_of_bits))
+            f'appcompatcache_cached_entry_2003_{number_of_bits:s}bit')
       elif format_type == self._FORMAT_TYPE_VISTA:
         data_type_map_name = (
-            'appcompatcache_cached_entry_vista_{0:s}bit'.format(number_of_bits))
+            f'appcompatcache_cached_entry_vista_{number_of_bits:s}bit')
       elif format_type == self._FORMAT_TYPE_7:
         data_type_map_name = (
-            'appcompatcache_cached_entry_7_{0:s}bit'.format(number_of_bits))
+            f'appcompatcache_cached_entry_7_{number_of_bits:s}bit')
 
     return self._GetDataTypeMap(data_type_map_name)
 
@@ -245,8 +243,7 @@ class AppCompatCacheWindowsRegistryPlugin(
           value_data[cached_entry_offset:], cached_entry_offset, data_type_map)
     except (ValueError, errors.ParseError) as exception:
       raise errors.ParseError(
-          'Unable to parse cached entry value with error: {0!s}'.format(
-              exception))
+          f'Unable to parse cached entry value with error: {exception!s}')
 
     if cached_entry.path_size > cached_entry.maximum_path_size:
       raise errors.ParseError('Path size value out of bounds.')
@@ -280,8 +277,7 @@ class AppCompatCacheWindowsRegistryPlugin(
           self._cached_entry_data_type_map, context=context)
     except (ValueError, errors.ParseError) as exception:
       raise errors.ParseError(
-          'Unable to parse cached entry value with error: {0!s}'.format(
-              exception))
+          f'Unable to parse cached entry value with error: {exception!s}')
 
     # TODO: have dtFabric handle string conversion.
     string_size = 0
@@ -328,8 +324,7 @@ class AppCompatCacheWindowsRegistryPlugin(
           self._cached_entry_data_type_map, context=context)
     except (ValueError, errors.ParseError) as exception:
       raise errors.ParseError(
-          'Unable to parse cached entry value with error: {0!s}'.format(
-              exception))
+          f'Unable to parse cached entry value with error: {exception!s}')
 
     path_size = cached_entry.path_size
     maximum_path_size = cached_entry.maximum_path_size
@@ -375,8 +370,7 @@ class AppCompatCacheWindowsRegistryPlugin(
           self._cached_entry_data_type_map, context=context)
     except (ValueError, errors.ParseError) as exception:
       raise errors.ParseError(
-          'Unable to parse cached entry value with error: {0!s}'.format(
-              exception))
+          f'Unable to parse cached entry value with error: {exception!s}')
 
     path_size = cached_entry.path_size
     maximum_path_size = cached_entry.maximum_path_size
@@ -423,8 +417,7 @@ class AppCompatCacheWindowsRegistryPlugin(
           self._cached_entry_data_type_map, context=context)
     except (ValueError, errors.ParseError) as exception:
       raise errors.ParseError(
-          'Unable to parse cached entry value with error: {0!s}'.format(
-              exception))
+          f'Unable to parse cached entry value with error: {exception!s}')
 
     path_size = cached_entry.path_size
     maximum_path_size = cached_entry.maximum_path_size
@@ -475,8 +468,7 @@ class AppCompatCacheWindowsRegistryPlugin(
           self._cached_entry_data_type_map)
     except (ValueError, errors.ParseError) as exception:
       raise errors.ParseError(
-          'Unable to parse cached entry value with error: {0!s}'.format(
-              exception))
+          f'Unable to parse cached entry value with error: {exception!s}')
 
     if cached_entry.signature not in (
         self._CACHED_ENTRY_SIGNATURE_8_0, self._CACHED_ENTRY_SIGNATURE_8_1):
@@ -498,8 +490,7 @@ class AppCompatCacheWindowsRegistryPlugin(
           data_type_map, context=context)
     except (ValueError, errors.ParseError) as exception:
       raise errors.ParseError(
-          'Unable to parse cached entry body with error: {0!s}'.format(
-              exception))
+          f'Unable to parse cached entry body with error: {exception!s}')
 
     data_offset = context.byte_size
     data_size = cached_entry_body.data_size
@@ -539,8 +530,7 @@ class AppCompatCacheWindowsRegistryPlugin(
           self._cached_entry_data_type_map)
     except (ValueError, errors.ParseError) as exception:
       raise errors.ParseError(
-          'Unable to parse cached entry value with error: {0!s}'.format(
-              exception))
+          f'Unable to parse cached entry value with error: {exception!s}')
 
     if cached_entry.signature not in (
         self._CACHED_ENTRY_SIGNATURE_8_0, self._CACHED_ENTRY_SIGNATURE_8_1):
@@ -557,8 +547,7 @@ class AppCompatCacheWindowsRegistryPlugin(
           data_type_map, context=context)
     except (ValueError, errors.ParseError) as exception:
       raise errors.ParseError(
-          'Unable to parse cached entry body with error: {0!s}'.format(
-              exception))
+          f'Unable to parse cached entry body with error: {exception!s}')
 
     data_offset = cached_entry_offset + context.byte_size
     data_size = cached_entry_body.data_size
@@ -592,7 +581,7 @@ class AppCompatCacheWindowsRegistryPlugin(
     data_type_map_name = self._HEADER_DATA_TYPE_MAP_NAMES.get(format_type, None)
     if not data_type_map_name:
       raise errors.ParseError(
-          'Unsupported format type: {0:d}'.format(format_type))
+          f'Unsupported format type: {format_type:d}')
 
     data_type_map = self._GetDataTypeMap(data_type_map_name)
     context = dtfabric_data_maps.DataTypeMapContext()
@@ -602,8 +591,7 @@ class AppCompatCacheWindowsRegistryPlugin(
           value_data, 0, data_type_map, context=context)
     except (ValueError, errors.ParseError) as exception:
       raise errors.ParseError(
-          'Unable to parse header value with error: {0!s}'.format(
-              exception))
+          f'Unable to parse header value with error: {exception!s}')
 
     header_data_size = context.byte_size
     if format_type == self._FORMAT_TYPE_10:
@@ -637,8 +625,7 @@ class AppCompatCacheWindowsRegistryPlugin(
     format_type = self._CheckSignature(value_data)
     if not format_type:
       parser_mediator.ProduceExtractionWarning(
-          'Unsupported signature in AppCompatCache key: {0:s}'.format(
-              registry_key.path))
+          f'Unsupported signature in AppCompatCache key: {registry_key.path:s}')
       return
 
     header_object = self._ParseHeader(format_type, value_data)

@@ -37,7 +37,7 @@ class GoogleAnalyticsEventData(events.EventData):
     Args:
       cookie_identifier (str): unique identifier of the cookie.
     """
-    data_type = '{0:s}:{1:s}'.format(self.DATA_TYPE, cookie_identifier)
+    data_type = f'{self.DATA_TYPE:s}:{cookie_identifier:s}'
 
     super(GoogleAnalyticsEventData, self).__init__(data_type=data_type)
     self.cookie_name = None

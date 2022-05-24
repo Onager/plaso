@@ -54,8 +54,7 @@ def PyParseIntCast(string, location, tokens):  # pylint: disable=unused-argument
     try:
       tokens[index] = int(token)
     except ValueError:
-      logger.error('Unable to cast [{0:s}] to an int, setting to 0'.format(
-          token))
+      logger.error(f'Unable to cast [{token:s}] to an int, setting to 0')
       tokens[index] = 0
 
   # We also need to cast the dictionary built tokens.
@@ -64,8 +63,7 @@ def PyParseIntCast(string, location, tokens):  # pylint: disable=unused-argument
       tokens[key] = int(tokens[key], 10)
     except ValueError:
       logger.error(
-          'Unable to cast [{0:s} = {1:d}] to an int, setting to 0'.format(
-              key, tokens[key]))
+          f'Unable to cast [{key:s} = {tokens[key]:d}] to an int, setting to 0')
       tokens[key] = 0
 
 
@@ -167,8 +165,7 @@ class PyparsingLineStructure(object):
     try:
       return self.expression.parseString(string)
     except pyparsing.ParseException as exception:
-      logger.debug('Unable to parse string with error: {0!s}'.format(
-          exception))
+      logger.debug(f'Unable to parse string with error: {exception!s}')
 
     return None
 
@@ -254,7 +251,7 @@ class PyparsingSingleLineTextParser(interface.FileObjectParser):
               exception.object[exception.start],
               self._current_offset + exception.start))
 
-    escaped = '\\x{0:2x}'.format(exception.object[exception.start])
+    escaped = f'\\x{exception.object[exception.start]:2x}'
     return (escaped, exception.start + 1)
 
   def _GetValueFromStructure(self, structure, name, default_value=None):
@@ -334,7 +331,7 @@ class PyparsingSingleLineTextParser(interface.FileObjectParser):
         return True
 
       except LookupError:
-        logger.error('Unsupported encoding: {0:s}'.format(encoding))
+        logger.error(f'Unsupported encoding: {encoding:s}')
       except UnicodeDecodeError:
         pass
 
@@ -490,11 +487,10 @@ class PyparsingSingleLineTextParser(interface.FileObjectParser):
 
       else:
         if len(line) > 80:
-          line = '{0:s}...'.format(line[:77])
+          line = f'{line[:77]:s}...'
 
         parser_mediator.ProduceExtractionWarning(
-            'unable to parse log line: "{0:s}" at offset: {1:d}'.format(
-                line, self._current_offset))
+            f'unable to parse log line: "{line:s}" at offset: {self._current_offset:d}')
 
         consecutive_line_failures += 1
         if (consecutive_line_failures >
@@ -509,8 +505,7 @@ class PyparsingSingleLineTextParser(interface.FileObjectParser):
         line = self._ReadLine(text_file_object, max_len=self.MAX_LINE_LENGTH)
       except UnicodeDecodeError:
         parser_mediator.ProduceExtractionWarning(
-            'unable to read and decode log line at offset {0:d}'.format(
-                self._current_offset))
+            f'unable to read and decode log line at offset {self._current_offset:d}')
         break
 
   @abc.abstractmethod
@@ -701,7 +696,7 @@ class PyparsingMultiLineTextParser(PyparsingSingleLineTextParser):
       text_reader.ReadLines(file_object)
     except UnicodeDecodeError as exception:
       raise errors.WrongParser(
-          'Not a text file, with error: {0!s}'.format(exception))
+          f'Not a text file, with error: {exception!s}')
 
     if not self.VerifyStructure(parser_mediator, text_reader.lines):
       raise errors.WrongParser('Wrong file structure.')
@@ -754,10 +749,10 @@ class PyparsingMultiLineTextParser(PyparsingSingleLineTextParser):
         odd_line = text_reader.ReadLine(file_object)
         if odd_line:
           if len(odd_line) > 80:
-            odd_line = '{0:s}...'.format(odd_line[:77])
+            odd_line = f'{odd_line[:77]:s}...'
 
           parser_mediator.ProduceExtractionWarning(
-              'unable to parse log line: {0:s}'.format(repr(odd_line)))
+              f'unable to parse log line: {repr(odd_line):s}')
 
           consecutive_line_failures += 1
           if (consecutive_line_failures >
@@ -770,7 +765,7 @@ class PyparsingMultiLineTextParser(PyparsingSingleLineTextParser):
         text_reader.ReadLines(file_object)
       except UnicodeDecodeError as exception:
         parser_mediator.ProduceExtractionWarning(
-            'unable to read lines with error: {0!s}'.format(exception))
+            f'unable to read lines with error: {exception!s}')
 
   @abc.abstractmethod
   def ParseRecord(self, parser_mediator, key, structure):

@@ -126,7 +126,7 @@ class SSHSyslogPlugin(interface.SyslogPlugin):
       ValueError: If an unknown key is provided.
     """
     if key not in ('failed_connection', 'login', 'opened_connection'):
-      raise ValueError('Unknown grammar key: {0:s}'.format(key))
+      raise ValueError(f'Unknown grammar key: {key:s}')
 
     if key == 'login':
       event_data = SSHLoginEventData()

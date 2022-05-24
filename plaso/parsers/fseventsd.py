@@ -162,8 +162,7 @@ class FseventsdParser(
           file_object, 0, page_header_map)
     except (ValueError, errors.ParseError) as exception:
       raise errors.WrongParser(
-          'Unable to parse page header with error: {0!s}'.format(
-              exception))
+          f'Unable to parse page header with error: {exception!s}')
 
     current_page_end = page_header.page_size
 
@@ -186,8 +185,7 @@ class FseventsdParser(
               file_object, file_offset)
         except errors.ParseError as exception:
           parser_mediator.ProduceExtractionWarning(
-              'Unable to parse page header with error: {0!s}'.format(
-                  exception))
+              f'Unable to parse page header with error: {exception!s}')
           break
 
         current_page_end += page_header.page_size
@@ -205,8 +203,7 @@ class FseventsdParser(
         file_offset += record_length
       except (ValueError, errors.ParseError) as exception:
         parser_mediator.ProduceExtractionWarning(
-            'Unable to parse page record with error: {0!s}'.format(
-                exception))
+            f'Unable to parse page record with error: {exception!s}')
         break
 
       event_data = self._BuildEventData(record)

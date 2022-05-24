@@ -249,7 +249,7 @@ class MacOSUserAccountsPlugin(interface.FileEntryArtifactPreprocessorPlugin):
     except (IOError, plistlib.InvalidFileException) as exception:
       mediator.ProducePreprocessingWarning(
           self.ARTIFACT_DEFINITION_NAME,
-          'Unable to read plist with error: {0!s}.'.format(exception))
+          f'Unable to read plist with error: {exception!s}.')
       return
 
     name = match.get('name', [None])[0]
@@ -272,7 +272,7 @@ class MacOSUserAccountsPlugin(interface.FileEntryArtifactPreprocessorPlugin):
     except KeyError:
       mediator.ProducePreprocessingWarning(
           self.ARTIFACT_DEFINITION_NAME,
-          'Unable to add user account: {0:s} to knowledge base.'.format(name))
+          f'Unable to add user account: {name:s} to knowledge base.')
 
 
 manager.PreprocessPluginsManager.RegisterPlugins([

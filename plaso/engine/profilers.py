@@ -81,8 +81,7 @@ class SampleFileProfiler(object):
 
   def Start(self):
     """Starts the profiler."""
-    filename = '{0:s}-{1:s}.csv.gz'.format(
-        self._FILENAME_PREFIX, self._identifier)
+    filename = f'{self._FILENAME_PREFIX:s}-{self._identifier:s}.csv.gz'
     if self._path:
       filename = os.path.join(self._path, filename)
 
@@ -146,8 +145,7 @@ class MemoryProfiler(SampleFileProfiler):
       used_memory (int): amount of used memory in bytes.
     """
     sample_time = time.time()
-    sample = '{0:f}\t{1:s}\t{2:d}\n'.format(
-        sample_time, profile_name, used_memory)
+    sample = f'{sample_time:f}\t{profile_name:s}\t{used_memory:d}\n'
     self._WritesString(sample)
 
 
@@ -264,6 +262,5 @@ class TasksProfiler(SampleFileProfiler):
       status (str): status.
     """
     sample_time = time.time()
-    sample = '{0:f}\t{1:s}\t{2:s}\n'.format(
-        sample_time, task.identifier, status)
+    sample = f'{sample_time:f}\t{task.identifier:s}\t{status:s}\n'
     self._WritesString(sample)

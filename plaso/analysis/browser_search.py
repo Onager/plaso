@@ -292,8 +292,7 @@ class BrowserSearchPlugin(interface.AnalysisPlugin):
       callback_method = getattr(self, method_name, None)
       if not callback_method:
         logger.warning(
-            'Missing callback method: {0:s} to parse search query'.format(
-                method_name))
+            f'Missing callback method: {method_name:s} to parse search query')
         continue
 
       match = url_expression.search(url)
@@ -321,7 +320,7 @@ class BrowserSearchPlugin(interface.AnalysisPlugin):
       event_tag = self._CreateEventTag(event, self._EVENT_TAG_LABELS)
       analysis_mediator.ProduceEventTag(event_tag)
 
-      lookup_key = '{0:s}:{1:s}'.format(engine, search_query)
+      lookup_key = f'{engine:s}:{search_query:s}'
       self._analysis_counter[lookup_key] += 1
 
 

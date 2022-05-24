@@ -68,7 +68,7 @@ class TaggingFile(object):
       filter_object = event_filter.EventObjectFilter()
 
       try:
-        filter_rule = ' OR '.join(['({0:s})'.format(rule) for rule in rules])
+        filter_rule = ' OR '.join([f'({rule:s})' for rule in rules])
         filter_object.CompileFilter(filter_rule)
       except errors.ParseError as exception:
         raise errors.TaggingFileError((

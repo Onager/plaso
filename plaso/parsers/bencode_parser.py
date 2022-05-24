@@ -178,8 +178,7 @@ class BencodeParser(interface.FileObjectParser):
               display_name, plugin.NAME))
           continue
 
-        logger.debug('Parsing file: {0:s} with plugin: {1:s}'.format(
-            display_name, plugin.NAME))
+        logger.debug(f'Parsing file: {display_name:s} with plugin: {plugin.NAME:s}')
 
         try:
           plugin.UpdateChainAndProcess(

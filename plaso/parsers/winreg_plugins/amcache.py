@@ -251,8 +251,7 @@ class AMCachePlugin(interface.WindowsRegistryPlugin):
     date_time_string = registry_value.GetDataAsObject()
     if not date_time_string:
       parser_mediator.ProduceExtractionWarning(
-          'missing {0:s} value data in key: {1:s}'.format(
-              registry_value.name, key_path))
+          f'missing {registry_value.name:s} value data in key: {key_path:s}')
       return None
 
     re_match = self._LINK_DATE_TIME_RE.match(date_time_string)
@@ -319,12 +318,11 @@ class AMCachePlugin(interface.WindowsRegistryPlugin):
         sequence_number, mft_entry = file_reference_key.name.split('0000')
         mft_entry = int(mft_entry, 16)
         sequence_number = int(sequence_number, 16)
-        event_data.file_reference = '{0:d}-{1:d}'.format(
-            mft_entry, sequence_number)
+        event_data.file_reference = f'{mft_entry:d}-{sequence_number:d}'
       else:
         # A FAT file is a single number.
         file_reference = int(file_reference_key.name, 16)
-        event_data.file_reference = '{0:d}'.format(file_reference)
+        event_data.file_reference = f'{file_reference:d}'
 
     except (ValueError, TypeError):
       pass

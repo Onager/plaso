@@ -133,7 +133,7 @@ class MacAppFirewallParser(text_parser.PyparsingSingleLineTextParser):
           time_elements_tuple=time_elements_tuple)
     except ValueError:
       parser_mediator.ProduceExtractionWarning(
-          'invalid date time value: {0!s}'.format(time_elements_tuple))
+          f'invalid date time value: {time_elements_tuple!s}')
       return
 
     self._last_month = time_elements_tuple[1]
@@ -177,7 +177,7 @@ class MacAppFirewallParser(text_parser.PyparsingSingleLineTextParser):
     """
     if key not in ('logline', 'repeated'):
       raise errors.ParseError(
-          'Unable to parse record, unknown structure: {0:s}'.format(key))
+          f'Unable to parse record, unknown structure: {key:s}')
 
     self._ParseLogLine(parser_mediator, structure, key)
 
@@ -206,15 +206,13 @@ class MacAppFirewallParser(text_parser.PyparsingSingleLineTextParser):
     action = self._GetValueFromStructure(structure, 'action')
     if action != 'creating /var/log/appfirewall.log':
       logger.debug(
-          'Not a Mac AppFirewall log file, invalid action: {0!s}'.format(
-              action))
+          f'Not a Mac AppFirewall log file, invalid action: {action!s}')
       return False
 
     status = self._GetValueFromStructure(structure, 'status')
     if status != 'Error':
       logger.debug(
-          'Not a Mac AppFirewall log file, invalid status: {0!s}'.format(
-              status))
+          f'Not a Mac AppFirewall log file, invalid status: {status!s}')
       return False
 
     time_elements_tuple = self._GetTimeElementsTuple(structure)

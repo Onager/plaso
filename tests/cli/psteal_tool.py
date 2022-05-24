@@ -154,7 +154,7 @@ class PstealToolTest(test_lib.CLIToolTestCase):
 
       expected_output = [
           '',
-          'Source path\t\t: {0:s}'.format(options.source),
+          f'Source path\t\t: {options.source:s}',
           'Source type\t\t: directory',
           'Processing time\t\t: 00:00:00',
           '',
@@ -181,7 +181,7 @@ class PstealToolTest(test_lib.CLIToolTestCase):
 
     options = test_lib.TestOptions()
     options.artifact_definitions_path = test_artifacts_path
-    options.credentials = ['password:{0:s}'.format(self._BDE_PASSWORD)]
+    options.credentials = [f'password:{self._BDE_PASSWORD:s}']
     options.quiet = True
     options.source = test_file_path
     options.status_view_mode = 'none'
@@ -197,7 +197,7 @@ class PstealToolTest(test_lib.CLIToolTestCase):
 
       expected_output = [
           '',
-          'Source path\t\t: {0:s}'.format(options.source),
+          f'Source path\t\t: {options.source:s}',
           'Source type\t\t: storage media image',
           'Processing time\t\t: 00:00:00',
           '',
@@ -237,7 +237,7 @@ class PstealToolTest(test_lib.CLIToolTestCase):
 
       expected_output = [
           '',
-          'Source path\t\t: {0:s}'.format(options.source),
+          f'Source path\t\t: {options.source:s}',
           'Source type\t\t: storage media image',
           'Processing time\t\t: 00:00:00',
           '',
@@ -279,7 +279,7 @@ class PstealToolTest(test_lib.CLIToolTestCase):
 
       expected_output = [
           '',
-          'Source path\t\t: {0:s}'.format(options.source),
+          f'Source path\t\t: {options.source:s}',
           'Source type\t\t: storage media image',
           'Processing time\t\t: 00:00:00',
           '',
@@ -322,7 +322,7 @@ class PstealToolTest(test_lib.CLIToolTestCase):
 
       expected_output = [
           '',
-          'Source path\t\t: {0:s}'.format(options.source),
+          f'Source path\t\t: {options.source:s}',
           'Source type\t\t: storage media image',
           'Processing time\t\t: 00:00:00',
           '',
@@ -366,7 +366,7 @@ class PstealToolTest(test_lib.CLIToolTestCase):
 
       expected_output = [
           '',
-          'Source path\t\t: {0:s}'.format(options.source),
+          f'Source path\t\t: {options.source:s}',
           'Source type\t\t: single file',
           'Processing time\t\t: 00:00:00',
           '',

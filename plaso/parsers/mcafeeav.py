@@ -86,8 +86,7 @@ class McafeeAccessProtectionParser(dsv_parser.DSVParser):
       month = int(month_string, 10)
       day_of_month = int(day_of_month_string, 10)
     except (AttributeError, ValueError):
-      raise errors.ParseError('Unsupported date string: {0:s}'.format(
-          date_string))
+      raise errors.ParseError(f'Unsupported date string: {date_string:s}')
 
     try:
       time_value, time_suffix = time_string.split(' ')
@@ -96,14 +95,12 @@ class McafeeAccessProtectionParser(dsv_parser.DSVParser):
       minutes = int(minutes_string, 10)
       seconds = int(seconds_string, 10)
     except (AttributeError, ValueError):
-      raise errors.ParseError('Unsupported time string: {0:s}'.format(
-          time_string))
+      raise errors.ParseError(f'Unsupported time string: {time_string:s}')
 
     if time_suffix == 'PM':
       hours += 12
     elif time_suffix != 'AM':
-      raise errors.ParseError('Unsupported time suffix: {0:s}.'.format(
-          time_suffix))
+      raise errors.ParseError(f'Unsupported time suffix: {time_suffix:s}.')
 
     time_elements_tuple = (year, month, day_of_month, hours, minutes, seconds)
 
@@ -113,8 +110,7 @@ class McafeeAccessProtectionParser(dsv_parser.DSVParser):
 
     except ValueError:
       raise errors.ParseError(
-          'Unsupported date and time strings: {0:s} {1:s}'.format(
-              date_string, time_string))
+          f'Unsupported date and time strings: {date_string:s} {time_string:s}')
 
     date_time.is_local_time = True
     return date_time
@@ -132,7 +128,7 @@ class McafeeAccessProtectionParser(dsv_parser.DSVParser):
       date_time = self._CreateDateTime(row['date'], row['time'])
     except errors.ParseError as exception:
       parser_mediator.ProduceExtractionWarning(
-          'Unable to create date time with error: {0!s}'.format(exception))
+          f'Unable to create date time with error: {exception!s}')
       date_time = dfdatetime_semantic_time.InvalidTime()
 
     event_data = McafeeAVEventData()

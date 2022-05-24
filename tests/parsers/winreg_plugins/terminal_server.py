@@ -88,7 +88,7 @@ class ServersTerminalServerClientPluginTest(test_lib.RegistryPluginTestCase):
     expected_event_values = {
         'date_time': '2012-08-28 09:23:49.0020310',
         'data_type': 'windows:registry:mstsc:connection',
-        'key_path': '{0:s}\\myserver.com'.format(key_path),
+        'key_path': f'{key_path:s}\\myserver.com',
         # This should just be the plugin name, as we're invoking it directly,
         # and not through the parser.
         'parser': plugin.NAME,

@@ -109,8 +109,7 @@ class FormatSpecificationStore(object):
     """
     if identifier in self._format_specifications:
       raise KeyError(
-          'Format specification {0:s} is already defined in store.'.format(
-              identifier))
+          f'Format specification {identifier:s} is already defined in store.')
 
     self._format_specifications[identifier] = FormatSpecification(identifier)
 
@@ -136,12 +135,10 @@ class FormatSpecificationStore(object):
     for signature in specification.signatures:
       signature_index = len(self._signature_map)
 
-      signature_identifier = '{0:s}:{1:d}'.format(
-          specification.identifier, signature_index)
+      signature_identifier = f'{specification.identifier:s}:{signature_index:d}'
 
       if signature_identifier in self._signature_map:
-        raise KeyError('Signature {0:s} is already defined in map.'.format(
-            signature_identifier))
+        raise KeyError(f'Signature {signature_identifier:s} is already defined in map.')
 
       signature.SetIdentifier(signature_identifier)
       self._signature_map[signature_identifier] = specification

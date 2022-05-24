@@ -88,8 +88,7 @@ class FileSystemWinRegistryFileReader(dfwinreg_interface.WinRegistryFileReader):
       registry_file.Open(file_object)
     except IOError as exception:
       logger.warning(
-          'Unable to open Windows Registry file with error: {0!s}'.format(
-              exception))
+          f'Unable to open Windows Registry file with error: {exception!s}')
       return None
 
     return registry_file
@@ -186,8 +185,7 @@ class PreprocessPluginsManager(object):
         preprocess_plugin.Collect(mediator)
       except errors.PreProcessFail as exception:
         logger.warning(
-            'Unable to collect knowledge base value with error: {0!s}'.format(
-                exception))
+            f'Unable to collect knowledge base value with error: {exception!s}')
 
   @classmethod
   def CollectFromWindowsRegistry(cls, artifacts_registry, mediator, searcher):
@@ -241,7 +239,7 @@ class PreprocessPluginsManager(object):
     name = name.lower()
     if name not in cls._plugins:
       raise KeyError(
-          'Artifact plugin class not set for name: {0:s}.'.format(name))
+          f'Artifact plugin class not set for name: {name:s}.')
 
     del cls._plugins[name]
 
@@ -285,7 +283,7 @@ class PreprocessPluginsManager(object):
     name = name.lower()
     if name in cls._plugins:
       raise KeyError(
-          'Artifact plugin class already set for name: {0:s}.'.format(name))
+          f'Artifact plugin class already set for name: {name:s}.')
 
     preprocess_plugin = plugin_class()
 

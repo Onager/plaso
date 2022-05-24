@@ -69,7 +69,7 @@ class XLSXOutputArgumentsHelper(interface.ArgumentsHelper):
     additional_fields = cls._ParseStringOption(options, 'additional_fields')
 
     if additional_fields:
-      fields = '{0:s},{1:s}'.format(fields, additional_fields)
+      fields = f'{fields:s},{additional_fields:s}'
 
     filename = getattr(options, 'write', None)
     if not filename:

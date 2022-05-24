@@ -72,7 +72,7 @@ class MactimeParser(interface.FileObjectParser):
 
   _NON_PRINTABLE_CHARACTERS = list(range(0, 0x20)) + list(range(0x7f, 0xa0))
   _ESCAPE_CHARACTERS = str.maketrans({
-      value: '\\x{0:02x}'.format(value)
+      value: f'\\x{value:02x}'
       for value in _NON_PRINTABLE_CHARACTERS})
 
   def _GetDateTimeFromTimestamp(self, float_value):
@@ -119,8 +119,7 @@ class MactimeParser(interface.FileObjectParser):
       try:
         integer_value = int(integer_value, 10)
       except ValueError:
-        error_string = 'invalid {0:s} value in line: {1:d}'.format(
-            description, line_number)
+        error_string = f'invalid {description:s} value in line: {line_number:d}'
         if line_number == 0:
           raise errors.WrongParser(error_string)
 
@@ -152,8 +151,7 @@ class MactimeParser(interface.FileObjectParser):
       try:
         float_value = float(float_value)
       except ValueError:
-        error_string = 'invalid {0:s} value in line: {1:d}'.format(
-            description, line_number)
+        error_string = f'invalid {description:s} value in line: {line_number:d}'
         if line_number == 0:
           raise errors.WrongParser(error_string)
 
@@ -184,8 +182,7 @@ class MactimeParser(interface.FileObjectParser):
       line = line_reader.readline()
     except UnicodeDecodeError as exception:
       raise errors.WrongParser(
-          'unable to read line: {0:d} with error: {1!s}'.format(
-              line_number, exception))
+          f'unable to read line: {line_number:d} with error: {exception!s}')
 
     while line:
       values = line.split('|')
@@ -203,8 +200,7 @@ class MactimeParser(interface.FileObjectParser):
         if md5_value == '0':
           md5_value = None
         elif md5_value and not self._MD5_RE.match(md5_value):
-          error_string = 'invalid MD5 value: {0:s} in line: {1:d}'.format(
-              md5_value, line_number)
+          error_string = f'invalid MD5 value: {md5_value:s} in line: {line_number:d}'
           if line_number == 0:
             raise errors.WrongParser(error_string)
 
@@ -229,7 +225,7 @@ class MactimeParser(interface.FileObjectParser):
         if uid_value is not None:
           # Note that the user_sid attribute of MactimeEventData is expected to
           # be a string or None.
-          uid_value = '{0:d}'.format(uid_value)
+          uid_value = f'{uid_value:d}'
 
         mode_as_string_value = values.pop(-1) or None
 
@@ -242,8 +238,7 @@ class MactimeParser(interface.FileObjectParser):
         except (TypeError, ValueError):
           inode_value = None
           parser_mediator.ProduceRecoveryWarning(
-              'invalid inode value: {0!s} in line: {1:d}'.format(
-                  inode_value, line_number))
+              f'invalid inode value: {inode_value!s} in line: {line_number:d}')
 
         # Determine if the inode value is actually a 64-bit NTFS file reference.
         if inode_value > self._UINT48_MAX:
@@ -260,7 +255,7 @@ class MactimeParser(interface.FileObjectParser):
 
         else:
           for character in self._NON_PRINTABLE_CHARACTERS:
-            escaped_character = '\\x{0:02x}'.format(character)
+            escaped_character = f'\\x{character:02x}'
             filename = filename.replace(escaped_character, chr(character))
 
           filename = filename.replace('\\|', '|')
@@ -318,8 +313,7 @@ class MactimeParser(interface.FileObjectParser):
         line = line_reader.readline()
       except UnicodeDecodeError as exception:
         parser_mediator.ProduceExtractionWarning(
-            'unable to read line: {0:d} with error: {1!s}'.format(
-                line_number, exception))
+            f'unable to read line: {line_number:d} with error: {exception!s}')
         break
 
 

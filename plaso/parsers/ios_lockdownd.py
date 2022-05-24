@@ -77,7 +77,7 @@ class IOSLockdownParser(text_parser.PyparsingMultiLineTextParser):
     """
     if key != 'log_entry':
       raise errors.ParseError(
-          'Unable to parse record, unknown structure: {0:s}'.format(key))
+          f'Unable to parse record, unknown structure: {key:s}')
 
     year = self._GetValueFromStructure(structure, 'two_digit_year')
     month = self._GetValueFromStructure(structure, 'month')

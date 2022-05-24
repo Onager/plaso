@@ -106,8 +106,7 @@ class ESEDBPlugin(plugins.BasePlugin, dtfabric_helper.DtFabricHelper):
       return self._ReadStructureFromByteStream(value, 0, integer_map)
     except (ValueError, errors.ParseError) as exception:
       raise errors.ParseError(
-          'Unable to parse integer value with error: {0!s}'.format(
-              exception))
+          f'Unable to parse integer value with error: {exception!s}')
 
   def _ConvertValueBinaryDataToULInt64(self, value):
     """Converts a binary data value into an integer.
@@ -132,8 +131,7 @@ class ESEDBPlugin(plugins.BasePlugin, dtfabric_helper.DtFabricHelper):
       return self._ReadStructureFromByteStream(value, 0, integer_map)
     except (ValueError, errors.ParseError) as exception:
       raise errors.ParseError(
-          'Unable to parse integer value with error: {0!s}'.format(
-              exception))
+          f'Unable to parse integer value with error: {exception!s}')
 
   def _GetRecordValue(self, record, value_entry):
     """Retrieves a specific value from the record.
@@ -292,8 +290,7 @@ class ESEDBPlugin(plugins.BasePlugin, dtfabric_helper.DtFabricHelper):
       esedb_table = database.GetTableByName(table_name)
       if not esedb_table:
         if table_name not in self.OPTIONAL_TABLES:
-          logger.warning('[{0:s}] missing table: {1:s}'.format(
-              self.NAME, table_name))
+          logger.warning(f'[{self.NAME:s}] missing table: {table_name:s}')
         continue
 
       # The database is passed in case the database contains table names

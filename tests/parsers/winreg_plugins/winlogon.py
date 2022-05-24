@@ -332,7 +332,7 @@ class WinlogonPluginTest(test_lib.RegistryPluginTestCase):
         'command': 'NavLogon.dll',
         'date_time': '2013-01-30 10:47:57.0000000',
         'data_type': 'windows:registry:winlogon',
-        'key_path': '{0:s}\\Notify\\NavLogon'.format(key_path),
+        'key_path': f'{key_path:s}\\Notify\\NavLogon',
         'trigger': 'Logoff'}
 
     self.CheckEventValues(storage_writer, test_event2, expected_event_values)

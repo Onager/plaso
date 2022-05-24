@@ -202,7 +202,7 @@ class OperaGlobalHistoryParser(interface.FileObjectParser):
       event_data.popularity_index = int(popularity_index, 10)
     except ValueError:
       parser_mediator.ProduceExtractionWarning(
-          'unable to convert popularity index: {0:s}'.format(popularity_index))
+          f'unable to convert popularity index: {popularity_index:s}')
 
     if event_data.popularity_index < 0:
       event_data.description = 'First and Only Visit'
@@ -214,7 +214,7 @@ class OperaGlobalHistoryParser(interface.FileObjectParser):
       timestamp = int(timestamp, 10)
     except ValueError:
       parser_mediator.ProduceExtractionWarning(
-          'unable to convert timestamp: {0:s}'.format(timestamp))
+          f'unable to convert timestamp: {timestamp:s}')
       timestamp = None
 
     if timestamp is None:

@@ -254,25 +254,25 @@ class WindowsRegistryPlugin(plugins.BasePlugin):
           value_object = registry_value.GetDataAsObject()
 
           if registry_value.DataIsMultiString():
-            value_string = '[{0:s}]'.format(', '.join(value_object or []))
+            value_string = f"[{', '.join(value_object or []):s}]"
 
           elif (registry_value.DataIsInteger() or
                 registry_value.DataIsString()):
-            value_string = '{0!s}'.format(value_object)
+            value_string = f'{value_object!s}'
 
           else:
             # Represent remaining types like REG_BINARY and
             # REG_RESOURCE_REQUIREMENT_LIST.
-            value_string = '({0:d} bytes)'.format(len(value_object))
+            value_string = f'({len(value_object):d} bytes)'
 
         except dfwinreg_errors.WinRegistryValueError as exception:
           parser_mediator.ProduceRecoveryWarning((
               'Unable to retrieve value data of type: {0:s} as object from '
               'value: {1:s} in key: {2:s} with error: {3!s}').format(
                   data_type_string, value_name, registry_key.path, exception))
-          value_string = '({0:d} bytes)'.format(len(registry_value.data))
+          value_string = f'({len(registry_value.data):d} bytes)'
 
-      value_string = '[{0:s}] {1:s}'.format(data_type_string, value_string)
+      value_string = f'[{data_type_string:s}] {value_string:s}'
       values_dict[value_name] = value_string
 
     return values_dict
@@ -294,7 +294,7 @@ class WindowsRegistryPlugin(plugins.BasePlugin):
     event_data = windows_events.WindowsRegistryEventData()
     event_data.key_path = registry_key.path
     event_data.values = ' '.join([
-        '{0:s}: {1!s}'.format(name, value)
+        f'{name:s}: {value!s}'
         for name, value in sorted(values_dict.items())]) or None
 
     event = time_events.DateTimeValuesEvent(

@@ -17,7 +17,7 @@ class CompressedFileHandler(logging.FileHandler):
       encoding (Optional[str]): encoding of the log lines.
     """
     if 't' not in mode and encoding:
-      mode = '{0:s}t'.format(mode)
+      mode = f'{mode:s}t'
     super(CompressedFileHandler, self).__init__(
         filename, mode=mode, encoding=encoding, delay=True)
 

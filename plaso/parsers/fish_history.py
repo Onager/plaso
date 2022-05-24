@@ -76,7 +76,7 @@ class FishHistoryParser(interface.FileObjectParser):
     file_size = file_object.get_size()
     if file_size > self._MAXIMUM_FISH_HISTORY_FILE_SIZE:
       parser_mediator.ProduceExtractionWarning(
-          'Fish history file size: {0:d} exceeds maxmimum'.format(file_size))
+          f'Fish history file size: {file_size:d} exceeds maxmimum')
       return
 
     file_object.seek(0, os.SEEK_SET)
@@ -85,13 +85,13 @@ class FishHistoryParser(interface.FileObjectParser):
       fish_history = yaml.safe_load(file_object)
     except yaml.YAMLError as exception:
       parser_mediator.ProduceExtractionWarning(
-          'Error reading YAML with error: {0:s}'.format(exception))
+          f'Error reading YAML with error: {exception:s}')
       return
 
     for entry_index, history_entry in enumerate(fish_history):
       if not ('cmd' in history_entry and 'when' in history_entry):
         parser_mediator.ProduceExtractionWarning(
-            'Unsupported history entry: {0:d}'.format(entry_index))
+            f'Unsupported history entry: {entry_index:d}')
         return
 
       event_data = FishHistoryEventData()

@@ -42,7 +42,7 @@ class PathFilter(object):
       ValueError: if the filter type contains an unsupported value.
     """
     if filter_type not in (self.FILTER_TYPE_EXCLUDE, self.FILTER_TYPE_INCLUDE):
-      raise ValueError('Unsupported filter type: {0!s}'.format(filter_type))
+      raise ValueError(f'Unsupported filter type: {filter_type!s}')
 
     super(PathFilter, self).__init__()
     self.description = description
@@ -79,7 +79,7 @@ class PathCollectionFiltersHelper(filters_helper.CollectionFiltersHelper):
           if path_segment[0] == '{' and path_segment[-1] == '}':
             # Rewrite legacy path expansion attributes, such as {systemroot}
             # into %SystemRoot%.
-            path_segment = '%{0:s}%'.format(path_segment[1:-1])
+            path_segment = f'%{path_segment[1:-1]:s}%'
             path_segments[index] = path_segment
 
           if path_segment[0] == '%' and path_segment[-1] == '%':
@@ -100,7 +100,7 @@ class PathCollectionFiltersHelper(filters_helper.CollectionFiltersHelper):
 
         if not path_segments[-1]:
           logger.warning(
-              'Empty last path segment in path: {0:s}'.format(path))
+              f'Empty last path segment in path: {path:s}')
           continue
 
         find_spec = file_system_searcher.FindSpec(

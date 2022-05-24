@@ -188,8 +188,7 @@ class BinaryCookieParser(
 
       except Exception as exception:  # pylint: disable=broad-except
         parser_mediator.ProduceExtractionWarning(
-            'plugin: {0:s} unable to parse cookie with error: {1!s}'.format(
-                plugin.NAME, exception))
+            f'plugin: {plugin.NAME:s} unable to parse cookie with error: {exception!s}')
 
   @classmethod
   def GetFormatSpecification(cls):
@@ -221,7 +220,7 @@ class BinaryCookieParser(
           file_object, 0, file_header_map)
     except (ValueError, errors.ParseError) as exception:
       raise errors.WrongParser(
-          'Unable to read file header with error: {0!s}.'.format(exception))
+          f'Unable to read file header with error: {exception!s}.')
 
     file_offset = file_header_data_size
 
@@ -253,7 +252,7 @@ class BinaryCookieParser(
       page_data = file_object.read(page_size)
       if len(page_data) != page_size:
         parser_mediator.ProduceExtractionWarning(
-            'unable to read page: {0:d}'.format(page_number))
+            f'unable to read page: {page_number:d}')
         break
 
       self._ParsePage(parser_mediator, file_offset, page_data)

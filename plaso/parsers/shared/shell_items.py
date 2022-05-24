@@ -99,15 +99,15 @@ class ShellItemsParser(object):
       if description:
         path_segment = description
       else:
-        path_segment = '{{{0:s}}}'.format(shell_item.shell_folder_identifier)
+        path_segment = f'{{{shell_item.shell_folder_identifier:s}}}'
 
-      path_segment = '<{0:s}>'.format(path_segment)
+      path_segment = f'<{path_segment:s}>'
 
     elif isinstance(shell_item, pyfwsi.volume):
       if shell_item.name:
         path_segment = shell_item.name
       elif shell_item.identifier:
-        path_segment = '{{{0:s}}}'.format(shell_item.identifier)
+        path_segment = f'{{{shell_item.identifier:s}}}'
 
     elif isinstance(shell_item, pyfwsi.file_entry):
       long_name = ''
@@ -129,7 +129,7 @@ class ShellItemsParser(object):
       pass
 
     if path_segment is None:
-      path_segment = '<UNKNOWN: 0x{0:02x}>'.format(shell_item.class_type)
+      path_segment = f'<UNKNOWN: 0x{shell_item.class_type:02x}>'
 
     return path_segment
 
@@ -152,11 +152,11 @@ class ShellItemsParser(object):
 
       if ((path_segment.startswith('<') and path_segment.endswith('>')) or
           len(strings) == 1):
-        strings.append(' {0:s}'.format(path_segment))
+        strings.append(f' {path_segment:s}')
       elif path_segment.startswith('\\'):
-        strings.append('{0:s}'.format(path_segment))
+        strings.append(f'{path_segment:s}')
       else:
-        strings.append('\\{0:s}'.format(path_segment))
+        strings.append(f'\\{path_segment:s}')
       number_of_path_segments -= 1
 
     return ''.join(strings)

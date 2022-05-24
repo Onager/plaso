@@ -29,7 +29,7 @@ class ParserImportTest(test_lib.ImportCheckTestCase):
 
   def testPluginsImported(self):
     """Tests that all plugins are imported."""
-    parsers_glob = '{0:s}/*_plugins/'.format(test_lib.PARSERS_PATH)
+    parsers_glob = f'{test_lib.PARSERS_PATH:s}/*_plugins/'
     plugin_directories = glob.glob(parsers_glob)
     for plugin_directory in plugin_directories:
       plugin_directory_path = os.path.join(

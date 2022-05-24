@@ -143,7 +143,7 @@ class APTHistoryLogParser(text_parser.PyparsingSingleLineTextParser):
     self._date_time = self._BuildDateTime(structure.get('start_date', None))
     if not self._date_time:
       parser_mediator.ProduceExtractionWarning(
-          'invalid date time value: {0!s}'.format(self._date_time))
+          f'invalid date time value: {self._date_time!s}')
       return
 
     self._event_data = APTHistoryLogEventData()
@@ -280,7 +280,7 @@ class APTHistoryLogParser(text_parser.PyparsingSingleLineTextParser):
       return
 
     raise errors.ParseError(
-        'Unable to parse record, unknown structure: {0:s}'.format(key))
+        f'Unable to parse record, unknown structure: {key:s}')
 
   def VerifyStructure(self, parser_mediator, line):
     """Verify that this file is an APT History log file.
@@ -298,7 +298,7 @@ class APTHistoryLogParser(text_parser.PyparsingSingleLineTextParser):
       # Reset stored values for parsing a new file.
       self._ResetState()
     except pyparsing.ParseException as exception:
-      logger.debug('Not an APT History log file: {0!s}'.format(exception))
+      logger.debug(f'Not an APT History log file: {exception!s}')
       return False
 
     return True

@@ -116,7 +116,7 @@ class MacDocumentVersionsPlugin(interface.SQLitePlugin):
     event_data.path = path
     event_data.query = query
     # Note that the user_sid value is expected to be a string.
-    event_data.user_sid = '{0!s}'.format(user_sid)
+    event_data.user_sid = f'{user_sid!s}'
     event_data.version_path = version_path
 
     timestamp = self._GetRowValue(query_hash, row, 'version_time')

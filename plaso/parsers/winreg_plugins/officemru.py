@@ -128,7 +128,7 @@ class OfficeMRUPlugin(interface.WindowsRegistryPlugin):
       # TODO: split value string in individual values.
       event_data.value_string = value_string
 
-      entries.append('{0:s}: {1:s}'.format(registry_value.name, value_string))
+      entries.append(f'{registry_value.name:s}: {value_string:s}')
 
       if not timestamp:
         date_time = dfdatetime_semantic_time.NotSet()

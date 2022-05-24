@@ -219,7 +219,7 @@ class StorageMediaToolVolumeScanner(volume_scanner.VolumeScanner):
         raise dfvfs_errors.ScannerError('No partitions found.')
 
       for partition_identifier in partition_identifiers:
-        location = '/{0:s}'.format(partition_identifier)
+        location = f'/{partition_identifier:s}'
         sub_scan_node = scan_node.GetSubNodeByLocation(location)
         self._ScanVolume(scan_context, sub_scan_node, options, base_path_specs)
 
@@ -321,16 +321,14 @@ class StorageMediaToolVolumeScanner(volume_scanner.VolumeScanner):
 
     else:
       raise dfvfs_errors.ScannerError(
-          'Unsupported volume system type: {0:s}.'.format(
-              scan_node.type_indicator))
+          f'Unsupported volume system type: {scan_node.type_indicator:s}.')
 
     for volume_identifier in volume_identifiers:
-      location = '/{0:s}'.format(volume_identifier)
+      location = f'/{volume_identifier:s}'
       sub_scan_node = scan_node.GetSubNodeByLocation(location)
       if not sub_scan_node:
         raise dfvfs_errors.ScannerError(
-            'Scan node missing for volume identifier: {0:s}.'.format(
-                volume_identifier))
+            f'Scan node missing for volume identifier: {volume_identifier:s}.')
 
       self._ScanVolume(scan_context, sub_scan_node, options, base_path_specs)
 
@@ -419,20 +417,18 @@ class StorageMediaTool(tools.CLITool):
       credential_type, _, credential_data = credential_string.partition(':')
       if not credential_type or not credential_data:
         raise errors.BadConfigOption(
-            'Badly formatted credential: {0:s}.'.format(credential_string))
+            f'Badly formatted credential: {credential_string:s}.')
 
       if credential_type not in self._SUPPORTED_CREDENTIAL_TYPES:
         raise errors.BadConfigOption(
-            'Unsupported credential type for: {0:s}.'.format(
-                credential_string))
+            f'Unsupported credential type for: {credential_string:s}.')
 
       if credential_type in self._BINARY_DATA_CREDENTIAL_TYPES:
         try:
           credential_data = codecs.decode(credential_data, 'hex')
         except TypeError:
           raise errors.BadConfigOption(
-              'Unsupported credential data for: {0:s}.'.format(
-                  credential_string))
+              f'Unsupported credential data for: {credential_string:s}.')
 
       self._credentials.append((credential_type, credential_data))
 

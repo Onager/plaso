@@ -50,15 +50,13 @@ class EventData(interface.AttributeContainer):
 
       if isinstance(attribute_value, bytes):
         raise TypeError(
-            'Attribute: {0:s} value of type bytes not supported.'.format(
-                attribute_name))
+            f'Attribute: {attribute_name:s} value of type bytes not supported.')
 
       if isinstance(attribute_value, dict):
         raise TypeError(
-            'Attribute: {0:s} value of type dict not supported.'.format(
-                attribute_name))
+            f'Attribute: {attribute_name:s} value of type dict not supported.')
 
-      attribute_string = '{0:s}: {1!s}'.format(attribute_name, attribute_value)
+      attribute_string = f'{attribute_name:s}: {attribute_value!s}'
       attributes.append(attribute_string)
 
     return ', '.join(attributes)
@@ -232,8 +230,7 @@ class EventTag(interface.AttributeContainer):
       ValueError: if a label is malformed.
     """
     if not isinstance(label, str):
-      raise TypeError('label is not a string type. Is {0!s}'.format(
-          type(label)))
+      raise TypeError(f'label is not a string type. Is {type(label)!s}')
 
     if not self._VALID_LABEL_REGEX.match(label):
       raise ValueError((
@@ -284,7 +281,7 @@ class EventTag(interface.AttributeContainer):
     Returns:
       str: label.
     """
-    text = '{0:s}{1:s}'.format(prefix, text)
+    text = f'{prefix:s}{text:s}'
     return cls._INVALID_LABEL_CHARACTERS_REGEX.sub('_', text)
 
   def GetEventIdentifier(self):

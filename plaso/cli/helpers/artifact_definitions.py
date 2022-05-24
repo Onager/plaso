@@ -106,14 +106,12 @@ class ArtifactDefinitionsArgumentsHelper(interface.ArgumentsHelper):
           '{0:s}.').format(custom_artifacts_path))
 
     if custom_artifacts_path:
-      logger.info('Custom artifact definitions path: {0:s}'.format(
-          custom_artifacts_path))
+      logger.info(f'Custom artifact definitions path: {custom_artifacts_path:s}')
 
     registry = artifacts_registry.ArtifactDefinitionsRegistry()
     reader = artifacts_reader.YamlArtifactsReader()
 
-    logger.info('Determined artifact definitions path: {0:s}'.format(
-        artifacts_path))
+    logger.info(f'Determined artifact definitions path: {artifacts_path:s}')
 
     try:
       if os.path.isdir(artifacts_path):
@@ -144,7 +142,7 @@ class ArtifactDefinitionsArgumentsHelper(interface.ArgumentsHelper):
         artifact_definition = registry.GetDefinitionByAlias(name)
       if not artifact_definition:
         raise errors.BadConfigOption(
-            'Missing required artifact definition: {0:s}'.format(name))
+            f'Missing required artifact definition: {name:s}')
 
     setattr(configuration_object, '_artifact_definitions_path', artifacts_path)
     setattr(configuration_object, '_custom_artifacts_path',

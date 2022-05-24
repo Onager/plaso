@@ -60,7 +60,7 @@ class AnalysisPluginOptions(object):
         title='Analysis Plugins')
     # TODO: add support for a 3 column table.
     for name, description, type_string in analysis_plugin_info:
-      description = '{0:s} [{1:s}]'.format(description, type_string)
+      description = f'{description:s} [{type_string:s}]'
       table_view.AddRow([name, description])
     table_view.Write(self._output_writer)
 
@@ -162,18 +162,16 @@ class OutputModuleOptions(object):
 
     except (KeyError, ValueError) as exception:
       raise RuntimeError(
-          'Unable to create output module with error: {0!s}'.format(
-              exception))
+          f'Unable to create output module with error: {exception!s}')
 
     if output_module.WRITES_OUTPUT_FILE:
       if not self._output_filename:
         raise errors.BadConfigOption(
-            'Output format: {0:s} requires an output file'.format(
-                self._output_format))
+            f'Output format: {self._output_format:s} requires an output file')
 
       if os.path.exists(self._output_filename):
         raise errors.BadConfigOption(
-            'Output file already exists: {0:s}.'.format(self._output_filename))
+            f'Output file already exists: {self._output_filename:s}.')
 
       output_module.Open(path=self._output_filename)
     else:
@@ -232,7 +230,7 @@ class OutputModuleOptions(object):
           pytz.timezone(time_zone_string)
         except pytz.UnknownTimeZoneError:
           raise errors.BadConfigOption(
-              'Unknown time zone: {0:s}'.format(time_zone_string))
+              f'Unknown time zone: {time_zone_string:s}')
 
         self._output_time_zone = time_zone_string
 
@@ -248,7 +246,7 @@ class OutputModuleOptions(object):
       value = None
       while not value:
         value = self._PromptUserForInput(
-            'Please specific a value for {0:s}'.format(parameter))
+            f'Please specific a value for {parameter:s}')
 
       setattr(options, parameter, value)
 

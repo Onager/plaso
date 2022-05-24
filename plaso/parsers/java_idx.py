@@ -82,8 +82,7 @@ class JavaIDXParser(interface.FileObjectParser, dtfabric_helper.DtFabricHelper):
           file_object, 0, file_header_map)
     except (ValueError, errors.ParseError) as exception:
       raise errors.WrongParser(
-          'Unable to parse file header with error: {0!s}'.format(
-              exception))
+          f'Unable to parse file header with error: {exception!s}')
 
     if not file_header.format_version in self._SUPPORTED_FORMAT_VERSIONS:
       raise errors.WrongParser('Unsupported format version.')
@@ -132,8 +131,7 @@ class JavaIDXParser(interface.FileObjectParser, dtfabric_helper.DtFabricHelper):
             file_object, file_offset, http_header_map)
       except (ValueError, errors.ParseError) as exception:
         parser_mediator.ProduceExtractionWarning(
-            'Unable to parse HTTP header value at offset: 0x{0:08x}'.format(
-                file_offset))
+            f'Unable to parse HTTP header value at offset: 0x{file_offset:08x}')
         break
 
       file_offset += data_size

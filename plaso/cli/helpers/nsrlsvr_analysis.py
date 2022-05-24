@@ -92,7 +92,7 @@ class NsrlsvrAnalysisArgumentsHelper(interface.ArgumentsHelper):
 
     if not analysis_plugin.TestConnection():
       raise errors.BadConfigOption(
-          'Unable to connect to nsrlsvr {0:s}:{1:d}'.format(host, port))
+          f'Unable to connect to nsrlsvr {host:s}:{port:d}')
 
 
 manager.ArgumentHelperManager.RegisterHelper(NsrlsvrAnalysisArgumentsHelper)

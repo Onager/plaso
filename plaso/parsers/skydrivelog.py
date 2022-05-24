@@ -149,7 +149,7 @@ class SkyDriveLogParser(text_parser.PyparsingMultiLineTextParser):
           time_elements_tuple=time_elements_tuple)
     except ValueError:
       parser_mediator.ProduceExtractionWarning(
-          'invalid date time value: {0!s}'.format(time_elements_tuple))
+          f'invalid date time value: {time_elements_tuple!s}')
       return
 
     details = self._GetValueFromStructure(structure, 'details')
@@ -192,7 +192,7 @@ class SkyDriveLogParser(text_parser.PyparsingMultiLineTextParser):
           time_elements_tuple=time_elements_tuple)
     except ValueError:
       parser_mediator.ProduceExtractionWarning(
-          'invalid date time value: {0!s}'.format(time_elements_tuple))
+          f'invalid date time value: {time_elements_tuple!s}')
       return
 
     # Replace newlines with spaces in structure.detail to preserve output.
@@ -227,7 +227,7 @@ class SkyDriveLogParser(text_parser.PyparsingMultiLineTextParser):
     """
     if key not in ('header', 'logline'):
       raise errors.ParseError(
-          'Unable to parse record, unknown structure: {0:s}'.format(key))
+          f'Unable to parse record, unknown structure: {key:s}')
 
     if key == 'logline':
       self._ParseLine(parser_mediator, structure)
@@ -259,8 +259,7 @@ class SkyDriveLogParser(text_parser.PyparsingMultiLineTextParser):
           time_elements_tuple=time_elements_tuple)
     except ValueError:
       logger.debug(
-          'Not a SkyDrive log file, invalid date and time: {0!s}'.format(
-              time_elements_tuple))
+          f'Not a SkyDrive log file, invalid date and time: {time_elements_tuple!s}')
       return False
 
     return True
@@ -351,7 +350,7 @@ class SkyDriveOldLogParser(text_parser.PyparsingSingleLineTextParser):
           time_elements_tuple=time_elements_tuple)
     except ValueError:
       parser_mediator.ProduceExtractionWarning(
-          'invalid date time value: {0!s}'.format(time_elements_tuple))
+          f'invalid date time value: {time_elements_tuple!s}')
       return
 
     event_data = SkyDriveOldLogEventData()
@@ -406,7 +405,7 @@ class SkyDriveOldLogParser(text_parser.PyparsingSingleLineTextParser):
     """
     if key not in ('logline', 'no_header_single_line'):
       raise errors.ParseError(
-          'Unable to parse record, unknown structure: {0:s}'.format(key))
+          f'Unable to parse record, unknown structure: {key:s}')
 
     if key == 'logline':
       self._ParseLogline(parser_mediator, structure)

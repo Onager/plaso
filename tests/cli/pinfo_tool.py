@@ -789,7 +789,7 @@ Storage files are different.
     table_view.AddRow([session_identifier, session_start_time])
     table_view.Write(output_writer)
 
-    title = 'Session: {0!s}'.format(session_identifier)
+    title = f'Session: {session_identifier!s}'
     table_view = cli_views.ViewsFactory.GetTableView(
         cli_views.ViewsFactory.FORMAT_TYPE_CLI, title=title)
     table_view.AddRow(['Start time', session_start_time])

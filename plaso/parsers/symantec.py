@@ -218,7 +218,7 @@ class SymantecParser(dsv_parser.DSVParser):
       date_time.is_local_time = True
     except ValueError:
       parser_mediator.ProduceExtractionWarning(
-          'invalid date time value: {0!s}'.format(time_elements_tuple))
+          f'invalid date time value: {time_elements_tuple!s}')
       return
 
     # TODO: remove unused attributes.

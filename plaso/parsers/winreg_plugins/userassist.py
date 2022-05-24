@@ -121,7 +121,7 @@ class UserAssistPlugin(
     format_version = version_value.GetDataAsObject()
     if format_version not in (3, 5):
       parser_mediator.ProduceExtractionWarning(
-          'unsupported format version: {0:d}'.format(format_version))
+          f'unsupported format version: {format_version:d}')
       return
 
     if not count_subkey:
@@ -178,19 +178,18 @@ class UserAssistPlugin(
         entry_data_size = 72
       else:
         parser_mediator.ProduceExtractionWarning(
-            'unsupported format version: {0:d}'.format(format_version))
+            f'unsupported format version: {format_version:d}')
         continue
 
       if not registry_value.DataIsBinaryData():
         parser_mediator.ProduceExtractionWarning(
-            'unsupported value data type: {0:s}'.format(
-                registry_value.data_type_string))
+            f'unsupported value data type: {registry_value.data_type_string:s}')
         continue
 
       value_data_size = len(registry_value.data)
       if entry_data_size != value_data_size:
         parser_mediator.ProduceExtractionWarning(
-            'unsupported value data size: {0:d}'.format(value_data_size))
+            f'unsupported value data size: {value_data_size:d}')
         continue
 
       try:
@@ -198,8 +197,7 @@ class UserAssistPlugin(
             registry_value.data, 0, entry_map)
       except (ValueError, errors.ParseError) as exception:
         parser_mediator.ProduceExtractionWarning(
-            'unable to parse UserAssist entry value with error: {0!s}'.format(
-                exception))
+            f'unable to parse UserAssist entry value with error: {exception!s}')
         continue
 
       event_data = UserAssistWindowsRegistryEventData()

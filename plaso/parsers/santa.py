@@ -367,7 +367,7 @@ class SantaParser(text_parser.PyparsingSingleLineTextParser):
     """
     if key not in self._SUPPORTED_KEYS:
       raise errors.ParseError(
-          'Unable to parse record, unknown structure: {0:s}'.format(key))
+          f'Unable to parse record, unknown structure: {key:s}')
 
     if key == 'quota_exceeded_line':
       # skip this line
@@ -380,7 +380,7 @@ class SantaParser(text_parser.PyparsingSingleLineTextParser):
       date_time.CopyFromStringISO8601(date_time_string)
     except ValueError:
       parser_mediator.ProduceExtractionWarning(
-          'invalid date time value: {0!s}'.format(date_time_string))
+          f'invalid date time value: {date_time_string!s}')
       return
 
     if key == 'execution_line':
@@ -480,7 +480,7 @@ class SantaParser(text_parser.PyparsingSingleLineTextParser):
           parser_mediator.ProduceEventWithEventData(new_event, event_data)
         except ValueError:
           parser_mediator.ProduceExtractionWarning(
-              'invalid date time value: {0:s}'.format(event_data.appearance))
+              f'invalid date time value: {event_data.appearance:s}')
 
       event = time_events.DateTimeValuesEvent(
           date_time, definitions.TIME_DESCRIPTION_WRITTEN)
